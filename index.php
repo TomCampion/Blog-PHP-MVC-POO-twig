@@ -41,6 +41,9 @@ switch ($page) {
     case 'blog':
         echo $twig->render('blog.twig');
         break;
+    case 'connexion':
+        echo $twig->render('connexion.twig');
+        break;
     case (preg_match('#article-([0-9]+)#', $page, $params) ? true : false):
         echo $twig->render('article.twig', ['id_article' => $params[1] ]);
         break;
