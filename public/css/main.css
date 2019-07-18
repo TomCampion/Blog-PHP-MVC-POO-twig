@@ -2315,3 +2315,24 @@ ul.social-links li:last-child a {
 h2.post-title:hover {
     color: #fd9129;
 }
+
+.no-margin-bottom{
+  margin-bottom: 0px !important;
+  text-align: justify;
+}
+
+@media screen and (min-width: 768px)  {
+  #exp-block {
+    margin-bottom: 0px;
+  }
+  #section-cv{
+    padding-bottom: 0px;
+  }
+}
+
+@media screen and (min-width: 1400px)  {
+  #page-cv #mCSB_1_scrollbar_vertical  {
+    display: none;
+  }
+  
+}

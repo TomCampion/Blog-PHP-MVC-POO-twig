@@ -9,6 +9,7 @@
 "use strict";
     
     // Portfolio subpage filters
+    /* tom
     function portfolio_init() {
         var portfolio_grid = $('#portfolio_grid'),
             portfolio_filter = $('#portfolio_filters');
@@ -35,6 +36,7 @@
 
         }
     }
+    */
     // /Portfolio subpage filters
 
     // Contact form validator
@@ -99,7 +101,7 @@
         }
     }
     // /Custom scroll
-
+    /*tom
     //On Window load & Resize
     $(window)
         .on('load', function() { //Load
@@ -120,11 +122,12 @@
              mobileMenuHide();
              customScroll();
         });
-
+    */
 
     // On Document Load
     $(document).on('ready', function() {
         // Initialize Portfolio grid
+        /* tom
         var $portfolio_container = $("#portfolio-grid");
 
         $portfolio_container.imagesLoaded(function () {
@@ -132,9 +135,9 @@
                 portfolio_init(this);
             }, 500);
         });
-
+        */
         // Portfolio hover effect init
-        $(' #portfolio_grid > figure > a ').each( function() { $(this).hoverdir(); } );
+        // tom $(' #portfolio_grid > figure > a ').each( function() { $(this).hoverdir(); } );
 
         // Mobile menu
         $('.menu-toggle').on("click", function () {
