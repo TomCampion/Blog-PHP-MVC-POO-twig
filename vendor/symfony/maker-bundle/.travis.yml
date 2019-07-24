@@ -1,0 +1,47 @@
+language: php
+sudo: false
+cache:
+    directories:
+        - $HOME/.composer/cache/files
+        - $HOME/symfony-bridge/.phpunit
+
+env:
+    global:
+        - PHPUNIT_FLAGS="-v"
+        - SYMFONY_PHPUNIT_DIR="$HOME/symfony-bridge/.phpunit"
+
+matrix:
+    fast_finish: true
+    include:
+        - php: 7.1
+        - php: 7.2
+        - php: 7.3
+        - php: 7.1
+          env: MAKER_TEST_VERSION=stable-dev
+        - php: 7.1
+          env: MAKER_TEST_VERSION=dev
+
+# the following need to be refactored properly into allow_failures
+#        allow_failures:
+#        # low deps is still a WIP
+#        - php: 7.1
+#          env: deps=low
+#          # Dev-master is allowed to fail.
+#        - env: STABILITY="dev"
+
+before_install:
+    - if ! [ -z "$STABILITY" ]; then composer config minimum-stability ${STABILITY}; fi;
+    - |
+      if [[ $deps = low ]]; then
+          composer update --prefer-lowest
+      else
+          composer update
+      fi
+
+install:
+    - ./vendor/bin/simple-phpunit install
+
+script:
+    - composer validate --strict --no-check-lock
+    - ./vendor/bin/simple-phpunit $PHPUNIT_FLAGS
+    - ./vendor/bin/php-cs-fixer fix --dry-run --diff
