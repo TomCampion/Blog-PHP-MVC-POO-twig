@@ -1,6 +1,6 @@
 <?php
 require 'vendor/autoload.php';
-
+require 'SecurityController.php';
 class AppController {
 
     private $twig;
@@ -32,7 +32,14 @@ class AppController {
     }
 
     private function renderConnexion(){
-        echo  $this->twig->render('connexion.twig', ['current_user_id' => session_id()]);  
+         if(!empty($_POST['nom']) and !empty($_POST['prenom']) and !empty($_POST['register_email']) and !empty($_POST['register_password']) ){
+            $SecurityController = new SecurityController();
+            $result = $SecurityController->register($_POST['prenom'],$_POST['nom'],$_POST['register_email'],$_POST['register_password']);
+
+            echo  $this->twig->render('connexion.twig', ['message_register' => $result['message']], ['current_user_id' => session_id()]);  
+        }else{
+             echo  $this->twig->render('connexion.twig', ['current_user_id' => session_id()]);  
+        } 
     }
 
     private function renderPost($params){
