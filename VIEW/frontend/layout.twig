@@ -65,6 +65,12 @@
             <li>
               <a class="pt-trigger" href="connexion" data-animation="17"><i class="menu-icon pe-7s-icon pe-7s-door-lock"></i>Connexion</a>
             </li>
+
+            {% if session.id is not empty %}
+            <li>
+              <a class="pt-trigger" href="accueil" data-animation="18"><i class="menu-icon pe-7s-icon pe-7s-box1"></i>Profil</a>
+            </li>
+            {% endif %}
           </ul>
           <!-- /Main menu -->
         </div>
