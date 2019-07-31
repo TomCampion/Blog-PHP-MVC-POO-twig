@@ -1,0 +1,36 @@
+{% extends 'layout.twig' %}
+
+{% block title %}
+Page non trouvé
+{% endblock %}
+
+{% block content %}
+
+  <!-- Main Content -->
+      <div id="main" class="site-main">
+        <!-- Page changer wrapper -->
+        <div class="pt-wrapper" style="background-image: url(public/images/main_bg_light.jpg);">
+          <!-- Subpages -->
+          <div class="subpages">          
+
+            <section class="pt-page" >
+              <div class="border-block-top-110"></div>
+                <div class="section-inner">
+                                 
+                  <figure style="text-align:center;vertical-align: middle;margin-top:10%;">
+				    <img src="public/images/404.gif"alt="404 page non trouvée">
+				    <br><br>
+				    <figcaption><h1><a href="/tom/">Retour à l'acceuil</a></figcaption>
+				</figure>
+
+                </div>
+              
+            </section>
+        
+          </div>
+        </div>
+        <!-- /Page changer wrapper -->
+      </div>
+      <!-- /Main Content -->
+
+{% endblock %}
