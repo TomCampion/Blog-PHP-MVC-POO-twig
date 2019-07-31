@@ -12,7 +12,6 @@
                   <div id="section_connection" class="section-title-wrapper">
                     <h2 class="section-title">Connexion {{ current_user_id }}</h2>
 
-                    
                     {% if current_user_id is empty %}
 
                      <h4>Se connecter</h4>
@@ -84,6 +83,9 @@
                     </form> 
                     {% else %}
                     <h4>Vous êtes déja connecté ! </h4>
+                    <form method="post" action="" name="deconnexion">
+                      <input type="submit" class="button btn-send" value="Se déconnecter">
+                    </form>
                     {% endif %}
 
                   </div>
@@ -94,25 +96,30 @@
 
             <script>
               var p1=document.getElementById("pass1");
-              p1.addEventListener("click", function(){
-                if(p1.className == "visibility-password far fa-eye"){
-                  p1.className = "visibility-password far fa-eye-slash";
-                  document.getElementById("ipt1").setAttribute("type", "password");
-                }else{
-                  p1.className = "visibility-password far fa-eye";
-                  document.getElementById("ipt1").setAttribute("type", "text");
-                }
-              });
+              if(p1 != null){
+                p1.addEventListener("click", function(){
+                  if(p1.className == "visibility-password far fa-eye"){
+                    p1.className = "visibility-password far fa-eye-slash";
+                    document.getElementById("ipt1").setAttribute("type", "password");
+                  }else{
+                    p1.className = "visibility-password far fa-eye";
+                    document.getElementById("ipt1").setAttribute("type", "text");
+                  }
+                });
+              }
+
               var p2=document.getElementById("pass2");
-              p2.addEventListener("click", function(){
-                if(p2.className == "visibility-password far fa-eye"){
-                  p2.className = "visibility-password far fa-eye-slash";
-                  document.getElementById("ipt2").setAttribute("type", "password");
-                }else{
-                  p2.className = "visibility-password far fa-eye";
-                  document.getElementById("ipt2").setAttribute("type", "text");
-                }
-              });
+              if(p2 != null){
+                p2.addEventListener("click", function(){
+                  if(p2.className == "visibility-password far fa-eye"){
+                    p2.className = "visibility-password far fa-eye-slash";
+                    document.getElementById("ipt2").setAttribute("type", "password");
+                  }else{
+                    p2.className = "visibility-password far fa-eye";
+                    document.getElementById("ipt2").setAttribute("type", "text");
+                  }
+                });
+              }
             </script>
 
 {% endblock %}
