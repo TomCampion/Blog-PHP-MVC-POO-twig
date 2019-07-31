@@ -80,6 +80,23 @@ Class UserManager extends Manager {
 		}
 	}
 
+	public function userExist (String $email, String $password){
+		try {
+			$query = $this->db->prepare('SELECT id, password FROM users WHERE email=?');
+			$query->execute( array($email) );
+			$user = $query->fetch();
+
+			if(password_verify($password, $user->password )){
+				return (int)$user->id;	
+			}else{
+				return false;
+			}
+					
+		} catch (Exception $e) {
+			echo 'Impossible de vérifer l\'existence de l\'utilisateur : '.$e->getMessage().'<br>';
+		}
+	}
+
 	public function isEmailUnique($email)
     {
     	$valid = true;
