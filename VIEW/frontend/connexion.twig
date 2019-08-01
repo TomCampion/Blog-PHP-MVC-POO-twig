@@ -10,7 +10,7 @@
               <div  class="section-inner">
                 <div class="section-title-block">
                   <div id="section_connection" class="section-title-wrapper">
-                    <h2 class="section-title">Connexion {{ current_user_id }}</h2>
+                    <h2 class="section-title">Connexion</h2>
 
                     {% if current_user_id is empty %}
 
@@ -83,7 +83,8 @@
                     </form> 
                     {% else %}
                     <h4>Vous êtes déja connecté ! </h4>
-                    <form method="post" action="" name="deconnexion">
+                    <form method="post" action="" >
+                      <input type="hidden" name="deconnexion" value="1">
                       <input type="submit" class="button btn-send" value="Se déconnecter">
                     </form>
                     {% endif %}

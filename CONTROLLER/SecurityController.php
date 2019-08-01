@@ -55,11 +55,10 @@ class SecurityController {
 		$user_id = $this->userManager->userExist($email, $password);
 
 		if( is_int($user_id) and $user_id > 0){
-			session_start();
-			session_id($user_id);
+
 			$user = $this->userManager->get($user_id);
 			foreach ($user as $key => $value) {		
-				if($key != 'id' and $key != 'password'){
+				if($key != 'password'){
 					$_SESSION[$key]=$value;
 				}
 			}
@@ -73,7 +72,7 @@ class SecurityController {
 
 	public function logout()
 	{
-		session_start();
+		session_unset();
 		session_destroy();
 	}
 }
