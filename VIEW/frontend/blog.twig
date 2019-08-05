@@ -1,0 +1,53 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+
+ <!-- blog Subpage -->
+            <section class="pt-page pt-page-6 animated slideInRight" data-id="blog">
+              <div class="border-block-top-110"></div>
+              <div class="section-inner">
+                <div class="section-title-block">
+                  <div class="section-title-wrapper">
+                    <h2 class="section-title">Blog</h2>
+                    <h5 class="section-description">My Best Works</h5>
+                  </div>
+                </div>
+
+                <!-- blog Content -->
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 mx-auto">
+
+                  {% for post in publishedPosts %}
+
+                  <div class="post-preview">
+                    <a  href="post-{{post.id}}">
+                    <h2 class="post-title">
+                      {{ post.title}}
+                    </h2>
+                    <h3 class="post-subtitle">
+                      {{ post.standfirst}}
+                    </h3>
+                    </a>
+                    <p class="post-meta">Publié par <span class="auteur">{{ post.author}}</span> le {{ post.creationDate |date("d/m/Y", "Europe/Paris")}}</p>
+                  </div>
+                  <hr>
+
+                  {% endfor %}
+
+                  <!-- Pager -
+                  <div class="clearfix">
+                    <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+                  </div>
+                   -->
+                  </div>
+                </div>
+
+              </div>
+                <!-- /blog Content -->
+
+{% endblock %}
+          
+
+           

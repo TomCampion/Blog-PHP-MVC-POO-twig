@@ -1,0 +1,32 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+
+            <section class="pt-page pt-page-6 animated slideInUp" data-id="blog">
+              <div class="border-block-top-110"></div>
+              <div class="section-inner">
+                <div class="section-title-block">
+                  <div class="section-title-wrapper">
+                    <h2 class="section-title">Profil</h2>
+                    <h5 class="section-description">{{session.firstname}}</h5>
+                  </div>
+                </div>
+                
+                <div class="row">
+                {% if session.id is not empty %}
+                  {{ session.firstname}}
+                  {{ session.lastname}}
+                {% else %}
+                  <h4>Vous devez être connecté pour accéder à votre profil ! <a href="connexion">Connectez-vous !</a> </h4>  
+                {% endif %}
+                </div>
+
+              </div>
+              <!-- /section-inner  -->
+
+{% endblock %}
+          
+
+           
