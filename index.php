@@ -1,9 +1,9 @@
 <?php
 require 'vendor/autoload.php';
 require 'CONTROLLER/Controller.php';
-require 'Controller/FrontendController.php';
-require 'Controller/BlogController.php';
-require 'Controller/SecurityController.php';
+require 'CONTROLLER/SecurityController.php';
+require 'CONTROLLER/FrontendController.php';
+require 'CONTROLLER/BlogController.php';
 
 session_start();
 

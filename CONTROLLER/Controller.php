@@ -1,6 +1,11 @@
 <?php
 namespace tom\controller;
 
+require 'MODEL/Manager.php';
+require 'MODEL/UserManager.php';
+require 'MODEL/Users.php';
+require 'MODEL/PostManager.php';
+
 class Controller{
 
     protected $twig;

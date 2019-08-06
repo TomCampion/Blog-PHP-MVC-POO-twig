@@ -1,5 +1,4 @@
 <?php
-require 'Manager.php';
 
 Class PostManager extends Manager {
 

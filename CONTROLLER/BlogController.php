@@ -1,5 +1,4 @@
 <?php
-require 'MODEL/PostManager.php';
 
 class BlogController extends tom\controller\Controller{
 
