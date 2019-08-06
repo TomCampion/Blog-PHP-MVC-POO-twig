@@ -19,6 +19,7 @@ $router->map('GET','/projet1', 'projet1');
 $router->map('GET','/blog', 'blog');
 $router->map('GET','/connexion', 'connexion');
 $router->map('GET','/contact', 'contact');
+$router->map('GET','/profil', 'profil');
 
 $router->map('GET','/post-[i:id]', 'post');
 
