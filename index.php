@@ -20,6 +20,8 @@ $router->map('GET','/profil', 'profil');
 $router->map('GET','/post-[i:id]', 'post');
 
 $router->map('POST','/register', 'register');
+$router->map('POST','/authentification', 'authentification');
+$router->map('POST','/logout', 'logout');
 
 $FrontendController = new Tom\Blog\Controller\FrontendController();
 $BlogController = new Tom\Blog\Controller\BlogController();
@@ -28,7 +30,7 @@ $SecurityController = new Tom\Blog\Controller\SecurityController();
 $match = $router->match();
 $target = $match['target'];
 
-if($target == 'connexion' or $target == 'profil' or $target == 'register'){
+if($target == 'connexion' or $target == 'profil' or $target == 'register' or $target == 'authentification' or $target == 'logout'){
     $SecurityController->execute($match);
 }elseif($target == 'blog' or $target == 'post'){
     $BlogController->execute($match);

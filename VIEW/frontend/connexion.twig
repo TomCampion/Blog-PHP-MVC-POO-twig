@@ -17,7 +17,7 @@
 
                      <h4>Se connecter</h4>
 
-                       <form  method="post" action="">
+                      <form  method="post" action="authentification">
 
                       <div class="messages">{{ message_connexion|raw }}</div>  
 
@@ -84,8 +84,8 @@
                     </form> 
                     {% else %}
                     <h4>Vous êtes déja connecté ! </h4>
-                    <form method="post" action="" >
-                      <input type="hidden" name="deconnexion" value="1">
+                    <form method="post" action="logout" >
+                      <input type="hidden" name="logout" value="1">
                       <input type="submit" class="button btn-send" value="Se déconnecter">
                     </form>
                     {% endif %}
