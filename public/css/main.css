@@ -2350,3 +2350,11 @@ h2.post-title:hover {
     width:450px;
   }
 }
+
+.nav-tabs{
+  margin-bottom: 15px;
+}
+
+.mt-2{
+  margin-top: 35px;
+}

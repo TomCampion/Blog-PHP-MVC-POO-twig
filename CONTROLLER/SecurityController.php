@@ -69,7 +69,7 @@ class SecurityController extends Controller{
             $user = $this->userManager->userExist($email, $password);
             if( !empty($user) ){
                 foreach ($user as $key => $value) {
-                    if($key == 'id' or $key == 'firstname' or $key == 'lastname' or $key == 'email' or $key == 'admin' or $key == 'restricted'){
+                    if($key == 'id' or $key == 'firstname' or $key == 'lastname' or $key == 'email' or $key == 'admin' or $key == 'restricted' or $key =='register_date'){
                         $_SESSION[$key]=$value;
                     }
                 }
