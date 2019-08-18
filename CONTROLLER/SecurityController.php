@@ -88,4 +88,11 @@ class SecurityController extends Controller{
             $this->executeConnexion();
         }
     }
+
+    public function executeLogout()
+    {
+        session_unset();
+        session_destroy();
+        header('Location: accueil');
+    }
 }
