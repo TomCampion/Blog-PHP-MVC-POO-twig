@@ -22,7 +22,7 @@ class Helper{
         return $valid;
     }
 
-    private function CheckFirstname ($firstname){
+    public function CheckFirstname ($firstname){
         $message = '';
         if(!$this->isAlpha($firstname))
             $message = $message.'<p class="msg_error">Le champ prénom ne peut contenir que des lettres ! </p>';
@@ -32,7 +32,7 @@ class Helper{
         return $message;
     }
 
-    private function checkLastname($lastname){
+    public function checkLastname($lastname){
         $message = '';
         if(!$this->isAlpha($lastname))
             $message = $message.'<p class="msg_error">Le champ nom ne peut contenir que des lettres ! </p>';
@@ -42,7 +42,7 @@ class Helper{
         return $message;
     }
 
-    private function checkEmail($email){
+    public function checkEmail($email){
         $message = '';
         if(!$this->isEmail($email))
             $message = $message.'<p class="msg_error">L\adresse e-mail n\'est pas valide ! </p>';
@@ -52,7 +52,7 @@ class Helper{
         return $message;
     }
 
-    private function checkPassword($password){
+    public function checkPassword($password){
         $message = '';
         if(strlen($password) < 3)
             $message = '<p class="msg_error">Votre mot de passe est trop court, il doit faire au moins 3 caractères </p>';
