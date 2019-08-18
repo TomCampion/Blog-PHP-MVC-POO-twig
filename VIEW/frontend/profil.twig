@@ -1,0 +1,144 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+
+            <section class="pt-page pt-page-6 animated slideInUp" data-id="blog">
+              <div class="border-block-top-110"></div>
+              <div class="section-inner">
+                <div class="section-title-block">
+                  <div class="section-title-wrapper">
+                    <h2 class="section-title">Profil</h2>
+                    <h5 class="section-description">{{session.firstname}}</h5>
+                  </div>
+                </div>
+                
+                <div class="row">
+                {% if session.id is not empty %}
+
+                  {% if session.restricted == 1 %}
+                  <div class="alert alert-danger" role="alert">
+                    <strong>Votre compte à été restreint ! vous ne pouvez plus commenter d'articles.</strong>
+                  </div>
+                  {% endif %}
+
+                  {{ msg | raw}}
+
+                  <div class="container">
+                    <div class="row my-2">
+                      <div class="col-lg-11 order-lg-2">
+                        <ul class="nav nav-tabs">
+                          <li class="nav-item active">
+                            <a href="" data-target="#profile" data-toggle="tab" class="nav-link active" aria-expanded="true">Profil</a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="" data-target="#edit" data-toggle="tab" class="nav-link">Modifier profil</a>
+                          </li>
+                        </ul>
+                        <div class="tab-content py-4">
+                          <div class="tab-pane active" id="profile">
+                            <h4 class="mb-3">Profil</h4>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <h5>{{ session.firstname |capitalize}}</h5>
+                                <h5>{{ session.lastname |capitalize}}</h5>
+                                <h5>{{ session.email}}</h5>
+                                <h5>Date de création de compte : {{ session.register_date |date("d/m/Y H:i")}}</h5>
+                              </div>
+                              <!--
+                              <div class="col-md-12">
+                                <h4 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span>Dernier(s) Commentaire(s) posté(s)</h4>
+                                <table class="table table-sm table-hover table-striped">
+                                  <tbody>
+                                  <tr>
+                                    <td>
+                                      <strong>Abby</strong> joined ACME Project Team in <strong>`Collaboration`</strong>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong>Gary</strong> deleted My Board1 in <strong>`Discussions`</strong>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong>Kensington</strong> deleted MyBoard3 in <strong>`Discussions`</strong>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong>John</strong> deleted My Board1 in <strong>`Discussions`</strong>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong>Skell</strong> deleted his post Look at Why this is.. in <strong>`Discussions`</strong>
+                                    </td>
+                                  </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                              -->
+                            </div>
+                            <!--/row-->
+                          </div>
+
+                          <div class="tab-pane" id="edit">
+                            <form id="editprofile" role="form" action="editprofile" method="post">
+                              <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Prénom</label>
+                                <div class="col-lg-9">
+                                  <input name="prenom" class="form-control" type="text" value="{{session.firstname}}" required>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Nom</label>
+                                <div class="col-lg-9">
+                                  <input name="nom" class="form-control" type="text" value="{{session.lastname}}" required>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Email</label>
+                                <div class="col-lg-9">
+                                  <input name="email" class="form-control" type="email" value="{{session.email}}" required>
+                                </div>
+                              </div>
+<!--
+                              <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Password</label>
+                                <div class="col-lg-9">
+                                  <input name="password" class="form-control" type="password" value="" required>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">Confirm password</label>
+                                <div class="col-lg-9">
+                                  <input name="password2" class="form-control" type="password" value="" required>
+                                </div>
+                              </div>
+                              -->
+                              <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label"></label>
+                                <div class="col-lg-9">
+                                  <input type="submit" class="btn" value="Enregistrer modifications">
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% else %}
+                  <h4>Vous devez être connecté pour accéder à votre profil ! <a href="connexion">Connectez-vous !</a> </h4>  
+                {% endif %}
+                </div>
+
+              </div>
+              <!-- /section-inner  -->
+
+{% endblock %}
+          
+
+           

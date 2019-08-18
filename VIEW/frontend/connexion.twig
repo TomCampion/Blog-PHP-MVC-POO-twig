@@ -1,0 +1,128 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+
+     <!-- Resume Subpage -->
+            <section class="pt-page animated slideInLeft" data-id="resume">
+              <div class="border-block-top-110"></div>
+              <div  class="section-inner">
+                <div class="section-title-block">
+                  <div id="section_connection" class="section-title-wrapper">
+                    <h2 class="section-title">Connexion</h2>
+
+                    
+                    {% if session.id is empty %}
+
+                     <h4>Se connecter</h4>
+
+                      <form  method="post" action="authentification">
+
+                      <div class="messages">{{ message_connexion|raw }}</div>  
+
+                      <div class="controls">
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" maxlength=254 placeholder="Adresse e-mail" required>
+                            <div class="form-control-border"></div>
+                            <i class="form-control-icon pe-7s-mail"></i>
+                            <div class="help-block with-errors"></div>
+                        </div>
+
+                         <div class="form-group">
+                            <input id="ipt1" type="password" name="password" class="form-control" minlength=3 maxlength=100 placeholder="Mot de passe" required>
+                             <div style="display:inline;">
+                              <i id="pass1" class="visibility-password far fa-eye-slash"></i>
+                            </div>
+                            <div class="form-control-border"></div>
+                            <i class="form-control-icon pe-7s-key"></i>                           
+                            <div class="help-block with-errors"></div>                            
+                        </div>
+
+                        <input type="submit" class="button btn-send" value="Se connecter">
+                      </div>
+                    </form>
+
+                    <h4>Pas encore de compte ? Inscrivez vous ! </h4>
+
+                    <form  method="post" action="register">
+
+                      <div class="messages">{{ message_register|raw }}</div>
+
+                      <div class="controls">
+                        <div class="form-group">
+                            <input type="text" name="nom" class="form-control" maxlength=45 placeholder="Nom" required>
+                            <div class="form-control-border"></div>
+                            <i class="form-control-icon pe-7s-user"></i>
+                            <div class="help-block with-errors"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" name="prenom" class="form-control" maxlength=45 placeholder="Prénom" required>
+                            <div class="form-control-border"></div>
+                            <i class="form-control-icon pe-7s-user"></i>
+                            <div class="help-block with-errors"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email" name="register_email" class="form-control" minlength=3 maxlength=254 placeholder="Adresse e-mail" required>
+                            <div class="form-control-border"></div>
+                            <i class="form-control-icon pe-7s-mail"></i>
+                            <div class="help-block with-errors"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <input id="ipt2" type="password" name="register_password" minlength=3 maxlength=100 class="form-control" placeholder="Mot de passe" required>
+                            <div class="form-control-border"></div>
+                            <i class="form-control-icon pe-7s-key"></i> 
+                            <i style="display:inline;" id="pass2" class="visibility-password far fa-eye-slash"></i>
+                            <div class="help-block with-errors"></div>                            
+                        </div>
+
+                        <input type="submit" class="button btn-send" value="S'inscrire">
+                      </div>
+                    </form> 
+                    {% else %}
+                    <h4>Vous êtes déja connecté ! </h4>
+                    <form method="post" action="logout" >
+                      <input type="submit" class="button btn-send" value="Se déconnecter">
+                    </form>
+                    {% endif %}
+
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- End Resume Subpage -->
+
+            <script>
+              var p1=document.getElementById("pass1");
+              if(p1 != null){
+                p1.addEventListener("click", function(){
+                  if(p1.className == "visibility-password far fa-eye"){
+                    p1.className = "visibility-password far fa-eye-slash";
+                    document.getElementById("ipt1").setAttribute("type", "password");
+                  }else{
+                    p1.className = "visibility-password far fa-eye";
+                    document.getElementById("ipt1").setAttribute("type", "text");
+                  }
+                });
+              }
+              var p2=document.getElementById("pass2");
+              if(p2 != null){
+                p2.addEventListener("click", function(){
+                  if(p2.className == "visibility-password far fa-eye"){
+                    p2.className = "visibility-password far fa-eye-slash";
+                    document.getElementById("ipt2").setAttribute("type", "password");
+                  }else{
+                    p2.className = "visibility-password far fa-eye";
+                    document.getElementById("ipt2").setAttribute("type", "text");
+                  }
+                });
+              }
+            </script>
+
+{% endblock %}
+          
+
+           

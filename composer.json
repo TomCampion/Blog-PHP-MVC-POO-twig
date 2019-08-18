@@ -1,0 +1,12 @@
+{
+    "require": {
+        "twig/twig": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tom\\Blog\\Controller\\": "CONTROLLER/",
+            "Tom\\Blog\\Model\\": "MODEL/",
+            "Tom\\Blog\\Services\\": "Services/"
+        }
+    }
+}
