@@ -95,4 +95,29 @@ class SecurityController extends Controller{
         session_destroy();
         header('Location: accueil');
     }
+
+    private function editProfile(String $firstname, String $lastname, String $email){
+        $message = $this->helper->CheckFirstname($firstname);
+        $message .= $this->helper->checkLastname($lastname);
+        $message .= $this->helper->checkEmail($email);
+
+        if (empty($message)) {
+            $this->userManager->update($firstname, $lastname, $email, $_SESSION['id']);
+            $_SESSION['email'] = $email;
+            $_SESSION['firstname'] = $firstname;
+            $_SESSION['lastname'] = $lastname;
+            header('Location: profil');
+        }else{
+            $message = '<div class="alert alert-danger" role="alert"><strong>'.$message.'</strong></div>';
+        }
+        return $message;
+    }
+
+    public function executeEditProfile()
+    {
+        if(!empty($_POST['nom']) and !empty($_POST['prenom']) and !empty($_POST['email'])) {
+            $msg_edit = $this->editProfile($_POST['prenom'], $_POST['nom'], $_POST['email']);
+            echo $this->twig->render('profil.twig', ['msg' => $msg_edit]);
+        }
+    }
 }
