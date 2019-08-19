@@ -1,8 +1,6 @@
 <?php
 require 'vendor/autoload.php';
 
-use Tom\Blog\Controller;
-
 session_start();
 
 // Routing
@@ -11,6 +9,7 @@ $router = new AltoRouter();
 $FrontendController = new Tom\Blog\Controller\FrontendController();
 $BlogController = new Tom\Blog\Controller\BlogController();
 $SecurityController = new Tom\Blog\Controller\SecurityController();
+$AdminUserController = new Tom\Blog\AdminController\AdminUsersController();
 
 $router->setBasePath('/blog');
 $router->map('GET','/', [$FrontendController, "executeAccueil"]);
@@ -30,6 +29,8 @@ $router->map('POST','/register', [$SecurityController, "executeRegister"]);
 $router->map('POST','/authentification', [$SecurityController, "executeAuthentification"]);
 $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
 $router->map('POST','/editprofile', [$SecurityController, "executeEditProfile"]);
+//Admin part
+$router->map('GET','/users', [$AdminUserController, "executeUsers"]);
 
 $match = $router->match();
 

@@ -1,0 +1,57 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block content %}
+
+    {% if session.id is not empty and session.admin == 1 %}
+ <!-- blog Subpage -->
+            <section class="pt-page pt-page-6 animated slideInRight" data-id="blog">
+              <div class="border-block-top-110"></div>
+              <div class="section-inner">
+                <div class="section-title-block">
+                  <div class="section-title-wrapper">
+                    <h2 class="section-title">Gestion des Utilisateurs</h2>
+                  </div>
+                </div>
+
+                <!-- blog Content -->
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 mx-auto">
+                      <table class="table table-striped">
+                          <thead class="thead-dark">
+                          <tr>
+                              <th scope="col">ID</th>
+                              <th scope="col">Prénom</th>
+                              <th scope="col">Nom</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Admin</th>
+                              <th scope="col">Restricted</th>
+                              <th scope="col">Register Date</th>
+                          </tr>
+                          </thead>
+                              {% for user in users %}
+                                      <tbody>
+                                      <tr>
+                                          <th scope="row">{{user.id}}</th>
+                                          <td>{{ user.firstname}}</td>
+                                          <td>{{user.lastname}}</td>
+                                          <td>{{user.email}}</td>
+                                          <td>{{user.admin}}</td>
+                                          <td>{{user.restricted}}</td>
+                                          <td>{{user.register_date|date("d/m/Y H:i")}}</td>
+                                      </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+
+                  </div>
+                </div>
+
+              </div>
+                <!-- /blog Content -->
+    {% else %}
+      <h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>
+    {% endif %}
+
+ {% endblock %}

@@ -18,6 +18,7 @@ class ComposerStaticInit9df77d15ac6f4f35da5f1964da246663
             'Tom\\Blog\\Services\\' => 18,
             'Tom\\Blog\\Model\\' => 15,
             'Tom\\Blog\\Controller\\' => 20,
+            'Tom\\Blog\\AdminController\\' => 25,
         ),
         'S' => 
         array (
@@ -42,6 +43,10 @@ class ComposerStaticInit9df77d15ac6f4f35da5f1964da246663
         'Tom\\Blog\\Controller\\' => 
         array (
             0 => __DIR__ . '/../..' . '/CONTROLLER',
+        ),
+        'Tom\\Blog\\AdminController\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/CONTROLLER/Admin',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
