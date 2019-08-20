@@ -12,7 +12,11 @@ class AdminUsersController extends AdminController{
     }
 
     public function executeUsers(){
-        $users = $this->userManager->getList();
+        if(!empty($_POST['sort']) and !empty($_POST['order'])){
+            $users = $this->userManager->sortUsers($_POST['sort'], $_POST['order']);
+        }else{
+            $users = $this->userManager->getList();
+        }
         echo  $this->twig->render('users.twig', ['users' => $users ] );
     }
 

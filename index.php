@@ -31,6 +31,7 @@ $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
 $router->map('POST','/editprofile', [$SecurityController, "executeEditProfile"]);
 //Admin part
 $router->map('GET','/users', [$AdminUserController, "executeUsers"]);
+$router->map('POST','/users', [$AdminUserController, "executeUsers"]);
 
 $match = $router->match();
 

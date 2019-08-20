@@ -57,6 +57,25 @@ Class UserManager extends Manager {
         }
     }
 
+    public function sortUsers( String $column, String $order){
+        try {
+            if($column == 'id' or $column == 'firstname' or $column == 'lastname' or $column == 'email' or $column == 'restricted' or $column == 'admin' or $column == 'register_date') {
+                if($order == 'ASC' or $order == 'DESC') {
+                    $query = $this->db->prepare("SELECT * FROM users ORDER BY $column $order");
+                    $query->execute();
+                    $users = $query->fetchAll();
+                    return $users;
+                }else{
+                    throw new \Exception("Impossible d'effectuer un tri par ordre : ".$order);
+                }
+            }else{
+                throw new \Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
+            }
+        } catch (Exception $e) {
+            echo 'Impossible de trier les utilisateurs : '.$e->getMessage().'<br>';
+        }
+    }
+
     public function revokeAdmin (Users $usr){
         try {
             $query = $this->db->prepare('UPDATE users SET admin=0 WHERE id=?');
