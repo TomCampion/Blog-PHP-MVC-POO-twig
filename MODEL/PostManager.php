@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Model;
 
+use Tom\Blog\Model\Posts;
+
 Class PostManager extends Manager {
 
     public function add( Posts $post ){
@@ -59,8 +61,8 @@ Class PostManager extends Manager {
 
     public function getPublishedPosts(){
         try {
-            $query = $this->db->prepare('SELECT * FROM posts WHERE state=\'published\'');
-            $query->execute();
+            $query = $this->db->prepare("SELECT * FROM posts WHERE state= ?");
+            $query->execute(array(Posts::PUBLISHED));
             $posts = $query->fetchAll();
             return $posts;
         } catch (Exception $e) {
