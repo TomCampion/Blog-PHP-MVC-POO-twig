@@ -5,9 +5,14 @@ class Controller{
 
     protected $twig;
 
-    public function __construct(){
+    public function __construct(String $backend = null){
 
-        $loader = new \Twig_Loader_Filesystem('VIEW/frontend');
+        if($backend == 'backend'){
+            $loader = new \Twig_Loader_Filesystem('VIEW/backend');
+        }else{
+            $loader = new \Twig_Loader_Filesystem('VIEW/frontend');
+        }
+
         $this->twig = new \Twig_Environment($loader, [
             //'cache' => __DIR__ . '/tmp',
             'debug' => true
