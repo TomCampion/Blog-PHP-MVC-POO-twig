@@ -1,7 +1,7 @@
 <?php
 namespace Tom\Blog\AdminController;
 
-class AdminUsersController extends Controller{
+class AdminUsersController extends \Tom\Blog\Controller\Controller{
 
     private $userManager;
 
