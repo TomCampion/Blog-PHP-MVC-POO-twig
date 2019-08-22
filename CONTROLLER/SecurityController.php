@@ -124,4 +124,10 @@ class SecurityController extends Controller{
         echo  $this->twig->render('profil.twig');
     }
 
+    public function executeLogout()
+    {
+        session_unset();
+        session_destroy();
+        header('Location: accueil');
+    }
 }
