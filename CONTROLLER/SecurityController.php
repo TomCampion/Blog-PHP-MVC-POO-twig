@@ -82,7 +82,7 @@ class SecurityController extends Controller{
         $message = $this->checkEmail($email);
         $message .= $this->checkPassword($password);
         if (empty($message)){
-            $user = $this->userManager->userExist($email, $password);
+            $user = $this->userManager->authenticate($email, $password);
             if( !empty($user) ){
                 foreach ($user as $key => $value) {
                     if($key == 'id' or $key == 'firstname' or $key == 'lastname' or $key == 'email' or $key == 'admin' or $key == 'restricted' or $key =='register_date'){

@@ -131,7 +131,7 @@ Class UserManager extends Manager {
         }
     }
 
-    public function userExist (String $email, String $password){
+    public function authenticate(String $email, String $password){
         try {
             $query = $this->db->prepare('SELECT * FROM users WHERE email=?');
             $query->execute( array($email) );
