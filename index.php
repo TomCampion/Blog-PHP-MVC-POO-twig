@@ -12,7 +12,8 @@ $FrontendController = new Controller\FrontendController();
 $BlogController = new Controller\BlogController();
 $SecurityController = new Controller\SecurityController();
 $ProfileController = new Controller\ProfileController();
-$AdminUserController = new AdminController\AdminUsersController();
+$AdminUsersController = new AdminController\AdminUsersController();
+$AdminPostsController = new AdminController\AdminPostsController();
 
 $router->setBasePath('/blog');
 $router->map('GET','/', [$FrontendController, "executeAccueil"]);
@@ -34,9 +35,10 @@ $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
 $router->map('POST','/editprofile', [$ProfileController, "executeEditProfile"]);
 $router->map('POST','/changePassword', [$ProfileController, "executeChangePassword"]);
 //Admin part
-$router->map('GET','/users', [$AdminUserController, "executeUsers"]);
-$router->map('POST','/users', [$AdminUserController, "executeUsers"]);
-$router->map('POST','/usersAction', [$AdminUserController, "executeUserAction"]);
+$router->map('GET','/users', [$AdminUsersController, "executeUsers"]);
+$router->map('POST','/users', [$AdminUsersController, "executeUsers"]);
+$router->map('POST','/usersAction', [$AdminUsersController, "executeUserAction"]);
+$router->map('GET','/posts', [$AdminPostsController, "executePosts"]);
 
 $match = $router->match();
 

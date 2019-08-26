@@ -263,3 +263,7 @@ input[type="checkbox"]{
     width:15px;
     height:15px;
 }
+
+.voir_post{
+    color: #8d9aff;
+}
