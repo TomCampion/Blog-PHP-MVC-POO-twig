@@ -35,10 +35,9 @@ $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
 $router->map('POST','/editprofile', [$ProfileController, "executeEditProfile"]);
 $router->map('POST','/changePassword', [$ProfileController, "executeChangePassword"]);
 //Admin part
-$router->map('GET','/users', [$AdminUsersController, "executeUsers"]);
-$router->map('POST','/users', [$AdminUsersController, "executeUsers"]);
+$router->map('GET|POST','/users', [$AdminUsersController, "executeUsers"]);
 $router->map('POST','/usersAction', [$AdminUsersController, "executeUserAction"]);
-$router->map('GET','/posts', [$AdminPostsController, "executePosts"]);
+$router->map('GET|POST','/posts', [$AdminPostsController, "executePosts"]);
 
 $match = $router->match();
 
