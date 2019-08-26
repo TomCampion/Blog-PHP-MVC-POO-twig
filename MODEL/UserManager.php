@@ -86,37 +86,37 @@ Class UserManager extends Manager {
     }
 
 
-    public function revokeAdmin (Users $usr){
+    public function revokeAdmin (int $id){
         try {
             $query = $this->db->prepare('UPDATE users SET admin=0 WHERE id=?');
-            $query->execute( array($usr->getId()) );
+            $query->execute( array($id) );
         } catch (Exception $e) {
             echo 'Impossible de retirer le role admin : '.$e->getMessage().'<br>';
         }
     }
 
-    public function setAdmin (Users $usr){
+    public function setAdmin (int $id){
         try {
             $query = $this->db->prepare('UPDATE users SET admin=1 WHERE id=?');
-            $query->execute( array($usr->getId()) );
+            $query->execute( array($id) );
         } catch (Exception $e) {
             echo 'Impossible de mettre le role admin : '.$e->getMessage().'<br>';
         }
     }
 
-    public function restrictUser (Users $usr){
+    public function restrictUser (int $id){
         try {
             $query = $this->db->prepare('UPDATE users SET restricted=1 WHERE id=?');
-            $query->execute( array($usr->getId()) );
+            $query->execute( array($id) );
         } catch (Exception $e) {
             echo 'Impossible de restreindre l\utilisateur : '.$e->getMessage().'<br>';
         }
     }
 
-    public function revokeRestrict (Users $usr){
+    public function revokeRestrict (int $id){
         try {
             $query = $this->db->prepare('UPDATE users SET restricted=0 WHERE id=?');
-            $query->execute( array($usr->getId()) );
+            $query->execute( array($id) );
         } catch (Exception $e) {
             echo 'Impossible d\'enlever la restriction : '.$e->getMessage().'<br>';
         }

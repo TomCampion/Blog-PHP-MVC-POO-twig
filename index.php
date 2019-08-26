@@ -36,6 +36,7 @@ $router->map('POST','/changePassword', [$ProfileController, "executeChangePasswo
 //Admin part
 $router->map('GET','/users', [$AdminUserController, "executeUsers"]);
 $router->map('POST','/users', [$AdminUserController, "executeUsers"]);
+$router->map('POST','/usersAction', [$AdminUserController, "executeUserAction"]);
 
 $match = $router->match();
 
