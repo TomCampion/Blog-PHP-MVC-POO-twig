@@ -9,10 +9,11 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
     {
         parent::__construct('backend');
         $this->userManager = new \Tom\Blog\Model\UserManager();
+        if($_SESSION['admin'] != 1) header();
     }
 
     public function executeUsers(){
-        if(!empty($_POST['sort']) and !empty($_POST['order'])){
+        if(!empty($_POST['sort']) and !empty($_POST['order']) ){
             $users = $this->userManager->sortUsers($_POST['sort'], $_POST['order']);
         }else{
             $users = $this->userManager->getList();
