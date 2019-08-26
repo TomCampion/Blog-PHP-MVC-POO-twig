@@ -103,7 +103,7 @@ class SecurityController extends Controller{
             $msg_login = $this->login($_POST['email'], $_POST['password']);
             echo $this->twig->render('connexion.twig', ['message_connexion' => $msg_login]);
         }else{
-            $this->executeConnexion();
+            $this->executeLoginPage();
         }
     }
 
@@ -112,11 +112,11 @@ class SecurityController extends Controller{
             $msg_register = $this->register($_POST['prenom'], $_POST['nom'], $_POST['register_email'], $_POST['register_password']);
             echo $this->twig->render('connexion.twig', ['message_register' => $msg_register]);
         }else{
-            $this->executeConnexion();
+            $this->executeLoginPage();
         }
     }
 
-    public function executeConnexion(){
+    public function executeLoginPage(){
         echo  $this->twig->render('connexion.twig');
     }
 
