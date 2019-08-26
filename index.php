@@ -1,18 +1,18 @@
 <?php
 require 'vendor/autoload.php';
 
-use Tom\Blog\Controller;
+use Tom\Blog\Controller as Controller;
+use Tom\Blog\AdminController as AdminController;
 
 session_start();
 
 // Routing
 $router = new AltoRouter();
-
-$FrontendController = new Tom\Blog\Controller\FrontendController();
-$BlogController = new Tom\Blog\Controller\BlogController();
-$SecurityController = new Tom\Blog\Controller\SecurityController();
-$ProfileController = new Tom\Blog\Controller\ProfileController();
-$AdminUserController = new Tom\Blog\AdminController\AdminUsersController();
+$FrontendController = new Controller\FrontendController();
+$BlogController = new Controller\BlogController();
+$SecurityController = new Controller\SecurityController();
+$ProfileController = new Controller\ProfileController();
+$AdminUserController = new AdminController\AdminUsersController();
 
 $router->setBasePath('/blog');
 $router->map('GET','/', [$FrontendController, "executeAccueil"]);
