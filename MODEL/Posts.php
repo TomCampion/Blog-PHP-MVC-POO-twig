@@ -1,7 +1,7 @@
 <?php
 namespace Tom\Blog\Model;
 
-Class Posts {
+Class Posts extends Entity {
 
     private $id;
     private $title;
@@ -15,18 +15,6 @@ Class Posts {
     const PUBLISHED = 'published';
     const TRASH = 'trash';
     const DRAFT = 'draft';
-
-    public function hydrate(array $data)
-    {
-        foreach ($data as $key => $value)
-        {
-            $method = 'set'.ucfirst($key);
-            if (method_exists($this, $method))
-            {
-                $this->$method($value);
-            }
-        }
-    }
 
     /**
      * @return mixed
