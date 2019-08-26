@@ -31,6 +31,15 @@ Class UserManager extends Manager {
         }
     }
 
+    public function updatePassword(String $password, int $id){
+        try {
+            $query = $this->db->prepare('UPDATE users SET password= ? WHERE id= ?');
+            $query->execute( array(password_hash($password, PASSWORD_ARGON2I), $id) );
+        } catch (Exception $e) {
+            echo 'Impossible de modifier le mot de passe : '.$e->getMessage().'<br>';
+        }
+    }
+
     public function get( int $id ){
         try {
             if($id > 0){

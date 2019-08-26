@@ -2360,7 +2360,7 @@ h2.post-title:hover {
 }
 
 @media screen and (min-width: 992px)  {
-  #editprofile{
+  #editprofile, #changePassword{
     width: 75%;
   }
 }

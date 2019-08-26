@@ -49,6 +49,36 @@ class ProfileController extends Controller{
         if(!empty($_POST['nom']) and !empty($_POST['prenom']) and !empty($_POST['email'])) {
             $msg_edit = $this->editProfile($_POST['prenom'], $_POST['nom'], $_POST['email']);
             echo $this->twig->render('profil.twig', ['msg' => $msg_edit]);
+        }else{
+            $this->executeProfil();
+        }
+    }
+
+    private function changePassword( String $password){
+        $message = '';
+        if(strlen($password) < 3)
+            $message = '<p class="msg_error">Votre mot de passe est trop court, il doit faire au moins 3 caractères </p>';
+        if(strlen($password) > 254)
+            $message = $message.'<p class="msg_error">La taille maximum du mot de passe est de 254 caractères ! </p>';
+        if($_POST['password'] !== $_POST['password2'])
+            $message = $message.'<p class="msg_error">Vos mots de passe sont différents ! </p>';
+
+        if (empty($message)) {
+            $this->userManager->updatePassword($password, $_SESSION['id']);
+            $message = '<div class="alert alert-success" role="alert"><strong>Votre mot de passe a bien été modifié !</strong></div>';
+        }else{
+            $message = '<div class="alert alert-danger" role="alert"><strong>'.$message.'</strong></div>';
+        }
+
+        return $message;
+    }
+
+    public function executeChangePassword(){
+        if(!empty($_POST['password']) and !empty($_POST['password2'])) {
+            $msg_password = $this->changePassword($_POST['password']);
+            echo $this->twig->render('profil.twig', ['msg' => $msg_password]);
+        }else{
+            $this->executeProfil();
         }
     }
 
