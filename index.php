@@ -38,6 +38,7 @@ $router->map('POST','/changePassword', [$ProfileController, "executeChangePasswo
 $router->map('GET|POST','/users', [$AdminUsersController, "executeUsers"]);
 $router->map('POST','/usersAction', [$AdminUsersController, "executeUserAction"]);
 $router->map('GET|POST','/posts', [$AdminPostsController, "executePosts"]);
+$router->map('GET|POST','/add_post', [$AdminPostsController, "executeAddPost"]);
 
 $match = $router->match();
 
