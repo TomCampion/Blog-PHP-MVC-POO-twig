@@ -71,8 +71,8 @@ Class PostManager extends Manager {
 
     public function update (Posts $post){
         try {
-            $query = $this->db->prepare('UPDATE posts SET title= ?, author= ?, standfirst= ?, content= ?, creationDate= ?, updateDate= NOW(), state= ? WHERE id= ?');
-            $query->execute( array($post->getTitle(), $post->getAuthor(), $post->getStandfirst(), $post->getContent(), $post->getCreationDate(), $post->getState(), $post->getId() ));
+            $query = $this->db->prepare('UPDATE posts SET title= ?, author= ?, standfirst= ?, content= ?, updateDate= NOW(), state= ? WHERE id= ?');
+            $query->execute( array($post->getTitle(), $post->getAuthor(), $post->getStandfirst(), $post->getContent(), $post->getState(), $post->getId() ));
         } catch (Exception $e) {
             echo 'Impossible de modifier le post : '.$e->getMessage().'<br>';
         }

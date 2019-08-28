@@ -63,7 +63,7 @@
                         <td>{{post.standfirst}}</td>
                         <td>{{post.creationDate |date("d/m/Y")}}</td>
                         <td>{{post.updateDate ? post.updateDate|date("d/m/Y")}}</td>
-                        <td><a class="voir_post" href="post-{{post.id}}">Voir le post</a></td>
+                        <td><a href="post-{{post.id}}">Voir</a><br><a href="editPost-{{post.id}}">Edit</a></td>
                     </tr>
                     {% endfor %}
                     </tbody>

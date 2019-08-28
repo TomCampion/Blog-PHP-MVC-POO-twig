@@ -39,6 +39,7 @@ $router->map('GET|POST','/users', [$AdminUsersController, "executeUsers"]);
 $router->map('POST','/usersAction', [$AdminUsersController, "executeUserAction"]);
 $router->map('GET|POST','/posts', [$AdminPostsController, "executePosts"]);
 $router->map('GET|POST','/add_post', [$AdminPostsController, "executeAddPost"]);
+$router->map('GET|POST','/editPost-[i:id]', [$AdminPostsController, "executeEditPost"]);
 
 $match = $router->match();
 

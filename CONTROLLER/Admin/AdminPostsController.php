@@ -49,4 +49,32 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
             echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
         }
     }
+
+    private function editPost(int $id, String $title, String $standfirst, String $content, String $state, String $author){
+        $data = [
+            'id' => $id,
+            'title' => $title,
+            'standfirst' => $standfirst,
+            'content' => $content,
+            'state' => $state,
+            'author' => $author
+        ];
+        $post = new \Tom\Blog\Model\Posts();
+        $post->hydrate($data);
+        $this->postManager->update($post);
+    }
+
+    public function executeEditPost($params){
+        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+            if(!empty($params['id']) and !empty($_POST['title']) and !empty($_POST['standfirst']) and !empty($_POST['content']) and !empty($_POST['state'])){
+                $this->editPost($params['id'], $_POST['title'], $_POST['standfirst'], $_POST['content'], $_POST['state'], $_POST['author']);
+                header('Location: posts');
+            }else{
+                $post = $this->postManager->get($params['id']);
+                echo $this->twig->render('editPost.twig', ['post' => $post ]);
+            }
+        }else{
+            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+        }
+    }
 }
