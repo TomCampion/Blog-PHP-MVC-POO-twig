@@ -15,10 +15,10 @@ Class PostManager extends Manager {
         }
     }
 
-    public function delete( Posts $post ){
+    public function delete( int $id ){
         try {
             $query = $this->db->prepare('DELETE FROM posts WHERE id=?');
-            $query->execute( array($post->getId()) );
+            $query->execute( array($id) );
         } catch (Exception $e) {
             echo 'Impossible de supprimmer le post : '.$e->getMessage().'<br>';
         }

@@ -267,6 +267,9 @@ input[type="checkbox"]{
 table a{
     color: #8d9aff;
 }
+table #deletePost{
+    color: #f73423 !important;
+}
 
 #add_post{
     margin-left: 75%;

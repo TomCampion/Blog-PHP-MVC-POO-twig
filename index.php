@@ -40,6 +40,7 @@ $router->map('POST','/usersAction', [$AdminUsersController, "executeUserAction"]
 $router->map('GET|POST','/posts', [$AdminPostsController, "executePosts"]);
 $router->map('GET|POST','/add_post', [$AdminPostsController, "executeAddPost"]);
 $router->map('GET|POST','/editPost-[i:id]', [$AdminPostsController, "executeEditPost"]);
+$router->map('GET|POST','/deletePost-[i:id]', [$AdminPostsController, "executeDeletePost"]);
 
 $match = $router->match();
 
