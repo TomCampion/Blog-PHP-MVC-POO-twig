@@ -50,7 +50,7 @@ Class PostManager extends Manager {
         }
     }
 
-    public function sortUsers( String $column, String $order){
+    public function sortPosts( String $column, String $order){
         try {
             if($column == 'id' or $column == 'title' or $column == 'author' or $column == 'state' or $column == 'standfirst' or $column == 'creationDate' or $column == 'updateDate') {
                 if($order == 'ASC' or $order == 'DESC') {
