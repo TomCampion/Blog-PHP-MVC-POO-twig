@@ -14,7 +14,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     public function executePosts(){
         if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
             if (!empty($_POST['sort']) and !empty($_POST['order'])) {
-                $posts = $this->postManager->sortUsers($_POST['sort'], $_POST['order']);
+                $posts = $this->postManager->sortPosts($_POST['sort'], $_POST['order']);
             } else {
                 $posts = $this->postManager->getList();
             }
@@ -49,4 +49,5 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
             echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
         }
     }
+  
 }
