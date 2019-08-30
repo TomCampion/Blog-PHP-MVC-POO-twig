@@ -32,6 +32,7 @@ $router->map('POST','/register', [$SecurityController, "executeRegister"]);
 $router->map('POST','/authentification', [$SecurityController, "executeAuthentification"]);
 $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
 $router->map('POST','/editprofile', [$ProfileController, "executeEditProfile"]);
+$router->map('POST','/changePassword', [$ProfileController, "executeChangePassword"]);
 //Admin part
 $router->map('GET','/users', [$AdminUserController, "executeUsers"]);
 $router->map('POST','/users', [$AdminUserController, "executeUsers"]);
