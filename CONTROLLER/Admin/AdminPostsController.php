@@ -78,4 +78,13 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
         }
     }
 
+    public function executeDeletePost ($params){
+        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+            $post = $this->postManager->delete($params['id']);
+            header('Location: posts');
+        }else{
+            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+        }
+    }
+
 }
