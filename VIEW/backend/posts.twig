@@ -15,6 +15,7 @@
                 </div>
             </div>
 
+            <a href="add_post"><button id="add_post" type="button" class="btn btn-primary btn-lg">Ajouter un Post</button></a>
 
             <form method="post" action="posts">
                 <p>Trier les résultats par <select name="sort">
@@ -60,8 +61,8 @@
                         <td>{{ post.title}}</td>
                         <td>{{post.author}}</td>
                         <td>{{post.standfirst}}</td>
-                        <td>{{post.creationDate |date("d/m/Y H:i")}}</td>
-                        <td>{{post.updateDate ? post.updateDate|date("d/m/Y H:i")}}</td>
+                        <td>{{post.creationDate |date("d/m/Y")}}</td>
+                        <td>{{post.updateDate ? post.updateDate|date("d/m/Y")}}</td>
                         <td><a class="voir_post" href="post-{{post.id}}">Voir le post</a></td>
                     </tr>
                     {% endfor %}

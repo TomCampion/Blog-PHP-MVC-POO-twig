@@ -1,0 +1,40 @@
+{% extends 'layout.twig' %}
+
+ {% block title %}Ajouter un Post{% endblock %}
+
+ {% block content %}
+
+     {% if session.id is not empty and session.admin == 1 %}
+
+         <section class="pt-page pt-page-6">
+         <div class="border-block-top-110"></div>
+         <div class="section-inner">
+             <div class="section-title-block">
+                 <div class="section-title-wrapper">
+                     <h2 class="section-title">Ajouter un Post</h2>
+                 </div>
+             </div>
+
+             <div class="row">
+                 <div class="col-lg-12 col-md-12 mx-auto">
+                     <form id="formAddPost" method="post">
+                         <label for="addTitle">Title</label>
+                         <input maxlength="255" id="addTitle" type="text" name="title" required>
+                         <label for="addStandfirst">Standfirst</label>
+                         <input maxlength="255" id="addStandfirst" type="text" name="standfirst" required>
+                         <label for="postContent">Content</label>
+                         <textarea id="postContent" name="content" required></textarea>
+                         <select name="state" required>
+                             <option value="published">published</option>
+                             <option value="draft">draft</option>
+                         </select>
+                         <input type="submit" value="Ajouter le Post">
+                     </form>
+                 </div>
+             </div>
+         </div>
+     {% else %}
+         <h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>
+     {% endif %}
+
+ {% endblock %}

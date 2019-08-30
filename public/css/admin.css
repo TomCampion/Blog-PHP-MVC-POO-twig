@@ -267,3 +267,19 @@ input[type="checkbox"]{
 .voir_post{
     color: #8d9aff;
 }
+
+#add_post{
+    margin-left: 75%;
+    margin-top: -10%;
+}
+
+#formAddPost input,#formAddPost label, #formAddPost select{
+    display: block;
+}
+#formAddPost input, #formAddPost select, #formAddPost textarea{
+    margin-bottom: 25px;
+}
+#postContent{
+    width:80%;
+    height:500px;
+}
