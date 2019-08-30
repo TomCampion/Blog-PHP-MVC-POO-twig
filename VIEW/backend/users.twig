@@ -33,12 +33,23 @@
                     <input type="submit" value="trier">
                 </p>
             </form>
+
+            <form method="post" action="usersAction">
+                 <select name="action">
+                        <option value="setAdmin">Mettre admin</option>
+                        <option value="revokeAdmin">Enlever admin</option>
+                        <option value="restrict">Restreindre</option>
+                        <option value="revokeRestrict">Enlever restriction</option>
+                 </select>
+                <input type="submit" value="Appliquer">
+
         <!-- blog Content -->
         <div class="row">
             <div class="col-lg-12 col-md-12 mx-auto">
                 <table class="table table-striped">
                     <thead class="thead-dark">
                     <tr>
+                        <th scope="col"></th>
                         <th scope="col">ID</th>
                         <th scope="col">Prénom</th>
                         <th scope="col">Nom</th>
@@ -51,7 +62,8 @@
                     {% for user in users %}
                     <tbody>
                     <tr>
-                        <th scope="row">{{user.id}}</th>
+                        <td><input type="checkbox" name="users[]" value="{{user.id}}"></td>
+                        <td>{{user.id}}</td>
                         <td>{{ user.firstname}}</td>
                         <td>{{user.lastname}}</td>
                         <td>{{user.email}}</td>
@@ -62,10 +74,9 @@
                     {% endfor %}
                     </tbody>
                 </table>
-
             </div>
         </div>
-
+             </form>
     </div>
     <!-- /blog Content -->
     {% else %}

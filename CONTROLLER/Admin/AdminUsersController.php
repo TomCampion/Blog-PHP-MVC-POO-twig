@@ -12,12 +12,33 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeUsers(){
-        if(!empty($_POST['sort']) and !empty($_POST['order'])){
-            $users = $this->userManager->sortUsers($_POST['sort'], $_POST['order']);
+        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+            if (!empty($_POST['sort']) and !empty($_POST['order'])) {
+                $users = $this->userManager->sortUsers($_POST['sort'], $_POST['order']);
+            } else {
+                $users = $this->userManager->getList();
+            }
+            echo $this->twig->render('users.twig', ['users' => $users]);
         }else{
-            $users = $this->userManager->getList();
+            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
         }
-        echo  $this->twig->render('users.twig', ['users' => $users ] );
+    }
+
+    public function executeUserAction(){
+        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+            if (!empty($_POST['action']) and !empty($_POST['users'])) {
+                foreach($_POST['users'] as $valeur)
+                {
+                    if($_POST['action'] == 'setAdmin')$this->userManager->setAdmin($valeur);
+                    if($_POST['action'] == 'revokeAdmin')$this->userManager->revokeAdmin($valeur);
+                    if($_POST['action'] == 'restrict')$this->userManager->restrictUser($valeur);
+                    if($_POST['action'] == 'revokeRestrict')$this->userManager->revokeRestrict($valeur);
+                }
+                $this->executeUsers();
+            }
+        }else{
+            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+        }
     }
 
 }
