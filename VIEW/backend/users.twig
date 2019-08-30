@@ -15,6 +15,24 @@
                 </div>
             </div>
 
+            <form method="post" action="users">
+                <p>Trier les résultats par <select name="sort">
+                        <option value="id">ID</option>
+                        <option value="firstname">Prénom</option>
+                        <option value="lastname">Nom</option>
+                        <option value="email">Email</option>
+                        <option value="admin">Admin</option>
+                        <option value="restricted">Restricted</option>
+                        <option value="register_date">Register date</option>
+                    </select>
+                    ordre
+                    <select name="order">
+                        <option value="ASC">croissant</option>
+                        <option value="DESC">décroissant</option>
+                    </select>
+                    <input type="submit" value="trier">
+                </p>
+            </form>
         <!-- blog Content -->
         <div class="row">
             <div class="col-lg-12 col-md-12 mx-auto">
