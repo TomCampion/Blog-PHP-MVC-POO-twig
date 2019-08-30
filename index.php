@@ -12,6 +12,7 @@ $FrontendController = new Tom\Blog\Controller\FrontendController();
 $BlogController = new Tom\Blog\Controller\BlogController();
 $SecurityController = new Tom\Blog\Controller\SecurityController();
 $ProfileController = new Tom\Blog\Controller\ProfileController();
+$AdminUserController = new Tom\Blog\AdminController\AdminUsersController();
 
 $router->setBasePath('/blog');
 $router->map('GET','/', [$FrontendController, "executeAccueil"]);
@@ -31,6 +32,8 @@ $router->map('POST','/register', [$SecurityController, "executeRegister"]);
 $router->map('POST','/authentification', [$SecurityController, "executeAuthentification"]);
 $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
 $router->map('POST','/editprofile', [$ProfileController, "executeEditProfile"]);
+//Admin part
+$router->map('GET','/users', [$AdminUserController, "executeUsers"]);
 
 $match = $router->match();
 

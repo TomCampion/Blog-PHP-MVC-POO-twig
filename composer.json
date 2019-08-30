@@ -7,7 +7,8 @@
         "psr-4": {
             "Tom\\Blog\\Controller\\": "CONTROLLER/",
             "Tom\\Blog\\Model\\": "MODEL/",
-            "Tom\\Blog\\Services\\": "Services/"
+            "Tom\\Blog\\Services\\": "Services/",
+            "Tom\\Blog\\AdminController\\": "CONTROLLER/Admin"
         }
     }
 }
