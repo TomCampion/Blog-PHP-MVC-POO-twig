@@ -1,7 +1,7 @@
 <?php
 namespace Tom\Blog\Model;
 
-Class Users {
+Class Users extends Entity {
 
     private $id;
     private $firstname;
@@ -10,18 +10,6 @@ Class Users {
     private $password;
     private $admin;
     private $restricted;
-
-    public function hydrate(array $data)
-    {
-        foreach ($data as $key => $value)
-        {
-            $method = 'set'.ucfirst($key);
-            if (method_exists($this, $method))
-            {
-                $this->$method($value);
-            }
-        }
-    }
 
     /**
      * @return mixed

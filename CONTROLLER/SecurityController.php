@@ -82,7 +82,7 @@ class SecurityController extends Controller{
         $message = $this->checkEmail($email);
         $message .= $this->checkPassword($password);
         if (empty($message)){
-            $user = $this->userManager->userExist($email, $password);
+            $user = $this->userManager->authenticate($email, $password);
             if( !empty($user) ){
                 foreach ($user as $key => $value) {
                     if($key == 'id' or $key == 'firstname' or $key == 'lastname' or $key == 'email' or $key == 'admin' or $key == 'restricted' or $key =='register_date'){
@@ -103,7 +103,7 @@ class SecurityController extends Controller{
             $msg_login = $this->login($_POST['email'], $_POST['password']);
             echo $this->twig->render('connexion.twig', ['message_connexion' => $msg_login]);
         }else{
-            $this->executeConnexion();
+            $this->executeLoginPage();
         }
     }
 
@@ -112,11 +112,11 @@ class SecurityController extends Controller{
             $msg_register = $this->register($_POST['prenom'], $_POST['nom'], $_POST['register_email'], $_POST['register_password']);
             echo $this->twig->render('connexion.twig', ['message_register' => $msg_register]);
         }else{
-            $this->executeConnexion();
+            $this->executeLoginPage();
         }
     }
 
-    public function executeConnexion(){
+    public function executeLoginPage(){
         echo  $this->twig->render('connexion.twig');
     }
 

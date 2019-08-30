@@ -1,18 +1,18 @@
 <?php
 require 'vendor/autoload.php';
 
-use Tom\Blog\Controller;
+use Tom\Blog\Controller as Controller;
+use Tom\Blog\AdminController as AdminController;
 
 session_start();
 
 // Routing
 $router = new AltoRouter();
-
-$FrontendController = new Tom\Blog\Controller\FrontendController();
-$BlogController = new Tom\Blog\Controller\BlogController();
-$SecurityController = new Tom\Blog\Controller\SecurityController();
-$ProfileController = new Tom\Blog\Controller\ProfileController();
-$AdminUserController = new Tom\Blog\AdminController\AdminUsersController();
+$FrontendController = new Controller\FrontendController();
+$BlogController = new Controller\BlogController();
+$SecurityController = new Controller\SecurityController();
+$ProfileController = new Controller\ProfileController();
+$AdminUserController = new AdminController\AdminUsersController();
 
 $router->setBasePath('/blog');
 $router->map('GET','/', [$FrontendController, "executeAccueil"]);
@@ -22,7 +22,7 @@ $router->map('GET','/cv', [$FrontendController, "executeCv"]);
 $router->map('GET','/portfolio', [$FrontendController, "executePortfolio"]);
 $router->map('GET','/projet1', [$FrontendController, "executeProjet1"]);
 $router->map('GET','/blog', [$BlogController, "executeBlog"]);
-$router->map('GET','/connexion', [$SecurityController, "executeConnexion"]);
+$router->map('GET','/connexion', [$SecurityController, "executeLoginPage"]);
 $router->map('GET','/contact', [$FrontendController, "executeContact"]);
 $router->map('GET','/profil', [$ProfileController, "executeProfil"]);
 
