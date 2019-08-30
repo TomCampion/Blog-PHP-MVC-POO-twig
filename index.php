@@ -11,6 +11,7 @@ $router = new AltoRouter();
 $FrontendController = new Tom\Blog\Controller\FrontendController();
 $BlogController = new Tom\Blog\Controller\BlogController();
 $SecurityController = new Tom\Blog\Controller\SecurityController();
+$ProfileController = new Tom\Blog\Controller\ProfileController();
 
 $router->setBasePath('/blog');
 $router->map('GET','/', [$FrontendController, "executeAccueil"]);
@@ -22,14 +23,14 @@ $router->map('GET','/projet1', [$FrontendController, "executeProjet1"]);
 $router->map('GET','/blog', [$BlogController, "executeBlog"]);
 $router->map('GET','/connexion', [$SecurityController, "executeConnexion"]);
 $router->map('GET','/contact', [$FrontendController, "executeContact"]);
-$router->map('GET','/profil', [$SecurityController, "executeProfil"]);
+$router->map('GET','/profil', [$ProfileController, "executeProfil"]);
 
 $router->map('GET','/post-[i:id]', [$BlogController, "executePost"]);
 
 $router->map('POST','/register', [$SecurityController, "executeRegister"]);
 $router->map('POST','/authentification', [$SecurityController, "executeAuthentification"]);
 $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
-$router->map('POST','/editprofile', [$SecurityController, "executeEditProfile"]);
+$router->map('POST','/editprofile', [$ProfileController, "executeEditProfile"]);
 
 $match = $router->match();
 
