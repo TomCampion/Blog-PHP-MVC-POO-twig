@@ -13,7 +13,11 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
 
     public function executePosts(){
         if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
-            $posts = $this->postManager->getList();
+            if (!empty($_POST['sort']) and !empty($_POST['order'])) {
+                $posts = $this->postManager->sortPosts($_POST['sort'], $_POST['order']);
+            } else {
+                $posts = $this->postManager->getList();
+            }
             echo $this->twig->render('posts.twig', ['posts' => $posts]);
         }else{
             echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';

@@ -50,6 +50,25 @@ Class PostManager extends Manager {
         }
     }
 
+    public function sortPosts( String $column, String $order){
+        try {
+            if($column == 'id' or $column == 'title' or $column == 'author' or $column == 'state' or $column == 'standfirst' or $column == 'creationDate' or $column == 'updateDate') {
+                if($order == 'ASC' or $order == 'DESC') {
+                    $query = $this->db->prepare("SELECT * FROM posts ORDER BY $column $order");
+                    $query->execute();
+                    $users = $query->fetchAll();
+                    return $users;
+                }else{
+                    throw new \Exception("Impossible d'effectuer un tri par ordre : ".$order);
+                }
+            }else{
+                throw new \Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
+            }
+        } catch (Exception $e) {
+            echo 'Impossible de trier les utilisateurs : '.$e->getMessage().'<br>';
+        }
+    }
+
     public function update (Posts $post){
         try {
             $query = $this->db->prepare('UPDATE posts SET title= ?, author= ?, standfirst= ?, content= ?, creationDate= ?, updateDate= NOW(), state= ? WHERE id= ?');

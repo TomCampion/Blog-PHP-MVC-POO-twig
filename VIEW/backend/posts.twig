@@ -15,16 +15,16 @@
                 </div>
             </div>
 
-            <!--
+
             <form method="post" action="posts">
                 <p>Trier les résultats par <select name="sort">
                         <option value="id">ID</option>
-                        <option value="firstname">Prénom</option>
-                        <option value="lastname">Nom</option>
-                        <option value="email">Email</option>
-                        <option value="admin">Admin</option>
-                        <option value="restricted">Restricted</option>
-                        <option value="register_date">Register date</option>
+                        <option value="state">statut</option>
+                        <option value="title">titre</option>
+                        <option value="author">auteur</option>
+                        <option value="standfirst">chapô</option>
+                        <option value="creationDate">date de création</option>
+                        <option value="updateDate">date de modification</option>
                     </select>
                     ordre
                     <select name="order">
@@ -34,7 +34,7 @@
                     <input type="submit" value="trier">
                 </p>
             </form>
-            -->
+
         <!-- blog Content -->
         <div class="row">
             <div class="col-lg-12 col-md-12 mx-auto">
@@ -61,7 +61,7 @@
                         <td>{{post.author}}</td>
                         <td>{{post.standfirst}}</td>
                         <td>{{post.creationDate |date("d/m/Y H:i")}}</td>
-                        <td>{{post.updateDate |date("d/m/Y H:i")}}</td>
+                        <td>{{post.updateDate ? post.updateDate|date("d/m/Y H:i")}}</td>
                         <td><a class="voir_post" href="post-{{post.id}}">Voir le post</a></td>
                     </tr>
                     {% endfor %}
