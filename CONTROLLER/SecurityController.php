@@ -76,6 +76,37 @@ class SecurityController extends Controller{
         }
         return $message;
     }
+
+    private function login(String $email, String $password)
+    {
+        $message = $this->checkEmail($email);
+        $message .= $this->checkPassword($password);
+        if (empty($message)){
+            $user = $this->userManager->userExist($email, $password);
+            if( !empty($user) ){
+                foreach ($user as $key => $value) {
+                    if($key == 'id' or $key == 'firstname' or $key == 'lastname' or $key == 'email' or $key == 'admin' or $key == 'restricted' or $key =='register_date'){
+                        $_SESSION[$key]=$value;
+                    }
+                }
+                header('Location: profil');
+            }else{
+                $message = '<p class="msg_error">Vos identifiants ne sont pas reconnus, vérifiez l’adresse mail et le mot de passe saisis</p>';
+            }
+        }
+        return $message;
+    }
+
+    public function executeAuthentification()
+    {
+        if (!empty($_POST['email']) and !empty($_POST['password'])) {
+            $msg_login = $this->login($_POST['email'], $_POST['password']);
+            echo $this->twig->render('connexion.twig', ['message_connexion' => $msg_login]);
+        }else{
+            $this->executeConnexion();
+        }
+    }
+
     public function executeRegister(){
         if(!empty($_POST['nom']) and !empty($_POST['prenom']) and !empty($_POST['register_email']) and !empty($_POST['register_password']) ) {
             $msg_register = $this->register($_POST['prenom'], $_POST['nom'], $_POST['register_email'], $_POST['register_password']);
