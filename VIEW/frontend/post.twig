@@ -4,8 +4,6 @@
 
 {% block content %}
 
-    
-
 <div id="ajax-page" class="ajax-page-content animated slideInDown">
     <div class="ajax-page-wrapper" style="position: relative;">
         <div class="ajax-page-nav">
@@ -35,7 +33,64 @@
             
         </div>
     </div>
+
+    <!-- comment -->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1" id="logout">
+                <div class="page-header">
+                    <h3 class="reviews">Laissez un commentaire </h3>
+                </div>
+                <div class="comment-tabs">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Commentaires</h4></a></li>
+                        <li><a href="#add-comment" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Ajouter un commentaire</h4></a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="comments-logout">
+                            <ul class="media-list">
+                                {% for comment in comments %}
+                                <li class="media">
+                                    <div class="media-body">
+                                        <div class="well well-lg">
+                                            <h4 class="media-heading text-uppercase reviews">{{ comment.author }}</h4>
+                                            <ul class="media-date text-uppercase reviews list-inline">
+                                                {{comment.creationDate |date("d/m/Y H:i")}}
+                                            </ul>
+                                            <p class="media-comment">
+                                               {{comment.content}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="tab-pane" id="add-comment">
+                            {% if session.id is not empty %}
+                            <form action="" method="post" class="form-horizontal" id="commentForm" role="form">
+                                <div class="form-group">
+                                    <label for="addComment" class="col-sm-2 control-label">Commentaire</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" minlength="3" maxlength="1024" name="addComment" id="addComment" rows="5"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button id="btnAddComment" class="btn btn-circle text-uppercase" type="submit" id="submitComment"><i class="fas fa-paper-plane"></i> Poster le commentaire</button>
+                                    </div>
+                                </div>
+                            </form>
+                            {% else %}
+                                <h4>Vous devez être connecté pour poster un commentaire! <a href="connexion">Connectez-vous !</a> </h4>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
+    <!--/comment-->
 
 <script type="text/javascript">
                     function customAjaxScroll() {

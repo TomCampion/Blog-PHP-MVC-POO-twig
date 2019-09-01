@@ -29,11 +29,13 @@ $router->map('GET','/profil', [$ProfileController, "executeProfil"]);
 
 $router->map('GET','/post-[i:id]', [$BlogController, "executePost"]);
 
+$router->map('POST','/post-[i:id]', [$BlogController, "executeAddComment"]);
 $router->map('POST','/register', [$SecurityController, "executeRegister"]);
 $router->map('POST','/authentification', [$SecurityController, "executeAuthentification"]);
 $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
 $router->map('POST','/editprofile', [$ProfileController, "executeEditProfile"]);
 $router->map('POST','/changePassword', [$ProfileController, "executeChangePassword"]);
+
 //Admin part
 $router->map('GET|POST','/users', [$AdminUsersController, "executeUsers"]);
 $router->map('POST','/usersAction', [$AdminUsersController, "executeUserAction"]);

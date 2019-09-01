@@ -6,6 +6,7 @@ Class Comments extends Entity
 
     private $id;
     private $content;
+    private $author;
     private $user_id;
     private $post_id;
     private $creationDate;
@@ -61,6 +62,29 @@ Class Comments extends Entity
         }
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        if (is_string($author)){
+            if(strlen($author) <= 90){
+                $this->author = $author;
+            }else{
+                throw new \Exception("The maximum length of the author attribute is 90 characters");
+            }
+        }else{
+            throw new \Exception("Author attribute must be a String");
+        }
+    }
 
     /**
      * @return mixed
