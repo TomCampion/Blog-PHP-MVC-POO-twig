@@ -41,11 +41,11 @@ Class CommentManager extends Manager
         }
     }
 
-    public function getCommentsFromPost(int $post_id)
+    public function getValidCommentsFromPost(int $post_id)
     {
         try {
             if ($post_id > 0) {
-                $query = $this->db->prepare('SELECT * FROM comments WHERE post_id=?');
+                $query = $this->db->prepare('SELECT * FROM comments WHERE post_id=? and state=\'valid\'');
                 $query->execute(array($post_id));
                 $comment = $query->fetchAll();
                 return $comment;
@@ -85,6 +85,19 @@ Class CommentManager extends Manager
         try {
             $query = $this->db->prepare('UPDATE comments SET content= ?, author =?, user_id= ?, post_id= ?, state= ?, updateDate= NOW() WHERE id= ?');
             $query->execute( array($comment->getContent(), $comment->getAuthor(), $comment->getUserId(), $comment->getPostId(), $comment->getState(), $comment->getId() ));
+        } catch (Exception $e) {
+            echo 'Impossible de modifier le commentaire : '.$e->getMessage().'<br>';
+        }
+    }
+
+    public function changeState (String $state, int $id){
+        try {
+            if($state == \Tom\Blog\Model\Comments::VALID or $state == \Tom\Blog\Model\Comments::INVALID){
+                $query = $this->db->prepare('UPDATE comments SET state= ? WHERE id= ?');
+                $query->execute( array($state, $id));
+            }else{
+                throw new \Exception("Impossible de passer le statut du commentaire à : ".$state);
+            }
         } catch (Exception $e) {
             echo 'Impossible de modifier le commentaire : '.$e->getMessage().'<br>';
         }

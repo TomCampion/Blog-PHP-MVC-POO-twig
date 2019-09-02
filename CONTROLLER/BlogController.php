@@ -16,7 +16,7 @@ class BlogController extends Controller{
 
     public function executePost($params){
         $post = $this->PostManager->get($params['id']);
-        $comments = $this->CommentManager->getCommentsFromPost($params['id']);
+        $comments = $this->CommentManager->getValidCommentsFromPost($params['id']);
         echo  $this->twig->render('post.twig', ['post' => $post, 'comments' => $comments ] );
     }
 

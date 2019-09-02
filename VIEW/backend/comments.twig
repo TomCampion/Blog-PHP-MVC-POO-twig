@@ -35,6 +35,13 @@
                  </p>
              </form>
 
+             <form method="post" action="changeCommentState">
+                 <select name="state">
+                     <option value="valid">Valid comment(s)</option>
+                     <option value="invalid">Invalid comment(s)</option>
+                 </select>
+                 <input type="submit" value="Appliquer">
+
              <div class="row">
                  <div class="col-lg-12 col-md-12 mx-auto">
                      <table class="table table-striped">
@@ -53,7 +60,7 @@
                          {% for comment in comments %}
                          <tbody>
                          <tr>
-                             <td>{{comment.id}}</td>
+                             <td><input type="checkbox" name="comments[]" value="{{comment.id}}"></td>
                              <td>{{comment.state}}</td>
                              <td>{{ comment.content}}</td>
                              <td>{{comment.author}}</td>
@@ -67,6 +74,7 @@
                      </table>
                  </div>
              </div>
+             </form>
          </div>
 
      {% else %}
