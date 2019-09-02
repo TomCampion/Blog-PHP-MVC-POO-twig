@@ -43,4 +43,13 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
         }
     }
 
+    public function executeDeleteComment($params){
+        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+            $post = $this->CommentManager->delete($params['id']);
+            header('Location: comments');
+        }else{
+            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+        }
+    }
+
 }

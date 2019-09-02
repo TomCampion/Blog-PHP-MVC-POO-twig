@@ -267,7 +267,7 @@ input[type="checkbox"]{
 table a{
     color: #8d9aff;
 }
-table #deletePost{
+table #deletePost, table #deleteComment{
     color: #f73423 !important;
 }
 
