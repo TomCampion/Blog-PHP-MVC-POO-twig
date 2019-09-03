@@ -39,33 +39,26 @@ Class PostManager extends Manager {
         }
     }
 
-    public function getList(){
+    public function getList(String $column = NULL, String $order = NULL){
         try {
-            $query = $this->db->prepare('SELECT * FROM posts');
-            $query->execute();
-            $posts = $query->fetchAll();
-            return $posts;
-        } catch (Exception $e) {
-            echo 'Impossible de selectionner les posts : '.$e->getMessage().'<br>';
-        }
-    }
-
-    public function sortPosts( String $column, String $order){
-        try {
-            if($column == 'id' or $column == 'title' or $column == 'author' or $column == 'state' or $column == 'standfirst' or $column == 'creationDate' or $column == 'updateDate') {
-                if($order == 'ASC' or $order == 'DESC') {
-                    $query = $this->db->prepare("SELECT * FROM posts ORDER BY $column $order");
-                    $query->execute();
-                    $users = $query->fetchAll();
-                    return $users;
-                }else{
-                    throw new \Exception("Impossible d'effectuer un tri par ordre : ".$order);
+                if($column == NULL and $order == NULL){
+                    $column = 'id';
+                    $order = 'ASC';
                 }
-            }else{
-                throw new \Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
-            }
-        } catch (Exception $e) {
-            echo 'Impossible de trier les utilisateurs : '.$e->getMessage().'<br>';
+                if($column == 'id' or $column == 'title' or $column == 'author' or $column == 'state' or $column == 'standfirst' or $column == 'creationDate' or $column == 'updateDate') {
+                    if($order == 'ASC' or $order == 'DESC') {
+                        $query = $this->db->prepare("SELECT * FROM posts ORDER BY $column $order");
+                        $query->execute();
+                        $posts = $query->fetchAll();
+                        return $posts;
+                    }else{
+                        throw new \Exception("Impossible d'effectuer un tri par ordre : ".$order);
+                    }
+                }else{
+                    throw new \Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
+                }
+            } catch (Exception $e) {
+            echo 'Impossible de selectionner les posts : '.$e->getMessage().'<br>';
         }
     }
 
@@ -80,7 +73,7 @@ Class PostManager extends Manager {
 
     public function getPublishedPosts(){
         try {
-            $query = $this->db->prepare("SELECT * FROM posts WHERE state= ?");
+            $query = $this->db->prepare("SELECT * FROM posts WHERE state= ? ORDER BY creationDate DESC");
             $query->execute(array(Posts::PUBLISHED));
             $posts = $query->fetchAll();
             return $posts;
