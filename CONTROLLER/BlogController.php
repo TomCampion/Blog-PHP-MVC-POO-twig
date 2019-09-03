@@ -1,7 +1,6 @@
 <?php
 namespace Tom\Blog\Controller;
 
-
 class BlogController extends Controller{
 
     private $PostManager;
@@ -30,8 +29,34 @@ class BlogController extends Controller{
             $msg_addComment = $this->AddComment($_POST['addComment'], $params['id']);
             echo $this->twig->render('post.twig', ['message_addComment' => $msg_addComment]);
         }else{
-            $this->executeLoginPage();
+            $this->executeBlog();
         }
+    }
+
+    public function executeEditComment($params){
+        if(!empty($_POST['editComment']) and !empty($params['id'])  ) {
+            $this->editComment($_POST['editComment'], $params['id']);
+        }else{
+            $this->executeBlog();
+        }
+    }
+
+    private function editComment( String $content, int $comment_id){
+        $message = '';
+        if(strlen($content) < 3)
+            $message = '<p class="msg_error">Votre commentaire est trop court, il doit faire au moins 3 caractères </p>';
+        if(strlen($content) > 1024)
+            $message = $message.'<p class="msg_error">La taille maximum du mcommentaire est de 1024 caractères ! </p>';
+
+        if (empty($message)) {
+            $comment = $this->CommentManager->get($comment_id);
+            $comment->setContent($_POST['editComment']);
+            $this->CommentManager->update($comment);
+            header ("Location: $_SERVER[HTTP_REFERER]" );
+        }else{
+            $message = '<div class="alert alert-danger" role="alert"><strong>'.$message.'</strong></div>';
+        }
+        return $message;
     }
 
     private function addComment(String $content, int $post_id){

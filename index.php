@@ -31,6 +31,7 @@ $router->map('GET','/profil', [$ProfileController, "executeProfil"]);
 $router->map('GET','/post-[i:id]', [$BlogController, "executePost"]);
 
 $router->map('POST','/post-[i:id]', [$BlogController, "executeAddComment"]);
+$router->map('GET|POST','/editComment-[i:id]', [$BlogController, "executeEditComment"]);
 $router->map('POST','/register', [$SecurityController, "executeRegister"]);
 $router->map('POST','/authentification', [$SecurityController, "executeAuthentification"]);
 $router->map('POST','/logout', [$SecurityController, "executeLogout"]);
@@ -47,6 +48,7 @@ $router->map('GET|POST','/deletePost-[i:id]', [$AdminPostsController, "executeDe
 $router->map('GET|POST','/comments', [$AdminCommentsController, "executeComments"]);
 $router->map('POST','/changeCommentState', [$AdminCommentsController, "executeChangeCommentState"]);
 $router->map('GET|POST','/deleteComment-[i:id]', [$AdminCommentsController, "executeDeleteComment"]);
+
 
 $match = $router->match();
 

@@ -2372,6 +2372,13 @@ h2.post-title:hover {
   color:#27db4e
 }
 
+.media-body .editComment{
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  cursor: pointer;
+}
+
 /* comment */
 #login {}
 .login,
@@ -2442,4 +2449,15 @@ h2.post-title:hover {
 #btnAddComment{
   background-color: #fd9129;
   color : white;
+}
+
+.textareaEditComment{
+  width: 100%;
+  height: 100px;
+}
+.dateEditComments{
+  font-style: italic;
+  position: absolute;
+  bottom: 15px;
+  font-size: 12px;
 }

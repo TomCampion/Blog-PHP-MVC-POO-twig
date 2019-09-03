@@ -31,7 +31,7 @@ Class CommentManager extends Manager
             if ($id > 0) {
                 $query = $this->db->prepare('SELECT * FROM comments WHERE id=?');
                 $query->execute(array($id));
-                $comment = $query->fetch();
+                $comment = $query->fetchObject('\Tom\Blog\Model\Comments');
                 return $comment;
             } else {
                 return false;
