@@ -46,6 +46,7 @@ $router->map('GET|POST','/editPost-[i:id]', [$AdminPostsController, "executeEdit
 $router->map('GET|POST','/deletePost-[i:id]', [$AdminPostsController, "executeDeletePost"]);
 $router->map('GET|POST','/comments', [$AdminCommentsController, "executeComments"]);
 $router->map('POST','/changeCommentState', [$AdminCommentsController, "executeChangeCommentState"]);
+$router->map('GET|POST','/deleteComment-[i:id]', [$AdminCommentsController, "executeDeleteComment"]);
 
 $match = $router->match();
 

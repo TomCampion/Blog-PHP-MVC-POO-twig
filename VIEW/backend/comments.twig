@@ -55,6 +55,7 @@
                              <th scope="col">post_id</th>
                              <th scope="col">Date de création</th>
                              <th scope="col">Date de modification</th>
+                             <th scope="col"></th>
                          </tr>
                          </thead>
                          {% for comment in comments %}
@@ -68,6 +69,7 @@
                              <td><a href="post-{{comment.post_id}}"> {{comment.post_id}}</a></td>
                              <td>{{comment.creationDate |date("d/m/Y H:i")}}</td>
                              <td>{{comment.updateDate ? comment.updateDate|date("d/m/Y H:i")}}</td>
+                             <td><a id="deleteComment" href="deleteComment-{{comment.id}}">Delete</a></td>
                          </tr>
                          {% endfor %}
                          </tbody>
