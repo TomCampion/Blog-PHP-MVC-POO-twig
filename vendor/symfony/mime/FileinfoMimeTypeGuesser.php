@@ -11,10 +11,8 @@
 
 namespace Symfony\Component\Mime;
 
-use finfo;
 use Symfony\Component\Mime\Exception\InvalidArgumentException;
 use Symfony\Component\Mime\Exception\LogicException;
-use function function_exists;
 
 /**
  * Guesses the MIME type using the PECL extension FileInfo.
@@ -42,7 +40,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      */
     public function isGuesserSupported(): bool
     {
-        return function_exists('finfo_open');
+        return \function_exists('finfo_open');
     }
 
     /**
@@ -58,7 +56,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
             throw new LogicException(sprintf('The "%s" guesser is not supported.', __CLASS__));
         }
 
-        if (false === $finfo = new finfo(FILEINFO_MIME_TYPE, $this->magicFile)) {
+        if (false === $finfo = new \finfo(FILEINFO_MIME_TYPE, $this->magicFile)) {
             return null;
         }
 

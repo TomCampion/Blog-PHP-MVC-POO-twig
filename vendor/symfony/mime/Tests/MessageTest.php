@@ -11,9 +11,6 @@
 
 namespace Symfony\Component\Mime\Tests;
 
-use DateTime;
-use DateTimeImmutable;
-use LogicException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Header\Headers;
@@ -31,7 +28,7 @@ class MessageTest extends TestCase
         $this->assertNull($m->getBody());
         $this->assertEquals(new Headers(), $m->getHeaders());
 
-        $m = new Message($h = (new Headers())->addDateHeader('Date', new DateTime()), $b = new TextPart('content'));
+        $m = new Message($h = (new Headers())->addDateHeader('Date', new \DateTime()), $b = new TextPart('content'));
         $this->assertSame($b, $m->getBody());
         $this->assertEquals($h, $m->getHeaders());
 
@@ -44,7 +41,7 @@ class MessageTest extends TestCase
 
     public function testGetPreparedHeadersThrowsWhenNoFrom()
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
         (new Message())->getPreparedHeaders();
     }
 
@@ -71,7 +68,7 @@ class MessageTest extends TestCase
         $message = new Message();
         $message->getHeaders()->addMailboxListHeader('From', ['fabien@symfony.com']);
         $h = $message->getPreparedHeaders();
-        $this->assertCount(4, iterator_to_array($h->getAll()));
+        $this->assertCount(4, iterator_to_array($h->all()));
         $this->assertEquals(new MailboxListHeader('From', [new Address('fabien@symfony.com')]), $h->get('From'));
         $this->assertEquals(new UnstructuredHeader('MIME-Version', '1.0'), $h->get('mime-version'));
         $this->assertTrue($h->has('Message-Id'));
@@ -79,7 +76,7 @@ class MessageTest extends TestCase
 
         $message = new Message();
         $message->getHeaders()->addMailboxListHeader('From', ['fabien@symfony.com']);
-        $message->getHeaders()->addDateHeader('Date', $n = new DateTimeImmutable());
+        $message->getHeaders()->addDateHeader('Date', $n = new \DateTimeImmutable());
         $this->assertEquals($n, $message->getPreparedHeaders()->get('Date')->getDateTime());
 
         $message = new Message();
@@ -90,7 +87,7 @@ class MessageTest extends TestCase
 
     public function testGetPreparedHeadersWithNoFrom()
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
         (new Message())->getPreparedHeaders();
     }
 

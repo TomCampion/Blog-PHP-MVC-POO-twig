@@ -17,9 +17,6 @@ use Symfony\Component\Mime\Part\Multipart\AlternativePart;
 use Symfony\Component\Mime\Part\Multipart\MixedPart;
 use Symfony\Component\Mime\Part\Multipart\RelatedPart;
 use Symfony\Component\Mime\Part\TextPart;
-use function array_slice;
-use function count;
-use function get_class;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -60,13 +57,13 @@ final class MessageConverter
             } elseif ($parts[0] instanceof TextPart) {
                 $email = self::createEmailFromTextPart($message, $parts[0]);
             } else {
-                throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', get_class($message)));
+                throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($message)));
             }
 
-            return self::attachParts($email, array_slice($parts, 1));
+            return self::attachParts($email, \array_slice($parts, 1));
         }
 
-        throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', get_class($message)));
+        throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($message)));
     }
 
     private static function createEmailFromTextPart(Message $message, TextPart $part): Email
@@ -78,14 +75,14 @@ final class MessageConverter
             return (new Email(clone $message->getHeaders()))->html($part->getBody(), $part->getPreparedHeaders()->getHeaderParameter('Content-Type', 'charset') ?: 'utf-8');
         }
 
-        throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', get_class($message)));
+        throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($message)));
     }
 
     private static function createEmailFromAlternativePart(Message $message, AlternativePart $part): Email
     {
         $parts = $part->getParts();
         if (
-            2 === count($parts) &&
+            2 === \count($parts) &&
             $parts[0] instanceof TextPart && 'text' === $parts[0]->getMediaType() && 'plain' === $parts[0]->getMediaSubtype() &&
             $parts[1] instanceof TextPart && 'text' === $parts[1]->getMediaType() && 'html' === $parts[1]->getMediaSubtype()
          ) {
@@ -95,7 +92,7 @@ final class MessageConverter
             ;
         }
 
-        throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', get_class($message)));
+        throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($message)));
     }
 
     private static function createEmailFromRelatedPart(Message $message, RelatedPart $part): Email
@@ -106,17 +103,17 @@ final class MessageConverter
         } elseif ($parts[0] instanceof TextPart) {
             $email = self::createEmailFromTextPart($message, $parts[0]);
         } else {
-            throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', get_class($message)));
+            throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($message)));
         }
 
-        return self::attachParts($email, array_slice($parts, 1));
+        return self::attachParts($email, \array_slice($parts, 1));
     }
 
     private static function attachParts(Email $email, array $parts): Email
     {
         foreach ($parts as $part) {
             if (!$part instanceof DataPart) {
-                throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', get_class($email)));
+                throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($email)));
             }
 
             $headers = $part->getPreparedHeaders();

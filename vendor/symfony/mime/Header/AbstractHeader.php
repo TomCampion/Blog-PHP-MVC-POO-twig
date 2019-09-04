@@ -12,7 +12,6 @@
 namespace Symfony\Component\Mime\Header;
 
 use Symfony\Component\Mime\Encoder\QpMimeHeaderEncoder;
-use function strlen;
 
 /**
  * An abstract base MIME Header.
@@ -106,7 +105,7 @@ abstract class AbstractHeader implements HeaderInterface
                 // ... otherwise it needs encoding
                 // Determine space remaining on line if first line
                 if ($shorten) {
-                    $usedLength = strlen($header->getName().': ');
+                    $usedLength = \strlen($header->getName().': ');
                 } else {
                     $usedLength = 0;
                 }
@@ -137,7 +136,7 @@ abstract class AbstractHeader implements HeaderInterface
                 }
 
                 if (-1 == $usedLength) {
-                    $usedLength = strlen($header->getName().': ') + strlen($value);
+                    $usedLength = \strlen($header->getName().': ') + \strlen($value);
                 }
                 $value .= $this->getTokenAsEncodedWord($token, $usedLength);
             } else {
@@ -167,14 +166,14 @@ abstract class AbstractHeader implements HeaderInterface
             if ($this->tokenNeedsEncoding($token)) {
                 $encodedToken .= $token;
             } else {
-                if (strlen($encodedToken) > 0) {
+                if (\strlen($encodedToken) > 0) {
                     $tokens[] = $encodedToken;
                     $encodedToken = '';
                 }
                 $tokens[] = $token;
             }
         }
-        if (strlen($encodedToken)) {
+        if (\strlen($encodedToken)) {
             $tokens[] = $encodedToken;
         }
 
@@ -195,7 +194,7 @@ abstract class AbstractHeader implements HeaderInterface
         if (null !== $this->lang) {
             $charsetDecl .= '*'.$this->lang;
         }
-        $encodingWrapperLength = strlen('=?'.$charsetDecl.'?'.self::$encoder->getName().'??=');
+        $encodingWrapperLength = \strlen('=?'.$charsetDecl.'?'.self::$encoder->getName().'??=');
 
         if ($firstLineOffset >= 75) {
             //Does this logic need to be here?
@@ -264,8 +263,8 @@ abstract class AbstractHeader implements HeaderInterface
         foreach ($tokens as $i => $token) {
             // Line longer than specified maximum or token was just a new line
             if (("\r\n" === $token) ||
-                ($i > 0 && strlen($currentLine.$token) > $this->lineLength)
-                && 0 < strlen($currentLine)) {
+                ($i > 0 && \strlen($currentLine.$token) > $this->lineLength)
+                && 0 < \strlen($currentLine)) {
                 $headerLines[] = '';
                 $currentLine = &$headerLines[$lineCount++];
             }

@@ -11,13 +11,11 @@
 
 namespace Symfony\Component\Mime\Exception;
 
-use Throwable;
-
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @experimental in 4.3
  */
-interface ExceptionInterface extends Throwable
+interface ExceptionInterface extends \Throwable
 {
 }

@@ -13,8 +13,6 @@ namespace Symfony\Component\Mime\Tests\Encoder;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Encoder\QpMimeHeaderEncoder;
-use function in_array;
-use function ord;
 
 class QpMimeHeaderEncoderTest extends TestCase
 {
@@ -93,15 +91,15 @@ class QpMimeHeaderEncoderTest extends TestCase
         */
 
         $allowedBytes = array_merge(
-            range(ord('a'), ord('z')), range(ord('A'), ord('Z')),
-            range(ord('0'), ord('9')),
-            [ord('!'), ord('*'), ord('+'), ord('-'), ord('/')]
+            range(\ord('a'), \ord('z')), range(\ord('A'), \ord('Z')),
+            range(\ord('0'), \ord('9')),
+            [\ord('!'), \ord('*'), \ord('+'), \ord('-'), \ord('/')]
         );
         $encoder = new QpMimeHeaderEncoder();
         foreach (range(0x00, 0xFF) as $byte) {
             $char = pack('C', $byte);
             $encodedChar = $encoder->encodeString($char, 'iso-8859-1');
-            if (in_array($byte, $allowedBytes)) {
+            if (\in_array($byte, $allowedBytes)) {
                 $this->assertEquals($char, $encodedChar, 'Character '.$char.' should not be encoded.');
             } elseif (0x20 == $byte) {
                 // special case

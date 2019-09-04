@@ -12,13 +12,11 @@
 namespace Symfony\Component\Mime\Tests\Part;
 
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Symfony\Component\Mime\Header\Headers;
 use Symfony\Component\Mime\Header\IdentificationHeader;
 use Symfony\Component\Mime\Header\ParameterizedHeader;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
 use Symfony\Component\Mime\Part\DataPart;
-use TypeError;
 
 class DataPartTest extends TestCase
 {
@@ -52,8 +50,8 @@ class DataPartTest extends TestCase
 
     public function testConstructorWithNonStringOrResource()
     {
-        $this->expectException(TypeError::class);
-        new DataPart(new stdClass());
+        $this->expectException(\TypeError::class);
+        new DataPart(new \stdClass());
     }
 
     public function testHeaders()

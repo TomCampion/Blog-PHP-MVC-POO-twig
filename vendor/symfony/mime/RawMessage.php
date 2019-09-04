@@ -11,15 +11,12 @@
 
 namespace Symfony\Component\Mime;
 
-use Serializable;
-use function is_string;
-
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @experimental in 4.3
  */
-class RawMessage implements Serializable
+class RawMessage implements \Serializable
 {
     private $message;
 
@@ -33,7 +30,7 @@ class RawMessage implements Serializable
 
     public function toString(): string
     {
-        if (is_string($this->message)) {
+        if (\is_string($this->message)) {
             return $this->message;
         }
 
@@ -42,7 +39,7 @@ class RawMessage implements Serializable
 
     public function toIterable(): iterable
     {
-        if (is_string($this->message)) {
+        if (\is_string($this->message)) {
             yield $this->message;
 
             return;
@@ -72,17 +69,11 @@ class RawMessage implements Serializable
         $this->__unserialize(unserialize($serialized));
     }
 
-    /**
-     * @internal
-     */
     public function __serialize(): array
     {
         return [$this->message];
     }
 
-    /**
-     * @internal
-     */
     public function __unserialize(array $data): void
     {
         [$this->message] = $data;

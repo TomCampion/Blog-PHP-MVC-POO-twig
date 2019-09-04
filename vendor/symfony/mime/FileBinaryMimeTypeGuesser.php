@@ -13,8 +13,6 @@ namespace Symfony\Component\Mime;
 
 use Symfony\Component\Mime\Exception\InvalidArgumentException;
 use Symfony\Component\Mime\Exception\LogicException;
-use function function_exists;
-use const DIRECTORY_SEPARATOR;
 
 /**
  * Guesses the MIME type with the binary "file" (only available on *nix).
@@ -51,7 +49,7 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
             return $supported;
         }
 
-        if ('\\' === DIRECTORY_SEPARATOR || !function_exists('passthru') || !function_exists('escapeshellarg')) {
+        if ('\\' === \DIRECTORY_SEPARATOR || !\function_exists('passthru') || !\function_exists('escapeshellarg')) {
             return $supported = false;
         }
 

@@ -13,11 +13,10 @@ namespace Symfony\Component\Mime\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
-use const DIRECTORY_SEPARATOR;
 
 abstract class AbstractMimeTypeGuesserTest extends TestCase
 {
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $path = __DIR__.'/Fixtures/mimetypes/to_delete';
         if (file_exists($path)) {
@@ -81,7 +80,7 @@ abstract class AbstractMimeTypeGuesserTest extends TestCase
             $this->markTestSkipped('Guesser is not supported');
         }
 
-        if ('\\' === DIRECTORY_SEPARATOR) {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('Can not verify chmod operations on Windows');
         }
 

@@ -17,10 +17,6 @@ use Symfony\Component\Mime\Encoder\IdnAddressEncoder;
 use Symfony\Component\Mime\Exception\InvalidArgumentException;
 use Symfony\Component\Mime\Exception\LogicException;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
-use function get_class;
-use function gettype;
-use function is_object;
-use function is_string;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -44,11 +40,11 @@ class Address
             self::$validator = new EmailValidator();
         }
 
-        if (!self::$validator->isValid($address, new RFCValidation())) {
+        $this->address = trim($address);
+
+        if (!self::$validator->isValid($this->address, new RFCValidation())) {
             throw new RfcComplianceException(sprintf('Email "%s" does not comply with addr-spec of RFC 2822.', $address));
         }
-
-        $this->address = $address;
     }
 
     public function getAddress(): string
@@ -78,11 +74,11 @@ class Address
         if ($address instanceof self) {
             return $address;
         }
-        if (is_string($address)) {
+        if (\is_string($address)) {
             return new self($address);
         }
 
-        throw new InvalidArgumentException(sprintf('An address can be an instance of Address or a string ("%s") given).', is_object($address) ? get_class($address) : gettype($address)));
+        throw new InvalidArgumentException(sprintf('An address can be an instance of Address or a string ("%s") given).', \is_object($address) ? \get_class($address) : \gettype($address)));
     }
 
     /**

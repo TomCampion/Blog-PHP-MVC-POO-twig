@@ -11,10 +11,8 @@
 
 namespace Symfony\Component\Mime\Tests\Header;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Exception\AddressEncoderException;
 use Symfony\Component\Mime\Header\PathHeader;
 
 class PathHeaderTest extends TestCase
@@ -25,11 +23,9 @@ class PathHeaderTest extends TestCase
         $this->assertEquals($address, $header->getAddress());
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testAddressMustComplyWithRfc2822()
     {
+        $this->expectException('Exception');
         $header = new PathHeader('Return-Path', new Address('chr is@swiftmailer.org'));
     }
 
@@ -53,11 +49,9 @@ class PathHeaderTest extends TestCase
         $this->assertEquals('<chris@xn--swftmailer-78a.org>', $header->getBodyAsString());
     }
 
-    /**
-     * @expectedException AddressEncoderException
-     */
     public function testAddressMustBeEncodable()
     {
+        $this->expectException('Symfony\Component\Mime\Exception\AddressEncoderException');
         $header = new PathHeader('Return-Path', new Address('chrïs@swiftmailer.org'));
         $header->getBodyAsString();
     }

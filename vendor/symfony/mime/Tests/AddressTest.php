@@ -11,9 +11,7 @@
 
 namespace Symfony\Component\Mime\Tests;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\NamedAddress;
 
@@ -29,7 +27,7 @@ class AddressTest extends TestCase
 
     public function testConstructorWithInvalidAddress()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         new Address('fab   pot@symfony.com');
     }
 
@@ -42,8 +40,8 @@ class AddressTest extends TestCase
 
     public function testCreateWrongArg()
     {
-        $this->expectException(InvalidArgumentException::class);
-        Address::create(new stdClass());
+        $this->expectException(\InvalidArgumentException::class);
+        Address::create(new \stdClass());
     }
 
     public function testCreateArray()
@@ -57,7 +55,7 @@ class AddressTest extends TestCase
 
     public function testCreateArrayWrongArg()
     {
-        $this->expectException(InvalidArgumentException::class);
-        Address::createArray([new stdClass()]);
+        $this->expectException(\InvalidArgumentException::class);
+        Address::createArray([new \stdClass()]);
     }
 }

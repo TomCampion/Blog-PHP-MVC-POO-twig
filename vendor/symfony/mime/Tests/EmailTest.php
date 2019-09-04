@@ -11,8 +11,6 @@
 
 namespace Symfony\Component\Mime\Tests;
 
-use DateTimeImmutable;
-use LogicException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -35,7 +33,7 @@ class EmailTest extends TestCase
     public function testDate()
     {
         $e = new Email();
-        $e->date($d = new DateTimeImmutable());
+        $e->date($d = new \DateTimeImmutable());
         $this->assertSame($d, $e->getDate());
     }
 
@@ -236,7 +234,7 @@ class EmailTest extends TestCase
 
     public function testGenerateBodyThrowsWhenEmptyBody()
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
         (new Email())->getBody();
     }
 
@@ -287,6 +285,10 @@ class EmailTest extends TestCase
         $this->assertEquals(new MixedPart($html, $att), $e->getBody());
 
         $e = new Email();
+        $e->attach($file);
+        $this->assertEquals(new MixedPart($att), $e->getBody());
+
+        $e = new Email();
         $e->html('html content');
         $e->text('text content');
         $e->attach($file);
@@ -328,7 +330,7 @@ class EmailTest extends TestCase
         $this->assertCount(2, $parts = $related[0]->getParts());
         $this->assertInstanceOf(AlternativePart::class, $parts[0]);
         $generatedHtml = $parts[0]->getParts()[1];
-        $this->assertContains('cid:'.$parts[1]->getContentId(), $generatedHtml->getBody());
+        $this->assertStringContainsString('cid:'.$parts[1]->getContentId(), $generatedHtml->getBody());
 
         $content = 'html content <img src="cid:test.gif">';
         $r = fopen('php://memory', 'r+', false);

@@ -11,10 +11,6 @@
 
 namespace Symfony\Component\Mime;
 
-use function count;
-use function is_resource;
-use function strlen;
-
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Xavier De Cock <xdecock@gmail.com>
@@ -102,7 +98,7 @@ final class CharacterStream
                     $this->fixedWidth = 1;
             }
         }
-        if (is_resource($input)) {
+        if (\is_resource($input)) {
             $blocks = 512;
             if (stream_get_meta_data($input)['seekable'] ?? false) {
                 rewind($input);
@@ -171,20 +167,20 @@ final class CharacterStream
         $ignored = '';
         $this->data .= $chars;
         if ($this->fixedWidth > 0) {
-            $strlen = strlen($chars);
+            $strlen = \strlen($chars);
             $ignoredL = $strlen % $this->fixedWidth;
             $ignored = $ignoredL ? substr($chars, -$ignoredL) : '';
             $this->charCount += ($strlen - $ignoredL) / $this->fixedWidth;
         } else {
             $this->charCount += $this->getUtf8CharPositions($chars, $this->dataSize, $ignored);
         }
-        $this->dataSize = strlen($this->data) - strlen($ignored);
+        $this->dataSize = \strlen($this->data) - \strlen($ignored);
     }
 
     private function getUtf8CharPositions(string $string, int $startOffset, &$ignoredChars): int
     {
-        $strlen = strlen($string);
-        $charPos = count($this->map['p']);
+        $strlen = \strlen($string);
+        $charPos = \count($this->map['p']);
         $foundChars = 0;
         $invalid = false;
         for ($i = 0; $i < $strlen; ++$i) {
