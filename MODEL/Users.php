@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Model;
 
+use Exception;
+
 Class Users extends Entity {
 
     private $id;
@@ -30,7 +32,7 @@ Class Users extends Entity {
         if($id > 0){
             $this->id = $id;
         }else{
-            throw new \Exception("User id can not be < 0");
+            throw new Exception("User id can not be < 0");
         }
     }
 
@@ -53,10 +55,10 @@ Class Users extends Entity {
             if(strlen($firstname) <= 45){
                 $this->firstname = $firstname;
             }else{
-                throw new \Exception("The maximum length of the firstname is 45 characters");
+                throw new Exception("The maximum length of the firstname is 45 characters");
             }
         }else{
-            throw new \Exception("Firstname must be a String");
+            throw new Exception("Firstname must be a String");
         }
     }
 
@@ -79,10 +81,10 @@ Class Users extends Entity {
             if(strlen($lastname) <= 45){
                 $this->lastname = $lastname;
             }else{
-                throw new \Exception("The maximum length of the lastname is 45 characters");
+                throw new Exception("The maximum length of the lastname is 45 characters");
             }
         }else{
-            throw new \Exception("Lastname must be a String");
+            throw new Exception("Lastname must be a String");
         }
     }
 
@@ -105,10 +107,10 @@ Class Users extends Entity {
             if (strlen($email) <= 254) {
                 $this->email = $email;
             }else{
-                throw new \Exception("The maximum length of the email is 254 characters");
+                throw new Exception("The maximum length of the email is 254 characters");
             }
         }else{
-            throw new \Exception("invalid email format");
+            throw new Exception("invalid email format");
         }
 
     }
@@ -132,10 +134,10 @@ Class Users extends Entity {
             if (strlen($password) <= 254) {
                 $this->password = $password;
             }else{
-                throw new \Exception("The maximum length of the password is 254 characters");
+                throw new Exception("The maximum length of the password is 254 characters");
             }
         }else{
-            throw new \Exception("Password must be a String");
+            throw new Exception("Password must be a String");
         }
     }
 
@@ -158,7 +160,7 @@ Class Users extends Entity {
         if($admin === 0 or $admin === 1){
             $this->admin = $admin;
         }else{
-            throw new \Exception("Admin attribute must be 0 or 1");
+            throw new Exception("Admin attribute must be 0 or 1");
         }
     }
 
@@ -181,7 +183,7 @@ Class Users extends Entity {
         if( $restricted === 0 or  $restricted === 1){
             $this->restricted =  $restricted;
         }else{
-            throw new \Exception("Restricted attribute must be 0 or 1");
+            throw new Exception("Restricted attribute must be 0 or 1");
         }
 
     }

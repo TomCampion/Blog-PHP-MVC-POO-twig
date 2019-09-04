@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Closure;
+use DateTime;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\CacheItem;
@@ -19,6 +21,9 @@ use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\ContractsTrait;
 use Symfony\Component\Cache\Traits\ProxyTrait;
 use Symfony\Contracts\Cache\CacheInterface;
+use function count;
+use function is_array;
+use function strlen;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -39,8 +44,8 @@ class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
         $this->pool = $pool;
         $this->poolHash = $poolHash = spl_object_hash($pool);
         $this->namespace = '' === $namespace ? '' : CacheItem::validateKey($namespace);
-        $this->namespaceLen = \strlen($namespace);
-        $this->createCacheItem = \Closure::bind(
+        $this->namespaceLen = strlen($namespace);
+        $this->createCacheItem = Closure::bind(
             function ($key, $innerItem) use ($defaultLifetime, $poolHash) {
                 $item = new CacheItem();
                 $item->key = $key;
@@ -58,7 +63,7 @@ class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
                 // Detect wrapped values that encode for their expiry and creation duration
                 // For compactness, these values are packed in the key of an array using
                 // magic numbers in the form 9D-..-..-..-..-00-..-..-..-5F
-                if (\is_array($v) && 1 === \count($v) && 10 === \strlen($k = key($v)) && "\x9D" === $k[0] && "\0" === $k[5] && "\x5F" === $k[9]) {
+                if (is_array($v) && 1 === count($v) && 10 === strlen($k = key($v)) && "\x9D" === $k[0] && "\0" === $k[5] && "\x5F" === $k[9]) {
                     $item->value = $v[$k];
                     $v = unpack('Ve/Nc', substr($k, 1, -1));
                     $item->metadata[CacheItem::METADATA_EXPIRY] = $v['e'] + CacheItem::METADATA_EXPIRY_OFFSET;
@@ -73,7 +78,7 @@ class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
             null,
             CacheItem::class
         );
-        $this->setInnerItem = \Closure::bind(
+        $this->setInnerItem = Closure::bind(
             /**
              * @param array $item A CacheItem cast to (array); accessing protected properties requires adding the "\0*\0" PHP prefix
              */
@@ -87,7 +92,7 @@ class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
                     $item["\0*\0value"] = ["\x9D".pack('VN', (int) $metadata[CacheItem::METADATA_EXPIRY] - CacheItem::METADATA_EXPIRY_OFFSET, $metadata[CacheItem::METADATA_CTIME])."\x5F" => $item["\0*\0value"]];
                 }
                 $innerItem->set($item["\0*\0value"]);
-                $innerItem->expiresAt(null !== $item["\0*\0expiry"] ? \DateTime::createFromFormat('U.u', sprintf('%.6f', $item["\0*\0expiry"])) : null);
+                $innerItem->expiresAt(null !== $item["\0*\0expiry"] ? DateTime::createFromFormat('U.u', sprintf('%.6f', $item["\0*\0expiry"])) : null);
             },
             null,
             CacheItem::class

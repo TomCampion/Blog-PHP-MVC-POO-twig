@@ -12,9 +12,14 @@
 namespace Symfony\Component\Cache\Tests;
 
 use Cache\IntegrationTests\SimpleCacheTest;
+use DateInterval;
+use Exception;
+use ReflectionObject;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\Psr16Cache;
+use function array_key_exists;
+use function get_class;
 
 /**
  * @group time-sensitive
@@ -25,7 +30,7 @@ class Psr16CacheTest extends SimpleCacheTest
     {
         parent::setUp();
 
-        if (\array_key_exists('testPrune', $this->skippedTests)) {
+        if (array_key_exists('testPrune', $this->skippedTests)) {
             return;
         }
 
@@ -101,10 +106,10 @@ class Psr16CacheTest extends SimpleCacheTest
         $cache = $this->createSimpleCache();
         $cache->clear();
 
-        $cache->set('foo', 'foo-val', new \DateInterval('PT05S'));
-        $cache->set('bar', 'bar-val', new \DateInterval('PT10S'));
-        $cache->set('baz', 'baz-val', new \DateInterval('PT15S'));
-        $cache->set('qux', 'qux-val', new \DateInterval('PT20S'));
+        $cache->set('foo', 'foo-val', new DateInterval('PT05S'));
+        $cache->set('bar', 'bar-val', new DateInterval('PT10S'));
+        $cache->set('baz', 'baz-val', new DateInterval('PT15S'));
+        $cache->set('qux', 'qux-val', new DateInterval('PT20S'));
 
         sleep(30);
         $cache->prune();
@@ -114,9 +119,9 @@ class Psr16CacheTest extends SimpleCacheTest
         $this->assertTrue($this->isPruned($cache, 'qux'));
 
         $cache->set('foo', 'foo-val');
-        $cache->set('bar', 'bar-val', new \DateInterval('PT20S'));
-        $cache->set('baz', 'baz-val', new \DateInterval('PT40S'));
-        $cache->set('qux', 'qux-val', new \DateInterval('PT80S'));
+        $cache->set('bar', 'bar-val', new DateInterval('PT20S'));
+        $cache->set('baz', 'baz-val', new DateInterval('PT40S'));
+        $cache->set('qux', 'qux-val', new DateInterval('PT80S'));
 
         $cache->prune();
         $this->assertFalse($this->isPruned($cache, 'foo'));
@@ -147,12 +152,12 @@ class Psr16CacheTest extends SimpleCacheTest
 
     protected function isPruned($cache, $name)
     {
-        if (Psr16Cache::class !== \get_class($cache)) {
+        if (Psr16Cache::class !== get_class($cache)) {
             $this->fail('Test classes for pruneable caches must implement `isPruned($cache, $name)` method.');
         }
 
         $pool = ((array) $cache)[sprintf("\0%s\0pool", Psr16Cache::class)];
-        $getFileMethod = (new \ReflectionObject($pool))->getMethod('getFile');
+        $getFileMethod = (new ReflectionObject($pool))->getMethod('getFile');
         $getFileMethod->setAccessible(true);
 
         return !file_exists($getFileMethod->invoke($pool, $name));
@@ -163,6 +168,6 @@ class NotUnserializable
 {
     public function __wakeup()
     {
-        throw new \Exception(__CLASS__);
+        throw new Exception(__CLASS__);
     }
 }

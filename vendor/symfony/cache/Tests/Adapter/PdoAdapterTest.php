@@ -11,8 +11,10 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use PDO;
 use Symfony\Component\Cache\Adapter\PdoAdapter;
 use Symfony\Component\Cache\Tests\Traits\PdoPruneableTrait;
+use function extension_loaded;
 
 /**
  * @group time-sensitive
@@ -25,7 +27,7 @@ class PdoAdapterTest extends AdapterTestCase
 
     public static function setupBeforeClass()
     {
-        if (!\extension_loaded('pdo_sqlite')) {
+        if (!extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('Extension pdo_sqlite required.');
         }
 
@@ -47,10 +49,10 @@ class PdoAdapterTest extends AdapterTestCase
 
     public function testCleanupExpiredItems()
     {
-        $pdo = new \PDO('sqlite:'.self::$dbFile);
+        $pdo = new PDO('sqlite:'.self::$dbFile);
 
         $getCacheItemCount = function () use ($pdo) {
-            return (int) $pdo->query('SELECT COUNT(*) FROM cache_items')->fetch(\PDO::FETCH_COLUMN);
+            return (int) $pdo->query('SELECT COUNT(*) FROM cache_items')->fetch(PDO::FETCH_COLUMN);
         };
 
         $this->assertSame(0, $getCacheItemCount());

@@ -11,10 +11,16 @@
 
 namespace Symfony\Component\Mime\Part\Multipart;
 
+use ReflectionProperty;
 use Symfony\Component\Mime\Exception\InvalidArgumentException;
 use Symfony\Component\Mime\Part\AbstractMultipartPart;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\TextPart;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function is_string;
 
 /**
  * Implements RFC 7578.
@@ -35,8 +41,8 @@ final class FormDataPart extends AbstractMultipartPart
         parent::__construct();
 
         foreach ($fields as $name => $value) {
-            if (!\is_string($value) && !\is_array($value) && !$value instanceof TextPart) {
-                throw new InvalidArgumentException(sprintf('A form field value can only be a string, an array, or an instance of TextPart ("%s" given).', \is_object($value) ? \get_class($value) : \gettype($value)));
+            if (!is_string($value) && !is_array($value) && !$value instanceof TextPart) {
+                throw new InvalidArgumentException(sprintf('A form field value can only be a string, an array, or an instance of TextPart ("%s" given).', is_object($value) ? get_class($value) : gettype($value)));
             }
 
             $this->fields[$name] = $value;
@@ -59,7 +65,7 @@ final class FormDataPart extends AbstractMultipartPart
     {
         $values = [];
         array_walk_recursive($fields, function ($item, $key) use (&$values) {
-            if (!\is_array($item)) {
+            if (!is_array($item)) {
                 $values[] = $this->preparePart($key, $item);
             }
         });
@@ -69,7 +75,7 @@ final class FormDataPart extends AbstractMultipartPart
 
     private function preparePart($name, $value): TextPart
     {
-        if (\is_string($value)) {
+        if (is_string($value)) {
             return $this->configurePart($name, new TextPart($value, 'utf-8', 'plain', '8bit'));
         }
 
@@ -81,7 +87,7 @@ final class FormDataPart extends AbstractMultipartPart
         static $r;
 
         if (null === $r) {
-            $r = new \ReflectionProperty(TextPart::class, 'encoding');
+            $r = new ReflectionProperty(TextPart::class, 'encoding');
             $r->setAccessible(true);
         }
 

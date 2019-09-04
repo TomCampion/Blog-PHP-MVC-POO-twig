@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Mime\Tests\Header;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Header\Headers;
@@ -29,7 +30,7 @@ class HeadersTest extends TestCase
 
     public function testAddDateHeaderDelegatesToFactory()
     {
-        $dateTime = new \DateTimeImmutable();
+        $dateTime = new DateTimeImmutable();
         $headers = new Headers();
         $headers->addDateHeader('Date', $dateTime);
         $this->assertNotNull($headers->get('Date'));
@@ -78,7 +79,7 @@ class HeadersTest extends TestCase
 
     public function testAddedDateHeaderIsSeenByHas()
     {
-        $dateTime = new \DateTimeImmutable();
+        $dateTime = new DateTimeImmutable();
         $headers = new Headers();
         $headers->addDateHeader('Date', $dateTime);
         $this->assertTrue($headers->has('Date'));

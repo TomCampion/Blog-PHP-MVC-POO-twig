@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Closure;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\CacheItem;
@@ -19,6 +20,8 @@ use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\ContractsTrait;
 use Symfony\Component\Cache\Traits\ProxyTrait;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
+use function func_num_args;
+use function is_string;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -44,7 +47,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
         $this->pool = $itemsPool;
         $this->tags = $tagsPool ?: $itemsPool;
         $this->knownTagVersionsTtl = $knownTagVersionsTtl;
-        $this->createCacheItem = \Closure::bind(
+        $this->createCacheItem = Closure::bind(
             function ($key, $value, CacheItem $protoItem) {
                 $item = new CacheItem();
                 $item->key = $key;
@@ -58,7 +61,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
             null,
             CacheItem::class
         );
-        $this->setCacheItemTags = \Closure::bind(
+        $this->setCacheItemTags = Closure::bind(
             function (CacheItem $item, $key, array &$itemTags) {
                 $item->isTaggable = true;
                 if (!$item->isHit) {
@@ -79,7 +82,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
             null,
             CacheItem::class
         );
-        $this->getTagsByKey = \Closure::bind(
+        $this->getTagsByKey = Closure::bind(
             function ($deferred) {
                 $tagsByKey = [];
                 foreach ($deferred as $key => $item) {
@@ -91,7 +94,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
             null,
             CacheItem::class
         );
-        $this->invalidateTags = \Closure::bind(
+        $this->invalidateTags = Closure::bind(
             function (AdapterInterface $tagsAdapter, array $tags) {
                 foreach ($tags as $v) {
                     $v->defaultLifetime = 0;
@@ -194,7 +197,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
         $tagKeys = [];
 
         foreach ($keys as $key) {
-            if ('' !== $key && \is_string($key)) {
+            if ('' !== $key && is_string($key)) {
                 $key = static::TAGS_PREFIX.$key;
                 $tagKeys[$key] = $key;
             }
@@ -235,7 +238,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
     public function deleteItems(array $keys)
     {
         foreach ($keys as $key) {
-            if ('' !== $key && \is_string($key)) {
+            if ('' !== $key && is_string($key)) {
                 $keys[] = static::TAGS_PREFIX.$key;
             }
         }
@@ -333,7 +336,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
             return [];
         }
 
-        if (!$fetchTagVersions = 1 !== \func_num_args()) {
+        if (!$fetchTagVersions = 1 !== func_num_args()) {
             foreach ($tagsByKey as $tags) {
                 foreach ($tags as $tag => $version) {
                     if ($tagVersions[$tag] > $version) {

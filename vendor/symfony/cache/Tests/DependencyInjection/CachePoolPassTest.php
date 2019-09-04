@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Tests\DependencyInjection;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
@@ -131,7 +132,7 @@ class CachePoolPassTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid "cache.pool" tag for service "app.cache_pool": accepted attributes are
      */
     public function testThrowsExceptionWhenCachePoolTagHasUnknownAttributes()

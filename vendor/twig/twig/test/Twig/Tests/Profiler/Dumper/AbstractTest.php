@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Profiler\Profile;
 
-abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framework\TestCase
+abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends TestCase
 {
     protected function getProfile()
     {
@@ -35,7 +36,7 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framewor
             ),
         ];
 
-        $p = new \ReflectionProperty($profile, 'profiles');
+        $p = new ReflectionProperty($profile, 'profiles');
         $p->setAccessible(true);
         $p->setValue($profile, $subProfiles);
 
@@ -81,18 +82,18 @@ abstract class Twig_Tests_Profiler_Dumper_AbstractTest extends \PHPUnit\Framewor
     {
         $profile = new Profile($templateName, $type, $name);
 
-        $p = new \ReflectionProperty($profile, 'profiles');
+        $p = new ReflectionProperty($profile, 'profiles');
         $p->setAccessible(true);
         $p->setValue($profile, $subProfiles);
 
-        $starts = new \ReflectionProperty($profile, 'starts');
+        $starts = new ReflectionProperty($profile, 'starts');
         $starts->setAccessible(true);
         $starts->setValue($profile, [
             'wt' => 0,
             'mu' => 0,
             'pmu' => 0,
         ]);
-        $ends = new \ReflectionProperty($profile, 'ends');
+        $ends = new ReflectionProperty($profile, 'ends');
         $ends->setAccessible(true);
         $ends->setValue($profile, [
             'wt' => $duration,

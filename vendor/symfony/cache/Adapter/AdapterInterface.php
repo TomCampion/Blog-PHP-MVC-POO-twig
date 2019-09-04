@@ -13,6 +13,7 @@ namespace Symfony\Component\Cache\Adapter;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\CacheItem;
+use Traversable;
 
 /**
  * Interface for adapters managing instances of Symfony's CacheItem.
@@ -31,7 +32,7 @@ interface AdapterInterface extends CacheItemPoolInterface
     /**
      * {@inheritdoc}
      *
-     * @return \Traversable|CacheItem[]
+     * @return Traversable|CacheItem[]
      */
     public function getItems(array $keys = []);
 }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Simple;
 
+use DateInterval;
+use DateTime;
 use Psr\Log\LoggerAwareInterface;
 use Psr\SimpleCache\CacheInterface as Psr16CacheInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -19,6 +21,13 @@ use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\ArrayTrait;
 use Symfony\Contracts\Cache\CacheInterface;
+use Traversable;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_int;
+use function is_object;
+use function is_string;
 
 @trigger_error(sprintf('The "%s" class is deprecated since Symfony 4.3, use "%s" and type-hint for "%s" instead.', ArrayCache::class, ArrayAdapter::class, CacheInterface::class), E_USER_DEPRECATED);
 
@@ -49,7 +58,7 @@ class ArrayCache implements Psr16CacheInterface, LoggerAwareInterface, Resettabl
      */
     public function get($key, $default = null)
     {
-        if (!\is_string($key) || !isset($this->expiries[$key])) {
+        if (!is_string($key) || !isset($this->expiries[$key])) {
             CacheItem::validateKey($key);
         }
         if (!$isHit = isset($this->expiries[$key]) && ($this->expiries[$key] > microtime(true) || !$this->delete($key))) {
@@ -70,13 +79,13 @@ class ArrayCache implements Psr16CacheInterface, LoggerAwareInterface, Resettabl
      */
     public function getMultiple($keys, $default = null)
     {
-        if ($keys instanceof \Traversable) {
+        if ($keys instanceof Traversable) {
             $keys = iterator_to_array($keys, false);
-        } elseif (!\is_array($keys)) {
-            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
+        } elseif (!is_array($keys)) {
+            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', is_object($keys) ? get_class($keys) : gettype($keys)));
         }
         foreach ($keys as $key) {
-            if (!\is_string($key) || !isset($this->expiries[$key])) {
+            if (!is_string($key) || !isset($this->expiries[$key])) {
                 CacheItem::validateKey($key);
             }
         }
@@ -89,8 +98,8 @@ class ArrayCache implements Psr16CacheInterface, LoggerAwareInterface, Resettabl
      */
     public function deleteMultiple($keys)
     {
-        if (!\is_array($keys) && !$keys instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
+        if (!is_array($keys) && !$keys instanceof Traversable) {
+            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', is_object($keys) ? get_class($keys) : gettype($keys)));
         }
         foreach ($keys as $key) {
             $this->delete($key);
@@ -104,7 +113,7 @@ class ArrayCache implements Psr16CacheInterface, LoggerAwareInterface, Resettabl
      */
     public function set($key, $value, $ttl = null)
     {
-        if (!\is_string($key)) {
+        if (!is_string($key)) {
             CacheItem::validateKey($key);
         }
 
@@ -116,13 +125,13 @@ class ArrayCache implements Psr16CacheInterface, LoggerAwareInterface, Resettabl
      */
     public function setMultiple($values, $ttl = null)
     {
-        if (!\is_array($values) && !$values instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf('Cache values must be array or Traversable, "%s" given', \is_object($values) ? \get_class($values) : \gettype($values)));
+        if (!is_array($values) && !$values instanceof Traversable) {
+            throw new InvalidArgumentException(sprintf('Cache values must be array or Traversable, "%s" given', is_object($values) ? get_class($values) : gettype($values)));
         }
         $valuesArray = [];
 
         foreach ($values as $key => $value) {
-            if (!\is_int($key) && !(\is_string($key) && isset($this->expiries[$key]))) {
+            if (!is_int($key) && !(is_string($key) && isset($this->expiries[$key]))) {
                 CacheItem::validateKey($key);
             }
             $valuesArray[$key] = $value;
@@ -148,13 +157,13 @@ class ArrayCache implements Psr16CacheInterface, LoggerAwareInterface, Resettabl
         if (null === $ttl) {
             return $this->defaultLifetime;
         }
-        if ($ttl instanceof \DateInterval) {
-            $ttl = (int) \DateTime::createFromFormat('U', 0)->add($ttl)->format('U');
+        if ($ttl instanceof DateInterval) {
+            $ttl = (int) DateTime::createFromFormat('U', 0)->add($ttl)->format('U');
         }
-        if (\is_int($ttl)) {
+        if (is_int($ttl)) {
             return 0 < $ttl ? $ttl : false;
         }
 
-        throw new InvalidArgumentException(sprintf('Expiration date must be an integer, a DateInterval or null, "%s" given', \is_object($ttl) ? \get_class($ttl) : \gettype($ttl)));
+        throw new InvalidArgumentException(sprintf('Expiration date must be an integer, a DateInterval or null, "%s" given', is_object($ttl) ? get_class($ttl) : gettype($ttl)));
     }
 }

@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
@@ -20,7 +21,7 @@ use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
 
-class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_Extension_SandboxTest extends TestCase
 {
     protected static $params;
     protected static $templates;
@@ -51,7 +52,7 @@ class Twig_Tests_Extension_SandboxTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Sandbox\SecurityError
+     * @expectedException        SecurityError
      * @expectedExceptionMessage Filter "json_encode" is not allowed in "1_child" at line 3.
      */
     public function testSandboxWithInheritance()
@@ -309,7 +310,7 @@ EOF
         $e = null;
         try {
             $twig->load('1_include')->render(self::$params);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
         if (null === $e) {
             $this->fail('An exception should be thrown for this test to be valid.');

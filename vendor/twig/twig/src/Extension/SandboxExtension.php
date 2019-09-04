@@ -17,6 +17,7 @@ use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityPolicyInterface;
 use Twig\Source;
 use Twig\TokenParser\SandboxTokenParser;
+use function is_object;
 
 final class SandboxExtension extends AbstractExtension
 {
@@ -107,7 +108,7 @@ final class SandboxExtension extends AbstractExtension
 
     public function ensureToStringAllowed($obj, int $lineno = -1, Source $source = null)
     {
-        if ($this->isSandboxed() && \is_object($obj) && method_exists($obj, '__toString')) {
+        if ($this->isSandboxed() && is_object($obj) && method_exists($obj, '__toString')) {
             try {
                 $this->policy->checkMethodAllowed($obj, '__toString');
             } catch (SecurityNotAllowedMethodError $e) {

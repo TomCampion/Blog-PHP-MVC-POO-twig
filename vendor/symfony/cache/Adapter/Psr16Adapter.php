@@ -12,6 +12,7 @@
 namespace Symfony\Component\Cache\Adapter;
 
 use Psr\SimpleCache\CacheInterface;
+use stdClass;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\ProxyTrait;
@@ -37,7 +38,7 @@ class Psr16Adapter extends AbstractAdapter implements PruneableInterface, Resett
         parent::__construct($namespace, $defaultLifetime);
 
         $this->pool = $pool;
-        $this->miss = new \stdClass();
+        $this->miss = new stdClass();
     }
 
     /**

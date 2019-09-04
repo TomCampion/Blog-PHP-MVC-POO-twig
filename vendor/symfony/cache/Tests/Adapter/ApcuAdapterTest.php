@@ -13,6 +13,10 @@ namespace Symfony\Component\Cache\Tests\Adapter;
 
 use Psr\Log\NullLogger;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
+use function function_exists;
+use function get_class;
+use const DIRECTORY_SEPARATOR;
+use const PHP_SAPI;
 
 class ApcuAdapterTest extends AdapterTestCase
 {
@@ -24,15 +28,15 @@ class ApcuAdapterTest extends AdapterTestCase
 
     public function createCachePool($defaultLifetime = 0)
     {
-        if (!\function_exists('apcu_fetch') || !filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)) {
+        if (!function_exists('apcu_fetch') || !filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)) {
             $this->markTestSkipped('APCu extension is required.');
         }
-        if ('cli' === \PHP_SAPI && !filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN)) {
+        if ('cli' === PHP_SAPI && !filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN)) {
             if ('testWithCliSapi' !== $this->getName()) {
                 $this->markTestSkipped('apc.enable_cli=1 is required.');
             }
         }
-        if ('\\' === \DIRECTORY_SEPARATOR) {
+        if ('\\' === DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('Fails transiently on Windows.');
         }
 
@@ -54,7 +58,7 @@ class ApcuAdapterTest extends AdapterTestCase
 
     public function testVersion()
     {
-        $namespace = str_replace('\\', '.', \get_class($this));
+        $namespace = str_replace('\\', '.', get_class($this));
 
         $pool1 = new ApcuAdapter($namespace, 0, 'p1');
 
@@ -79,7 +83,7 @@ class ApcuAdapterTest extends AdapterTestCase
 
     public function testNamespace()
     {
-        $namespace = str_replace('\\', '.', \get_class($this));
+        $namespace = str_replace('\\', '.', get_class($this));
 
         $pool1 = new ApcuAdapter($namespace.'_1', 0, 'p1');
 

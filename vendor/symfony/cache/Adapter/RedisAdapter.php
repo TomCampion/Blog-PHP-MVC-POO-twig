@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Predis\Client;
+use Redis;
+use RedisArray;
+use RedisCluster;
 use Symfony\Component\Cache\Marshaller\MarshallerInterface;
 use Symfony\Component\Cache\Traits\RedisTrait;
 
@@ -19,7 +23,7 @@ class RedisAdapter extends AbstractAdapter
     use RedisTrait;
 
     /**
-     * @param \Redis|\RedisArray|\RedisCluster|\Predis\Client $redisClient     The redis client
+     * @param Redis|RedisArray|RedisCluster|Client $redisClient     The redis client
      * @param string                                          $namespace       The default namespace
      * @param int                                             $defaultLifetime The default lifetime
      */

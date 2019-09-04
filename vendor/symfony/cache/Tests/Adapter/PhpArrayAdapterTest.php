@@ -11,10 +11,12 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use Closure;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Cache\Adapter\PhpArrayAdapter;
+use function count;
 
 /**
  * @group time-sensitive
@@ -147,9 +149,9 @@ class PhpArrayAdapterWrapper extends PhpArrayAdapter
 
     public function save(CacheItemInterface $item)
     {
-        (\Closure::bind(function () use ($item) {
+        (Closure::bind(function () use ($item) {
             $key = $item->getKey();
-            $this->keys[$key] = $id = \count($this->values);
+            $this->keys[$key] = $id = count($this->values);
             $this->data[$key] = $this->values[$id] = $item->get();
             $this->warmUp($this->data);
             list($this->keys, $this->values) = eval(substr(file_get_contents($this->file), 6));

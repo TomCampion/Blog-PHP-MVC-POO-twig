@@ -21,6 +21,8 @@ use Twig\Node\ForNode;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenStream;
+use function count;
+use function in_array;
 
 /**
  * Loops over each item of a sequence.
@@ -58,7 +60,7 @@ final class ForTokenParser extends AbstractTokenParser
         }
         $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
-        if (\count($targets) > 1) {
+        if (count($targets) > 1) {
             $keyTarget = $targets->getNode(0);
             $keyTarget = new AssignNameExpression($keyTarget->getAttribute('name'), $keyTarget->getTemplateLine());
             $valueTarget = $targets->getNode(1);
@@ -109,7 +111,7 @@ final class ForTokenParser extends AbstractTokenParser
     {
         if ($node instanceof GetAttrExpression && $node->getNode('node') instanceof NameExpression && 'loop' == $node->getNode('node')->getAttribute('name')) {
             $attribute = $node->getNode('attribute');
-            if ($attribute instanceof ConstantExpression && \in_array($attribute->getAttribute('value'), ['length', 'revindex0', 'revindex', 'last'])) {
+            if ($attribute instanceof ConstantExpression && in_array($attribute->getAttribute('value'), ['length', 'revindex0', 'revindex', 'last'])) {
                 throw new SyntaxError(sprintf('The "loop.%s" variable is not defined when looping with a condition.', $attribute->getAttribute('value')), $node->getTemplateLine(), $stream->getSourceContext());
             }
         }

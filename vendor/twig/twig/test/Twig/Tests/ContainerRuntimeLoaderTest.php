@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Twig\RuntimeLoader\ContainerRuntimeLoader;
 
-class Twig_Tests_ContainerRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_ContainerRuntimeLoaderTest extends TestCase
 {
     public function testLoad()
     {
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $container->expects($this->once())->method('has')->with('stdClass')->willReturn(true);
-        $container->expects($this->once())->method('get')->with('stdClass')->willReturn(new \stdClass());
+        $container->expects($this->once())->method('get')->with('stdClass')->willReturn(new stdClass());
 
         $loader = new ContainerRuntimeLoader($container);
 

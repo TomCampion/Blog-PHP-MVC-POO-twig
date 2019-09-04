@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Simple;
 
+use Closure;
 use Psr\SimpleCache\CacheInterface as Psr16CacheInterface;
 use Symfony\Component\Cache\Adapter\PhpArrayAdapter;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
@@ -18,6 +19,14 @@ use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\PhpArrayTrait;
 use Symfony\Contracts\Cache\CacheInterface;
+use Throwable;
+use Traversable;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_int;
+use function is_object;
+use function is_string;
 
 @trigger_error(sprintf('The "%s" class is deprecated since Symfony 4.3, use "%s" and type-hint for "%s" instead.', PhpArrayCache::class, PhpArrayAdapter::class, CacheInterface::class), E_USER_DEPRECATED);
 
@@ -60,8 +69,8 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
      */
     public function get($key, $default = null)
     {
-        if (!\is_string($key)) {
-            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', \is_object($key) ? \get_class($key) : \gettype($key)));
+        if (!is_string($key)) {
+            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
         }
         if (null === $this->values) {
             $this->initialize();
@@ -74,10 +83,10 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
         if ('N;' === $value) {
             return null;
         }
-        if ($value instanceof \Closure) {
+        if ($value instanceof Closure) {
             try {
                 return $value();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 return $default;
             }
         }
@@ -90,14 +99,14 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
      */
     public function getMultiple($keys, $default = null)
     {
-        if ($keys instanceof \Traversable) {
+        if ($keys instanceof Traversable) {
             $keys = iterator_to_array($keys, false);
-        } elseif (!\is_array($keys)) {
-            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
+        } elseif (!is_array($keys)) {
+            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', is_object($keys) ? get_class($keys) : gettype($keys)));
         }
         foreach ($keys as $key) {
-            if (!\is_string($key)) {
-                throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', \is_object($key) ? \get_class($key) : \gettype($key)));
+            if (!is_string($key)) {
+                throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
             }
         }
         if (null === $this->values) {
@@ -112,8 +121,8 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
      */
     public function has($key)
     {
-        if (!\is_string($key)) {
-            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', \is_object($key) ? \get_class($key) : \gettype($key)));
+        if (!is_string($key)) {
+            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
         }
         if (null === $this->values) {
             $this->initialize();
@@ -127,8 +136,8 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
      */
     public function delete($key)
     {
-        if (!\is_string($key)) {
-            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', \is_object($key) ? \get_class($key) : \gettype($key)));
+        if (!is_string($key)) {
+            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
         }
         if (null === $this->values) {
             $this->initialize();
@@ -142,16 +151,16 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
      */
     public function deleteMultiple($keys)
     {
-        if (!\is_array($keys) && !$keys instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
+        if (!is_array($keys) && !$keys instanceof Traversable) {
+            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', is_object($keys) ? get_class($keys) : gettype($keys)));
         }
 
         $deleted = true;
         $fallbackKeys = [];
 
         foreach ($keys as $key) {
-            if (!\is_string($key)) {
-                throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', \is_object($key) ? \get_class($key) : \gettype($key)));
+            if (!is_string($key)) {
+                throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
             }
 
             if (isset($this->keys[$key])) {
@@ -176,8 +185,8 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
      */
     public function set($key, $value, $ttl = null)
     {
-        if (!\is_string($key)) {
-            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', \is_object($key) ? \get_class($key) : \gettype($key)));
+        if (!is_string($key)) {
+            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
         }
         if (null === $this->values) {
             $this->initialize();
@@ -191,16 +200,16 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
      */
     public function setMultiple($values, $ttl = null)
     {
-        if (!\is_array($values) && !$values instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf('Cache values must be array or Traversable, "%s" given', \is_object($values) ? \get_class($values) : \gettype($values)));
+        if (!is_array($values) && !$values instanceof Traversable) {
+            throw new InvalidArgumentException(sprintf('Cache values must be array or Traversable, "%s" given', is_object($values) ? get_class($values) : gettype($values)));
         }
 
         $saved = true;
         $fallbackValues = [];
 
         foreach ($values as $key => $value) {
-            if (!\is_string($key) && !\is_int($key)) {
-                throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', \is_object($key) ? \get_class($key) : \gettype($key)));
+            if (!is_string($key) && !is_int($key)) {
+                throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given.', is_object($key) ? get_class($key) : gettype($key)));
             }
 
             if (isset($this->keys[$key])) {
@@ -227,10 +236,10 @@ class PhpArrayCache implements Psr16CacheInterface, PruneableInterface, Resettab
 
                 if ('N;' === $value) {
                     yield $key => null;
-                } elseif ($value instanceof \Closure) {
+                } elseif ($value instanceof Closure) {
                     try {
                         yield $key => $value();
-                    } catch (\Throwable $e) {
+                    } catch (Throwable $e) {
                         yield $key => $default;
                     }
                 } else {

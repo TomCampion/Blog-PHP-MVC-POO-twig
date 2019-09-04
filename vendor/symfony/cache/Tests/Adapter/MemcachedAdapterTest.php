@@ -11,8 +11,11 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use ErrorException;
+use Memcached;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\MemcachedAdapter;
+use Symfony\Component\Cache\Exception\CacheException;
 
 class MemcachedAdapterTest extends AdapterTestCase
 {
@@ -32,7 +35,7 @@ class MemcachedAdapterTest extends AdapterTestCase
         self::$client->get('foo');
         $code = self::$client->getResultCode();
 
-        if (\Memcached::RES_SUCCESS !== $code && \Memcached::RES_NOTFOUND !== $code) {
+        if (Memcached::RES_SUCCESS !== $code && Memcached::RES_NOTFOUND !== $code) {
             self::markTestSkipped('Memcached error: '.strtolower(self::$client->getResultMessage()));
         }
     }
@@ -54,16 +57,16 @@ class MemcachedAdapterTest extends AdapterTestCase
             'hash' => 'md5',
         ]);
 
-        $this->assertSame(\Memcached::SERIALIZER_PHP, $client->getOption(\Memcached::OPT_SERIALIZER));
-        $this->assertSame(\Memcached::HASH_MD5, $client->getOption(\Memcached::OPT_HASH));
-        $this->assertTrue($client->getOption(\Memcached::OPT_COMPRESSION));
-        $this->assertSame(0, $client->getOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE));
-        $this->assertSame(\Memcached::DISTRIBUTION_MODULA, $client->getOption(\Memcached::OPT_DISTRIBUTION));
+        $this->assertSame(Memcached::SERIALIZER_PHP, $client->getOption(Memcached::OPT_SERIALIZER));
+        $this->assertSame(Memcached::HASH_MD5, $client->getOption(Memcached::OPT_HASH));
+        $this->assertTrue($client->getOption(Memcached::OPT_COMPRESSION));
+        $this->assertSame(0, $client->getOption(Memcached::OPT_LIBKETAMA_COMPATIBLE));
+        $this->assertSame(Memcached::DISTRIBUTION_MODULA, $client->getOption(Memcached::OPT_DISTRIBUTION));
     }
 
     /**
      * @dataProvider provideBadOptions
-     * @expectedException \ErrorException
+     * @expectedException ErrorException
      * @expectedExceptionMessage constant(): Couldn't find constant Memcached::
      */
     public function testBadOptions($name, $value)
@@ -87,19 +90,19 @@ class MemcachedAdapterTest extends AdapterTestCase
 
         $client = MemcachedAdapter::createConnection([]);
 
-        $this->assertTrue($client->getOption(\Memcached::OPT_COMPRESSION));
-        $this->assertSame(1, $client->getOption(\Memcached::OPT_BINARY_PROTOCOL));
-        $this->assertSame(1, $client->getOption(\Memcached::OPT_TCP_NODELAY));
-        $this->assertSame(1, $client->getOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE));
+        $this->assertTrue($client->getOption(Memcached::OPT_COMPRESSION));
+        $this->assertSame(1, $client->getOption(Memcached::OPT_BINARY_PROTOCOL));
+        $this->assertSame(1, $client->getOption(Memcached::OPT_TCP_NODELAY));
+        $this->assertSame(1, $client->getOption(Memcached::OPT_LIBKETAMA_COMPATIBLE));
     }
 
     /**
-     * @expectedException \Symfony\Component\Cache\Exception\CacheException
+     * @expectedException CacheException
      * @expectedExceptionMessage MemcachedAdapter: "serializer" option must be "php" or "igbinary".
      */
     public function testOptionSerializer()
     {
-        if (!\Memcached::HAVE_JSON) {
+        if (!Memcached::HAVE_JSON) {
             $this->markTestSkipped('Memcached::HAVE_JSON required');
         }
 
@@ -183,13 +186,13 @@ class MemcachedAdapterTest extends AdapterTestCase
 
         yield [
             'memcached://localhost:11222?retry_timeout=10',
-            [\Memcached::OPT_RETRY_TIMEOUT => 8],
-            [\Memcached::OPT_RETRY_TIMEOUT => 10],
+            [Memcached::OPT_RETRY_TIMEOUT => 8],
+            [Memcached::OPT_RETRY_TIMEOUT => 10],
         ];
         yield [
             'memcached://localhost:11222?socket_recv_size=1&socket_send_size=2',
-            [\Memcached::OPT_RETRY_TIMEOUT => 8],
-            [\Memcached::OPT_SOCKET_RECV_SIZE => 1, \Memcached::OPT_SOCKET_SEND_SIZE => 2, \Memcached::OPT_RETRY_TIMEOUT => 8],
+            [Memcached::OPT_RETRY_TIMEOUT => 8],
+            [Memcached::OPT_SOCKET_RECV_SIZE => 1, Memcached::OPT_SOCKET_SEND_SIZE => 2, Memcached::OPT_RETRY_TIMEOUT => 8],
         ];
     }
 

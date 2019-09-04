@@ -11,9 +11,22 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Closure;
+use ErrorException;
+use Exception;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Cache\Exception\CacheException;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\VarExporter\VarExporter;
+use function function_exists;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function is_string;
+use const PHP_SAPI;
 
 /**
  * @author Piotr Stankowski <git@trakos.pl>
@@ -40,7 +53,7 @@ trait PhpFilesTrait
     {
         self::$startTime = self::$startTime ?? $_SERVER['REQUEST_TIME'] ?? time();
 
-        return \function_exists('opcache_invalidate') && ('cli' !== \PHP_SAPI || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOLEAN)) && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN);
+        return function_exists('opcache_invalidate') && ('cli' !== PHP_SAPI || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOLEAN)) && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -53,10 +66,10 @@ trait PhpFilesTrait
 
         set_error_handler($this->includeHandler);
         try {
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
                 try {
                     list($expiresAt) = include $file;
-                } catch (\ErrorException $e) {
+                } catch (ErrorException $e) {
                     $expiresAt = $time;
                 }
 
@@ -92,7 +105,7 @@ trait PhpFilesTrait
                 $missingIds[] = $id;
             } elseif ('N;' === $value) {
                 $values[$id] = null;
-            } elseif ($value instanceof \Closure) {
+            } elseif ($value instanceof Closure) {
                 $values[$id] = $value();
             } else {
                 $values[$id] = $value;
@@ -115,7 +128,7 @@ trait PhpFilesTrait
                     if ($now >= $expiresAt) {
                         unset($this->values[$id], $missingIds[$k]);
                     }
-                } catch (\ErrorException $e) {
+                } catch (ErrorException $e) {
                     unset($missingIds[$k]);
                 }
             }
@@ -141,7 +154,7 @@ trait PhpFilesTrait
         try {
             $file = $this->files[$id] ?? $this->files[$id] = $this->getFile($id);
             list($expiresAt, $value) = include $file;
-        } catch (\ErrorException $e) {
+        } catch (ErrorException $e) {
             return false;
         } finally {
             restore_error_handler();
@@ -170,20 +183,20 @@ trait PhpFilesTrait
             $isStaticValue = true;
             if (null === $value) {
                 $value = "'N;'";
-            } elseif (\is_object($value) || \is_array($value)) {
+            } elseif (is_object($value) || is_array($value)) {
                 try {
                     $value = VarExporter::export($value, $isStaticValue);
-                } catch (\Exception $e) {
-                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, \is_object($value) ? \get_class($value) : 'array'), 0, $e);
+                } catch (Exception $e) {
+                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, is_object($value) ? get_class($value) : 'array'), 0, $e);
                 }
-            } elseif (\is_string($value)) {
+            } elseif (is_string($value)) {
                 // Wrap "N;" in a closure to not confuse it with an encoded `null`
                 if ('N;' === $value) {
                     $isStaticValue = false;
                 }
                 $value = var_export($value, true);
             } elseif (!is_scalar($value)) {
-                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, \gettype($value)));
+                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, gettype($value)));
             } else {
                 $value = var_export($value, true);
             }

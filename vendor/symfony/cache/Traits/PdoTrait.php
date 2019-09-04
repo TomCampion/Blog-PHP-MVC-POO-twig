@@ -16,9 +16,19 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Schema\Schema;
+use DomainException;
+use PDO;
+use PDOException;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\Marshaller\DefaultMarshaller;
 use Symfony\Component\Cache\Marshaller\MarshallerInterface;
+use function count;
+use function get_class;
+use function gettype;
+use function in_array;
+use function is_object;
+use function is_resource;
+use function is_string;
 
 /**
  * @internal
@@ -46,18 +56,18 @@ trait PdoTrait
             throw new InvalidArgumentException(sprintf('Namespace contains "%s" but only characters in [-+.A-Za-z0-9] are allowed.', $match[0]));
         }
 
-        if ($connOrDsn instanceof \PDO) {
-            if (\PDO::ERRMODE_EXCEPTION !== $connOrDsn->getAttribute(\PDO::ATTR_ERRMODE)) {
+        if ($connOrDsn instanceof PDO) {
+            if (PDO::ERRMODE_EXCEPTION !== $connOrDsn->getAttribute(PDO::ATTR_ERRMODE)) {
                 throw new InvalidArgumentException(sprintf('"%s" requires PDO error mode attribute be set to throw Exceptions (i.e. $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION))', __CLASS__));
             }
 
             $this->conn = $connOrDsn;
         } elseif ($connOrDsn instanceof Connection) {
             $this->conn = $connOrDsn;
-        } elseif (\is_string($connOrDsn)) {
+        } elseif (is_string($connOrDsn)) {
             $this->dsn = $connOrDsn;
         } else {
-            throw new InvalidArgumentException(sprintf('"%s" requires PDO or Doctrine\DBAL\Connection instance or DSN string as first argument, "%s" given.', __CLASS__, \is_object($connOrDsn) ? \get_class($connOrDsn) : \gettype($connOrDsn)));
+            throw new InvalidArgumentException(sprintf('"%s" requires PDO or Doctrine\DBAL\Connection instance or DSN string as first argument, "%s" given.', __CLASS__, is_object($connOrDsn) ? get_class($connOrDsn) : gettype($connOrDsn)));
         }
 
         $this->table = isset($options['db_table']) ? $options['db_table'] : $this->table;
@@ -80,9 +90,9 @@ trait PdoTrait
      * Cache ID are saved in a column of maximum length 255. Cache data is
      * saved in a BLOB.
      *
-     * @throws \PDOException    When the table already exists
+     * @throws PDOException    When the table already exists
      * @throws DBALException    When the table already exists
-     * @throws \DomainException When an unsupported PDO driver is used
+     * @throws DomainException When an unsupported PDO driver is used
      */
     public function createTable()
     {
@@ -98,7 +108,7 @@ trait PdoTrait
                 'sqlsrv' => 'string',
             ];
             if (!isset($types[$this->driver])) {
-                throw new \DomainException(sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $this->driver));
+                throw new DomainException(sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $this->driver));
             }
 
             $schema = new Schema();
@@ -138,7 +148,7 @@ trait PdoTrait
                 $sql = "CREATE TABLE $this->table ($this->idCol VARCHAR(255) NOT NULL PRIMARY KEY, $this->dataCol VARBINARY(MAX) NOT NULL, $this->lifetimeCol INTEGER, $this->timeCol INTEGER NOT NULL)";
                 break;
             default:
-                throw new \DomainException(sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $this->driver));
+                throw new DomainException(sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $this->driver));
         }
 
         $conn->exec($sql);
@@ -160,10 +170,10 @@ trait PdoTrait
         } catch (TableNotFoundException $e) {
             return true;
         }
-        $delete->bindValue(':time', time(), \PDO::PARAM_INT);
+        $delete->bindValue(':time', time(), PDO::PARAM_INT);
 
         if ('' !== $this->namespace) {
-            $delete->bindValue(':namespace', sprintf('%s%%', $this->namespace), \PDO::PARAM_STR);
+            $delete->bindValue(':namespace', sprintf('%s%%', $this->namespace), PDO::PARAM_STR);
         }
         try {
             return $delete->execute();
@@ -180,28 +190,28 @@ trait PdoTrait
         $now = time();
         $expired = [];
 
-        $sql = str_pad('', (\count($ids) << 1) - 1, '?,');
+        $sql = str_pad('', (count($ids) << 1) - 1, '?,');
         $sql = "SELECT $this->idCol, CASE WHEN $this->lifetimeCol IS NULL OR $this->lifetimeCol + $this->timeCol > ? THEN $this->dataCol ELSE NULL END FROM $this->table WHERE $this->idCol IN ($sql)";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bindValue($i = 1, $now, \PDO::PARAM_INT);
+        $stmt->bindValue($i = 1, $now, PDO::PARAM_INT);
         foreach ($ids as $id) {
             $stmt->bindValue(++$i, $id);
         }
         $stmt->execute();
 
-        while ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             if (null === $row[1]) {
                 $expired[] = $row[0];
             } else {
-                yield $row[0] => $this->marshaller->unmarshall(\is_resource($row[1]) ? stream_get_contents($row[1]) : $row[1]);
+                yield $row[0] => $this->marshaller->unmarshall(is_resource($row[1]) ? stream_get_contents($row[1]) : $row[1]);
             }
         }
 
         if ($expired) {
-            $sql = str_pad('', (\count($expired) << 1) - 1, '?,');
+            $sql = str_pad('', (count($expired) << 1) - 1, '?,');
             $sql = "DELETE FROM $this->table WHERE $this->lifetimeCol + $this->timeCol <= ? AND $this->idCol IN ($sql)";
             $stmt = $this->getConnection()->prepare($sql);
-            $stmt->bindValue($i = 1, $now, \PDO::PARAM_INT);
+            $stmt->bindValue($i = 1, $now, PDO::PARAM_INT);
             foreach ($expired as $id) {
                 $stmt->bindValue(++$i, $id);
             }
@@ -218,7 +228,7 @@ trait PdoTrait
         $stmt = $this->getConnection()->prepare($sql);
 
         $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':time', time(), \PDO::PARAM_INT);
+        $stmt->bindValue(':time', time(), PDO::PARAM_INT);
         $stmt->execute();
 
         return (bool) $stmt->fetchColumn();
@@ -254,7 +264,7 @@ trait PdoTrait
      */
     protected function doDelete(array $ids)
     {
-        $sql = str_pad('', (\count($ids) << 1) - 1, '?,');
+        $sql = str_pad('', (count($ids) << 1) - 1, '?,');
         $sql = "DELETE FROM $this->table WHERE $this->idCol IN ($sql)";
         try {
             $stmt = $this->getConnection()->prepare($sql);
@@ -312,7 +322,7 @@ trait PdoTrait
         try {
             $stmt = $conn->prepare($sql);
         } catch (TableNotFoundException $e) {
-            if (!$conn->isTransactionActive() || \in_array($this->driver, ['pgsql', 'sqlite', 'sqlsrv'], true)) {
+            if (!$conn->isTransactionActive() || in_array($this->driver, ['pgsql', 'sqlite', 'sqlsrv'], true)) {
                 $this->createTable();
             }
             $stmt = $conn->prepare($sql);
@@ -321,32 +331,32 @@ trait PdoTrait
         if ('sqlsrv' === $driver || 'oci' === $driver) {
             $stmt->bindParam(1, $id);
             $stmt->bindParam(2, $id);
-            $stmt->bindParam(3, $data, \PDO::PARAM_LOB);
-            $stmt->bindValue(4, $lifetime, \PDO::PARAM_INT);
-            $stmt->bindValue(5, $now, \PDO::PARAM_INT);
-            $stmt->bindParam(6, $data, \PDO::PARAM_LOB);
-            $stmt->bindValue(7, $lifetime, \PDO::PARAM_INT);
-            $stmt->bindValue(8, $now, \PDO::PARAM_INT);
+            $stmt->bindParam(3, $data, PDO::PARAM_LOB);
+            $stmt->bindValue(4, $lifetime, PDO::PARAM_INT);
+            $stmt->bindValue(5, $now, PDO::PARAM_INT);
+            $stmt->bindParam(6, $data, PDO::PARAM_LOB);
+            $stmt->bindValue(7, $lifetime, PDO::PARAM_INT);
+            $stmt->bindValue(8, $now, PDO::PARAM_INT);
         } else {
             $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':data', $data, \PDO::PARAM_LOB);
-            $stmt->bindValue(':lifetime', $lifetime, \PDO::PARAM_INT);
-            $stmt->bindValue(':time', $now, \PDO::PARAM_INT);
+            $stmt->bindParam(':data', $data, PDO::PARAM_LOB);
+            $stmt->bindValue(':lifetime', $lifetime, PDO::PARAM_INT);
+            $stmt->bindValue(':time', $now, PDO::PARAM_INT);
         }
         if (null === $driver) {
             $insertStmt = $conn->prepare($insertSql);
 
             $insertStmt->bindParam(':id', $id);
-            $insertStmt->bindParam(':data', $data, \PDO::PARAM_LOB);
-            $insertStmt->bindValue(':lifetime', $lifetime, \PDO::PARAM_INT);
-            $insertStmt->bindValue(':time', $now, \PDO::PARAM_INT);
+            $insertStmt->bindParam(':data', $data, PDO::PARAM_LOB);
+            $insertStmt->bindValue(':lifetime', $lifetime, PDO::PARAM_INT);
+            $insertStmt->bindValue(':time', $now, PDO::PARAM_INT);
         }
 
         foreach ($values as $id => $data) {
             try {
                 $stmt->execute();
             } catch (TableNotFoundException $e) {
-                if (!$conn->isTransactionActive() || \in_array($this->driver, ['pgsql', 'sqlite', 'sqlsrv'], true)) {
+                if (!$conn->isTransactionActive() || in_array($this->driver, ['pgsql', 'sqlite', 'sqlsrv'], true)) {
                     $this->createTable();
                 }
                 $stmt->execute();
@@ -355,7 +365,7 @@ trait PdoTrait
                 try {
                     $insertStmt->execute();
                 } catch (DBALException $e) {
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     // A concurrent write won, let it be
                 }
             }
@@ -365,17 +375,17 @@ trait PdoTrait
     }
 
     /**
-     * @return \PDO|Connection
+     * @return PDO|Connection
      */
     private function getConnection()
     {
         if (null === $this->conn) {
-            $this->conn = new \PDO($this->dsn, $this->username, $this->password, $this->connectionOptions);
-            $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->conn = new PDO($this->dsn, $this->username, $this->password, $this->connectionOptions);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         if (null === $this->driver) {
-            if ($this->conn instanceof \PDO) {
-                $this->driver = $this->conn->getAttribute(\PDO::ATTR_DRIVER_NAME);
+            if ($this->conn instanceof PDO) {
+                $this->driver = $this->conn->getAttribute(PDO::ATTR_DRIVER_NAME);
             } else {
                 switch ($this->driver = $this->conn->getDriver()->getName()) {
                     case 'mysqli':
@@ -409,9 +419,9 @@ trait PdoTrait
     private function getServerVersion()
     {
         if (null === $this->serverVersion) {
-            $conn = $this->conn instanceof \PDO ? $this->conn : $this->conn->getWrappedConnection();
-            if ($conn instanceof \PDO) {
-                $this->serverVersion = $conn->getAttribute(\PDO::ATTR_SERVER_VERSION);
+            $conn = $this->conn instanceof PDO ? $this->conn : $this->conn->getWrappedConnection();
+            if ($conn instanceof PDO) {
+                $this->serverVersion = $conn->getAttribute(PDO::ATTR_SERVER_VERSION);
             } elseif ($conn instanceof ServerInfoAwareConnection) {
                 $this->serverVersion = $conn->getServerVersion();
             } else {

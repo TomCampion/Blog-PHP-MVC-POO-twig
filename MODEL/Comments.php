@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Model;
 
+use Exception;
+
 Class Comments extends Entity
 {
 
@@ -34,7 +36,7 @@ Class Comments extends Entity
         if($id > 0){
             $this->id = $id;
         }else{
-            throw new \Exception("Comment id can not be < 0");
+            throw new Exception("Comment id can not be < 0");
         }
     }
 
@@ -55,10 +57,10 @@ Class Comments extends Entity
             if(strlen($content) <= 1024){
                 $this->content = $content;
             }else{
-                throw new \Exception("The maximum length of the content is 1024 characters");
+                throw new Exception("The maximum length of the content is 1024 characters");
             }
         }else{
-            throw new \Exception("Content must be a String");
+            throw new Exception("Content must be a String");
         }
     }
 
@@ -79,10 +81,10 @@ Class Comments extends Entity
             if(strlen($author) <= 90){
                 $this->author = $author;
             }else{
-                throw new \Exception("The maximum length of the author attribute is 90 characters");
+                throw new Exception("The maximum length of the author attribute is 90 characters");
             }
         }else{
-            throw new \Exception("Author attribute must be a String");
+            throw new Exception("Author attribute must be a String");
         }
     }
 
@@ -103,7 +105,7 @@ Class Comments extends Entity
         if($user_id > 0){
             $this->user_id = $user_id;
         }else{
-            throw new \Exception("User id can not be < 0");
+            throw new Exception("User id can not be < 0");
         }
     }
 
@@ -124,7 +126,7 @@ Class Comments extends Entity
         if($post_id > 0){
             $this->post_id = $post_id;
         }else{
-            throw new \Exception("Post id can not be < 0");
+            throw new Exception("Post id can not be < 0");
         }
     }
 
@@ -146,10 +148,10 @@ Class Comments extends Entity
             if($creationDate != '1970-01-01'){
                 $this->creationDate = $creationDate;
             }else{
-                throw new \Exception("Invalid date format for creationDate");
+                throw new Exception("Invalid date format for creationDate");
             }
         }else{
-            throw new \Exception("creationDate must be a String");
+            throw new Exception("creationDate must be a String");
         }
     }
 
@@ -171,10 +173,10 @@ Class Comments extends Entity
             if($updateDate != '1970-01-01') {
                 $this->updateDate = $updateDate;
             }else{
-                throw new \Exception("Invalid date format for updateDate");
+                throw new Exception("Invalid date format for updateDate");
             }
         }else{
-            throw new \Exception("updateDate must be a String");
+            throw new Exception("updateDate must be a String");
         }
     }
 
@@ -194,7 +196,7 @@ Class Comments extends Entity
         if($state === self::INVALID or $state === self::VALID  or $state === self::WAITING_FOR_VALIDATION ){
             $this->state = $state;
         }else{
-            throw new \Exception("State attribute must be equal to 'valid', 'invalid' or 'waiting for validation'");
+            throw new Exception("State attribute must be equal to 'valid', 'invalid' or 'waiting for validation'");
         }
     }
 

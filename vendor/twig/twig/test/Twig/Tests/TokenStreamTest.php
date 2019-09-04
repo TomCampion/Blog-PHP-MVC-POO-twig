@@ -9,10 +9,12 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
+use Twig\Error\SyntaxError;
 use Twig\Token;
 use Twig\TokenStream;
 
-class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_TokenStreamTest extends TestCase
 {
     protected static $tokens;
 
@@ -43,7 +45,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unexpected end of template
      */
     public function testEndOfTemplateNext()
@@ -57,7 +59,7 @@ class Twig_Tests_TokenStreamTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unexpected end of template
      */
     public function testEndOfTemplateLook()

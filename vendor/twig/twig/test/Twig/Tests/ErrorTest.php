@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Error\RuntimeError;
@@ -16,12 +17,12 @@ use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
 
-class Twig_Tests_ErrorTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_ErrorTest extends TestCase
 {
     public function testErrorWithObjectFilename()
     {
         $error = new Error('foo');
-        $error->setSourceContext(new Source('', new \SplFileInfo(__FILE__)));
+        $error->setSourceContext(new Source('', new SplFileInfo(__FILE__)));
 
         $this->assertContains('test'.DIRECTORY_SEPARATOR.'Twig'.DIRECTORY_SEPARATOR.'Tests'.DIRECTORY_SEPARATOR.'ErrorTest.php', $error->getMessage());
     }
@@ -203,14 +204,14 @@ EOHTML
 
     public function testTwigLeakOutputInDebugMode()
     {
-        $output = exec(sprintf('%s %s debug', \PHP_BINARY, escapeshellarg(__DIR__.'/Fixtures/errors/leak-output.php')));
+        $output = exec(sprintf('%s %s debug', PHP_BINARY, escapeshellarg(__DIR__.'/Fixtures/errors/leak-output.php')));
 
         $this->assertSame('Hello OOPS', $output);
     }
 
     public function testDoesNotTwigLeakOutput()
     {
-        $output = exec(sprintf('%s %s', \PHP_BINARY, escapeshellarg(__DIR__.'/Fixtures/errors/leak-output.php')));
+        $output = exec(sprintf('%s %s', PHP_BINARY, escapeshellarg(__DIR__.'/Fixtures/errors/leak-output.php')));
 
         $this->assertSame('', $output);
     }
@@ -220,6 +221,6 @@ class Twig_Tests_ErrorTest_Foo
 {
     public function bar()
     {
-        throw new \Exception('Runtime error...');
+        throw new Exception('Runtime error...');
     }
 }

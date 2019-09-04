@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Mime\Tests\Header;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Header\IdentificationHeader;
 
@@ -100,7 +101,7 @@ class IdentificationHeaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException Exception
      * @expectedMessageException "a b c" is not valid id-left
      */
     public function testInvalidIdLeftThrowsException()
@@ -138,7 +139,7 @@ class IdentificationHeaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException Exception
      * @expectedMessageException "b c d" is not valid id-right
      */
     public function testInvalidIdRightThrowsException()
@@ -147,7 +148,7 @@ class IdentificationHeaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException Exception
      * @expectedMessageException "abc" is does not contain @
      */
     public function testMissingAtSignThrowsException()

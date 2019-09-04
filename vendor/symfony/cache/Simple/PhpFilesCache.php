@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Simple;
 
+use ErrorException;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Cache\Exception\CacheException;
 use Symfony\Component\Cache\PruneableInterface;
@@ -39,7 +40,7 @@ class PhpFilesCache extends AbstractCache implements PruneableInterface
         parent::__construct('', $defaultLifetime);
         $this->init($namespace, $directory);
         $this->includeHandler = static function ($type, $msg, $file, $line) {
-            throw new \ErrorException($msg, 0, $type, $file, $line);
+            throw new ErrorException($msg, 0, $type, $file, $line);
         };
     }
 }

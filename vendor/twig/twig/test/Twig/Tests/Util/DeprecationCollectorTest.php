@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 use Twig\TwigFunction;
 use Twig\Util\DeprecationCollector;
 
-class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_Util_DeprecationCollectorTest extends TestCase
 {
     /**
      * @requires PHP 5.3
@@ -35,11 +36,11 @@ class Twig_Tests_Util_DeprecationCollectorTest extends \PHPUnit\Framework\TestCa
     }
 }
 
-class Twig_Tests_Util_Iterator implements \IteratorAggregate
+class Twig_Tests_Util_Iterator implements IteratorAggregate
 {
     public function getIterator()
     {
-        return new \ArrayIterator([
+        return new ArrayIterator([
             'ok.twig' => '{{ foo }}',
             'deprec.twig' => '{{ deprec("foo") }}',
         ]);

@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
-class Twig_Tests_FactoryRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_FactoryRuntimeLoaderTest extends TestCase
 {
     public function testLoad()
     {
@@ -30,5 +31,5 @@ class Twig_Tests_FactoryRuntimeLoaderTest extends \PHPUnit\Framework\TestCase
 
 function getRuntime()
 {
-    return new \stdClass();
+    return new stdClass();
 }

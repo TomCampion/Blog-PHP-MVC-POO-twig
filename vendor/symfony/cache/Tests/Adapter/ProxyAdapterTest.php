@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use Exception;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -38,7 +39,7 @@ class ProxyAdapterTest extends AdapterTestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException Exception
      * @expectedExceptionMessage OK bar
      */
     public function testProxyfiedItem()
@@ -70,7 +71,7 @@ class TestingArrayAdapter extends ArrayAdapter
     public function save(CacheItemInterface $item)
     {
         if ($item === $this->item) {
-            throw new \Exception('OK '.$item->get());
+            throw new Exception('OK '.$item->get());
         }
     }
 }

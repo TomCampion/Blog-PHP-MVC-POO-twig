@@ -63,9 +63,11 @@
                                             {% if session.id == comment.user_id %}
                                                 <a class="editComment comment{{ comment.id }}" onclick="editComment({{ comment.id }})" >edit</a>
                                             {% endif %}
+                                            {% if comment.updateDate is not empty %}
                                             <p class="dateEditComments">
                                                 Commentaire édité le {{comment.updateDate |date("d/m/Y H:i")}}
                                             </p>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </li>
@@ -95,6 +97,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </div>
     <!--/comment-->
     <script>
@@ -133,4 +136,3 @@
                     });
                 </script>
 {% endblock %}
-          

@@ -11,8 +11,13 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Exception;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Cache\CacheItem;
+use function get_class;
+use function gettype;
+use function is_object;
+use function is_string;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -43,7 +48,7 @@ trait ArrayTrait
             if (null === $v || 'N;' === $v) {
                 continue;
             }
-            if (!\is_string($v) || !isset($v[2]) || ':' !== $v[1]) {
+            if (!is_string($v) || !isset($v[2]) || ':' !== $v[1]) {
                 $values[$k] = serialize($v);
             }
         }
@@ -56,7 +61,7 @@ trait ArrayTrait
      */
     public function hasItem($key)
     {
-        if (\is_string($key) && isset($this->expiries[$key]) && $this->expiries[$key] > microtime(true)) {
+        if (is_string($key) && isset($this->expiries[$key]) && $this->expiries[$key] > microtime(true)) {
             return true;
         }
         CacheItem::validateKey($key);
@@ -79,7 +84,7 @@ trait ArrayTrait
      */
     public function deleteItem($key)
     {
-        if (!\is_string($key) || !isset($this->expiries[$key])) {
+        if (!is_string($key) || !isset($this->expiries[$key])) {
             CacheItem::validateKey($key);
         }
         unset($this->values[$key], $this->expiries[$key]);
@@ -118,7 +123,7 @@ trait ArrayTrait
         if (null === $value) {
             return 'N;';
         }
-        if (\is_string($value)) {
+        if (is_string($value)) {
             // Serialize strings if they could be confused with serialized objects or arrays
             if ('N;' === $value || (isset($value[2]) && ':' === $value[1])) {
                 return serialize($value);
@@ -126,8 +131,8 @@ trait ArrayTrait
         } elseif (!is_scalar($value)) {
             try {
                 $serialized = serialize($value);
-            } catch (\Exception $e) {
-                $type = \is_object($value) ? \get_class($value) : \gettype($value);
+            } catch (Exception $e) {
+                $type = is_object($value) ? get_class($value) : gettype($value);
                 $message = sprintf('Failed to save key "{key}" of type %s: %s', $type, $e->getMessage());
                 CacheItem::log($this->logger, $message, ['key' => $key, 'exception' => $e]);
 
@@ -147,10 +152,10 @@ trait ArrayTrait
         if ('N;' === $value = $this->values[$key]) {
             return null;
         }
-        if (\is_string($value) && isset($value[2]) && ':' === $value[1]) {
+        if (is_string($value) && isset($value[2]) && ':' === $value[1]) {
             try {
                 $value = unserialize($value);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 CacheItem::log($this->logger, 'Failed to unserialize key "{key}": '.$e->getMessage(), ['key' => $key, 'exception' => $e]);
                 $value = false;
             }

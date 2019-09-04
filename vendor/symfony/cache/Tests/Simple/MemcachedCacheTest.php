@@ -11,7 +11,10 @@
 
 namespace Symfony\Component\Cache\Tests\Simple;
 
+use ErrorException;
+use Memcached;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
+use Symfony\Component\Cache\Exception\CacheException;
 use Symfony\Component\Cache\Simple\MemcachedCache;
 
 /**
@@ -36,7 +39,7 @@ class MemcachedCacheTest extends CacheTestCase
         self::$client->get('foo');
         $code = self::$client->getResultCode();
 
-        if (\Memcached::RES_SUCCESS !== $code && \Memcached::RES_NOTFOUND !== $code) {
+        if (Memcached::RES_SUCCESS !== $code && Memcached::RES_NOTFOUND !== $code) {
             self::markTestSkipped('Memcached error: '.strtolower(self::$client->getResultMessage()));
         }
     }
@@ -67,16 +70,16 @@ class MemcachedCacheTest extends CacheTestCase
             'hash' => 'md5',
         ]);
 
-        $this->assertSame(\Memcached::SERIALIZER_PHP, $client->getOption(\Memcached::OPT_SERIALIZER));
-        $this->assertSame(\Memcached::HASH_MD5, $client->getOption(\Memcached::OPT_HASH));
-        $this->assertTrue($client->getOption(\Memcached::OPT_COMPRESSION));
-        $this->assertSame(0, $client->getOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE));
-        $this->assertSame(\Memcached::DISTRIBUTION_MODULA, $client->getOption(\Memcached::OPT_DISTRIBUTION));
+        $this->assertSame(Memcached::SERIALIZER_PHP, $client->getOption(Memcached::OPT_SERIALIZER));
+        $this->assertSame(Memcached::HASH_MD5, $client->getOption(Memcached::OPT_HASH));
+        $this->assertTrue($client->getOption(Memcached::OPT_COMPRESSION));
+        $this->assertSame(0, $client->getOption(Memcached::OPT_LIBKETAMA_COMPATIBLE));
+        $this->assertSame(Memcached::DISTRIBUTION_MODULA, $client->getOption(Memcached::OPT_DISTRIBUTION));
     }
 
     /**
      * @dataProvider provideBadOptions
-     * @expectedException \ErrorException
+     * @expectedException ErrorException
      * @expectedExceptionMessage constant(): Couldn't find constant Memcached::
      */
     public function testBadOptions($name, $value)
@@ -100,18 +103,18 @@ class MemcachedCacheTest extends CacheTestCase
 
         $client = MemcachedCache::createConnection([]);
 
-        $this->assertTrue($client->getOption(\Memcached::OPT_COMPRESSION));
-        $this->assertSame(1, $client->getOption(\Memcached::OPT_BINARY_PROTOCOL));
-        $this->assertSame(1, $client->getOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE));
+        $this->assertTrue($client->getOption(Memcached::OPT_COMPRESSION));
+        $this->assertSame(1, $client->getOption(Memcached::OPT_BINARY_PROTOCOL));
+        $this->assertSame(1, $client->getOption(Memcached::OPT_LIBKETAMA_COMPATIBLE));
     }
 
     /**
-     * @expectedException \Symfony\Component\Cache\Exception\CacheException
+     * @expectedException CacheException
      * @expectedExceptionMessage MemcachedAdapter: "serializer" option must be "php" or "igbinary".
      */
     public function testOptionSerializer()
     {
-        if (!\Memcached::HAVE_JSON) {
+        if (!Memcached::HAVE_JSON) {
             $this->markTestSkipped('Memcached::HAVE_JSON required');
         }
 

@@ -13,6 +13,7 @@ namespace Symfony\Component\Mime\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use const DIRECTORY_SEPARATOR;
 
 abstract class AbstractMimeTypeGuesserTest extends TestCase
 {
@@ -80,7 +81,7 @@ abstract class AbstractMimeTypeGuesserTest extends TestCase
             $this->markTestSkipped('Guesser is not supported');
         }
 
-        if ('\\' === \DIRECTORY_SEPARATOR) {
+        if ('\\' === DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('Can not verify chmod operations on Windows');
         }
 

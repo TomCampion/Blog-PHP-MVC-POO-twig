@@ -12,6 +12,7 @@
 namespace Symfony\Component\Cache\Tests\Adapter;
 
 use Psr\Cache\CacheItemPoolInterface;
+use ReflectionObject;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 
 /**
@@ -35,7 +36,7 @@ class PhpFilesAdapterTest extends AdapterTestCase
 
     protected function isPruned(CacheItemPoolInterface $cache, $name)
     {
-        $getFileMethod = (new \ReflectionObject($cache))->getMethod('getFile');
+        $getFileMethod = (new ReflectionObject($cache))->getMethod('getFile');
         $getFileMethod->setAccessible(true);
 
         return !file_exists($getFileMethod->invoke($cache, $name));

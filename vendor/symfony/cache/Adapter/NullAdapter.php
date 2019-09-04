@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Closure;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -24,7 +25,7 @@ class NullAdapter implements AdapterInterface, CacheInterface
 
     public function __construct()
     {
-        $this->createCacheItem = \Closure::bind(
+        $this->createCacheItem = Closure::bind(
             function ($key) {
                 $item = new CacheItem();
                 $item->key = $key;

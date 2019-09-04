@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
@@ -18,10 +20,10 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Parser;
 use Twig\Source;
 
-class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_ExpressionParserTest extends TestCase
 {
     /**
-     * @expectedException \Twig\Error\SyntaxError
+     * @expectedException SyntaxError
      * @dataProvider getFailingTestsForAssignment
      */
     public function testCanOnlyAssignToNames($template)
@@ -64,7 +66,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\SyntaxError
+     * @expectedException SyntaxError
      * @dataProvider getFailingTestsForArray
      */
     public function testArraySyntaxError($template)
@@ -160,7 +162,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\SyntaxError
+     * @expectedException SyntaxError
      */
     public function testStringExpressionDoesNotConcatenateTwoConsecutiveStrings()
     {
@@ -232,7 +234,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\SyntaxError
+     * @expectedException SyntaxError
      */
     public function testAttributeCallDoesNotSupportNamedArguments()
     {
@@ -243,7 +245,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\SyntaxError
+     * @expectedException SyntaxError
      */
     public function testMacroCallDoesNotSupportNamedArguments()
     {
@@ -254,7 +256,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage An argument must be a name. Unexpected token "string" of value "a" ("name" expected) in "index" at line 1.
      */
     public function testMacroDefinitionDoesNotSupportNonNameVariableName()
@@ -266,7 +268,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage A default value for an argument must be a constant (a boolean, a string, a number, or an array) in "index" at line 1
      * @dataProvider             getMacroDefinitionDoesNotSupportNonConstantDefaultValues
      */
@@ -315,7 +317,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unknown "cycl" function. Did you mean "cycle" in "index" at line 1?
      */
     public function testUnknownFunction()
@@ -327,7 +329,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unknown "foobar" function in "index" at line 1.
      */
     public function testUnknownFunctionWithoutSuggestions()
@@ -339,7 +341,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unknown "lowe" filter. Did you mean "lower" in "index" at line 1?
      */
     public function testUnknownFilter()
@@ -351,7 +353,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unknown "foobar" filter in "index" at line 1.
      */
     public function testUnknownFilterWithoutSuggestions()
@@ -363,7 +365,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unknown "nul" test. Did you mean "null" in "index" at line 1
      */
     public function testUnknownTest()
@@ -375,7 +377,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unknown "foobar" test in "index" at line 1.
      */
     public function testUnknownTestWithoutSuggestions()

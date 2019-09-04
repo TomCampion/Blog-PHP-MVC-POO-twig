@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Closure;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\CacheItem;
@@ -19,6 +20,7 @@ use Symfony\Component\Cache\LockRegistry;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\CacheTrait;
 use Symfony\Contracts\Cache\ItemInterface;
+use function get_class;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -42,7 +44,7 @@ trait ContractsTrait
     public function setCallbackWrapper(?callable $callbackWrapper): callable
     {
         $previousWrapper = $this->callbackWrapper;
-        $this->callbackWrapper = $callbackWrapper ?? function (callable $callback, ItemInterface $item, bool &$save, CacheInterface $pool, \Closure $setMetadata, ?LoggerInterface $logger) {
+        $this->callbackWrapper = $callbackWrapper ?? function (callable $callback, ItemInterface $item, bool &$save, CacheInterface $pool, Closure $setMetadata, ?LoggerInterface $logger) {
             return $callback($item, $save);
         };
 
@@ -52,12 +54,12 @@ trait ContractsTrait
     private function doGet(AdapterInterface $pool, string $key, callable $callback, ?float $beta, array &$metadata = null)
     {
         if (0 > $beta = $beta ?? 1.0) {
-            throw new InvalidArgumentException(sprintf('Argument "$beta" provided to "%s::get()" must be a positive number, %f given.', \get_class($this), $beta));
+            throw new InvalidArgumentException(sprintf('Argument "$beta" provided to "%s::get()" must be a positive number, %f given.', get_class($this), $beta));
         }
 
         static $setMetadata;
 
-        $setMetadata = $setMetadata ?? \Closure::bind(
+        $setMetadata = $setMetadata ?? Closure::bind(
             function (CacheItem $item, float $startTime, ?array &$metadata) {
                 if ($item->expiry > $endTime = microtime(true)) {
                     $item->newMetadata[CacheItem::METADATA_EXPIRY] = $metadata[CacheItem::METADATA_EXPIRY] = $item->expiry;

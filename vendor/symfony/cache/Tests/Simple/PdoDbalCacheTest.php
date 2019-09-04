@@ -14,6 +14,7 @@ namespace Symfony\Component\Cache\Tests\Simple;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Cache\Simple\PdoCache;
 use Symfony\Component\Cache\Tests\Traits\PdoPruneableTrait;
+use function extension_loaded;
 
 /**
  * @group time-sensitive
@@ -27,7 +28,7 @@ class PdoDbalCacheTest extends CacheTestCase
 
     public static function setupBeforeClass()
     {
-        if (!\extension_loaded('pdo_sqlite')) {
+        if (!extension_loaded('pdo_sqlite')) {
             self::markTestSkipped('Extension pdo_sqlite required.');
         }
 

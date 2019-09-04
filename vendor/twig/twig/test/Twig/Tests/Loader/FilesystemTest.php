@@ -9,11 +9,12 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 
-class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_Loader_FilesystemTest extends TestCase
 {
     public function testGetSourceContext()
     {
@@ -152,7 +153,7 @@ class Twig_Tests_Loader_FilesystemTest extends \PHPUnit\Framework\TestCase
 
         try {
             $loader->getSourceContext('@named/nowhere.html');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(LoaderError::class, $e);
             $this->assertContains('Unable to find template "@named/nowhere.html"', $e->getMessage());
         }

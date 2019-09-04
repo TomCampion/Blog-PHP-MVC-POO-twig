@@ -12,6 +12,9 @@
 namespace Symfony\Component\Cache\Tests\Simple;
 
 use Symfony\Component\Cache\Simple\ApcuCache;
+use function function_exists;
+use const DIRECTORY_SEPARATOR;
+use const PHP_SAPI;
 
 /**
  * @group legacy
@@ -26,10 +29,10 @@ class ApcuCacheTest extends CacheTestCase
 
     public function createSimpleCache($defaultLifetime = 0)
     {
-        if (!\function_exists('apcu_fetch') || !filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN) || ('cli' === \PHP_SAPI && !filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN))) {
+        if (!function_exists('apcu_fetch') || !filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN) || ('cli' === PHP_SAPI && !filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN))) {
             $this->markTestSkipped('APCu extension is required.');
         }
-        if ('\\' === \DIRECTORY_SEPARATOR) {
+        if ('\\' === DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('Fails transiently on Windows.');
         }
 

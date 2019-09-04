@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Closure;
+use Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -20,6 +22,14 @@ use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\AbstractAdapterTrait;
 use Symfony\Component\Cache\Traits\ContractsTrait;
 use Symfony\Contracts\Cache\CacheInterface;
+use function count;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function is_string;
+use function strlen;
+use const PHP_SAPI;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -40,10 +50,10 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
     protected function __construct(string $namespace = '', int $defaultLifetime = 0)
     {
         $this->namespace = '' === $namespace ? '' : CacheItem::validateKey($namespace).static::NS_SEPARATOR;
-        if (null !== $this->maxIdLength && \strlen($namespace) > $this->maxIdLength - 24) {
-            throw new InvalidArgumentException(sprintf('Namespace must be %d chars max, %d given ("%s")', $this->maxIdLength - 24, \strlen($namespace), $namespace));
+        if (null !== $this->maxIdLength && strlen($namespace) > $this->maxIdLength - 24) {
+            throw new InvalidArgumentException(sprintf('Namespace must be %d chars max, %d given ("%s")', $this->maxIdLength - 24, strlen($namespace), $namespace));
         }
-        $this->createCacheItem = \Closure::bind(
+        $this->createCacheItem = Closure::bind(
             function ($key, $value, $isHit) use ($defaultLifetime) {
                 $item = new CacheItem();
                 $item->key = $key;
@@ -53,7 +63,7 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
                 // Detect wrapped values that encode for their expiry and creation duration
                 // For compactness, these values are packed in the key of an array using
                 // magic numbers in the form 9D-..-..-..-..-00-..-..-..-5F
-                if (\is_array($v) && 1 === \count($v) && 10 === \strlen($k = key($v)) && "\x9D" === $k[0] && "\0" === $k[5] && "\x5F" === $k[9]) {
+                if (is_array($v) && 1 === count($v) && 10 === strlen($k = key($v)) && "\x9D" === $k[0] && "\0" === $k[5] && "\x5F" === $k[9]) {
                     $item->value = $v[$k];
                     $v = unpack('Ve/Nc', substr($k, 1, -1));
                     $item->metadata[CacheItem::METADATA_EXPIRY] = $v['e'] + CacheItem::METADATA_EXPIRY_OFFSET;
@@ -65,8 +75,8 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
             null,
             CacheItem::class
         );
-        $getId = \Closure::fromCallable([$this, 'getId']);
-        $this->mergeByLifetime = \Closure::bind(
+        $getId = Closure::fromCallable([$this, 'getId']);
+        $this->mergeByLifetime = Closure::bind(
             function ($deferred, $namespace, &$expiredIds) use ($getId) {
                 $byLifetime = [];
                 $now = microtime(true);
@@ -119,7 +129,7 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
         }
 
         $apcu = new ApcuAdapter($namespace, (int) $defaultLifetime / 5, $version);
-        if ('cli' === \PHP_SAPI && !filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN)) {
+        if ('cli' === PHP_SAPI && !filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN)) {
             $apcu->setLogger(new NullLogger());
         } elseif (null !== $logger) {
             $apcu->setLogger($logger);
@@ -130,8 +140,8 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
 
     public static function createConnection($dsn, array $options = [])
     {
-        if (!\is_string($dsn)) {
-            throw new InvalidArgumentException(sprintf('The %s() method expect argument #1 to be string, %s given.', __METHOD__, \gettype($dsn)));
+        if (!is_string($dsn)) {
+            throw new InvalidArgumentException(sprintf('The %s() method expect argument #1 to be string, %s given.', __METHOD__, gettype($dsn)));
         }
         if (0 === strpos($dsn, 'redis:') || 0 === strpos($dsn, 'rediss:')) {
             return RedisAdapter::createConnection($dsn, $options);
@@ -159,18 +169,18 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
         foreach ($byLifetime as $lifetime => $values) {
             try {
                 $e = $this->doSave($values, $lifetime);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
             if (true === $e || [] === $e) {
                 continue;
             }
-            if (\is_array($e) || 1 === \count($values)) {
-                foreach (\is_array($e) ? $e : array_keys($values) as $id) {
+            if (is_array($e) || 1 === count($values)) {
+                foreach (is_array($e) ? $e : array_keys($values) as $id) {
                     $ok = false;
                     $v = $values[$id];
-                    $type = \is_object($v) ? \get_class($v) : \gettype($v);
-                    $message = sprintf('Failed to save key "{key}" of type %s%s', $type, $e instanceof \Exception ? ': '.$e->getMessage() : '.');
-                    CacheItem::log($this->logger, $message, ['key' => substr($id, \strlen($this->namespace)), 'exception' => $e instanceof \Exception ? $e : null]);
+                    $type = is_object($v) ? get_class($v) : gettype($v);
+                    $message = sprintf('Failed to save key "{key}" of type %s%s', $type, $e instanceof Exception ? ': '.$e->getMessage() : '.');
+                    CacheItem::log($this->logger, $message, ['key' => substr($id, strlen($this->namespace)), 'exception' => $e instanceof Exception ? $e : null]);
                 }
             } else {
                 foreach ($values as $id => $v) {
@@ -185,15 +195,15 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
                 try {
                     $v = $byLifetime[$lifetime][$id];
                     $e = $this->doSave([$id => $v], $lifetime);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
                 if (true === $e || [] === $e) {
                     continue;
                 }
                 $ok = false;
-                $type = \is_object($v) ? \get_class($v) : \gettype($v);
-                $message = sprintf('Failed to save key "{key}" of type %s%s', $type, $e instanceof \Exception ? ': '.$e->getMessage() : '.');
-                CacheItem::log($this->logger, $message, ['key' => substr($id, \strlen($this->namespace)), 'exception' => $e instanceof \Exception ? $e : null]);
+                $type = is_object($v) ? get_class($v) : gettype($v);
+                $message = sprintf('Failed to save key "{key}" of type %s%s', $type, $e instanceof Exception ? ': '.$e->getMessage() : '.');
+                CacheItem::log($this->logger, $message, ['key' => substr($id, strlen($this->namespace)), 'exception' => $e instanceof Exception ? $e : null]);
             }
         }
 

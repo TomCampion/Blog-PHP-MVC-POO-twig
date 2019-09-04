@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Mime\Header;
 
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
+
 /**
  * A Date MIME Header.
  *
@@ -22,7 +26,7 @@ final class DateHeader extends AbstractHeader
 {
     private $dateTime;
 
-    public function __construct(string $name, \DateTimeInterface $date)
+    public function __construct(string $name, DateTimeInterface $date)
     {
         parent::__construct($name);
 
@@ -30,7 +34,7 @@ final class DateHeader extends AbstractHeader
     }
 
     /**
-     * @param \DateTimeInterface $body
+     * @param DateTimeInterface $body
      */
     public function setBody($body)
     {
@@ -38,14 +42,14 @@ final class DateHeader extends AbstractHeader
     }
 
     /**
-     * @return \DateTimeImmutable
+     * @return DateTimeImmutable
      */
     public function getBody()
     {
         return $this->getDateTime();
     }
 
-    public function getDateTime(): \DateTimeImmutable
+    public function getDateTime(): DateTimeImmutable
     {
         return $this->dateTime;
     }
@@ -55,10 +59,10 @@ final class DateHeader extends AbstractHeader
      *
      * If a DateTime instance is provided, it is converted to DateTimeImmutable.
      */
-    public function setDateTime(\DateTimeInterface $dateTime)
+    public function setDateTime(DateTimeInterface $dateTime)
     {
-        if ($dateTime instanceof \DateTime) {
-            $immutable = new \DateTimeImmutable('@'.$dateTime->getTimestamp());
+        if ($dateTime instanceof DateTime) {
+            $immutable = new DateTimeImmutable('@'.$dateTime->getTimestamp());
             $dateTime = $immutable->setTimezone($dateTime->getTimezone());
         }
         $this->dateTime = $dateTime;
@@ -66,6 +70,6 @@ final class DateHeader extends AbstractHeader
 
     public function getBodyAsString(): string
     {
-        return $this->dateTime->format(\DateTime::RFC2822);
+        return $this->dateTime->format(DateTime::RFC2822);
     }
 }

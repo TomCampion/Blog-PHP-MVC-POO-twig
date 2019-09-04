@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Closure;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\CacheItem;
@@ -20,6 +21,8 @@ use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\ContractsTrait;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use function count;
+use function get_class;
 
 /**
  * Chains several adapters together.
@@ -49,7 +52,7 @@ class ChainAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
 
         foreach ($adapters as $adapter) {
             if (!$adapter instanceof CacheItemPoolInterface) {
-                throw new InvalidArgumentException(sprintf('The class "%s" does not implement the "%s" interface.', \get_class($adapter), CacheItemPoolInterface::class));
+                throw new InvalidArgumentException(sprintf('The class "%s" does not implement the "%s" interface.', get_class($adapter), CacheItemPoolInterface::class));
             }
 
             if ($adapter instanceof AdapterInterface) {
@@ -58,9 +61,9 @@ class ChainAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
                 $this->adapters[] = new ProxyAdapter($adapter);
             }
         }
-        $this->adapterCount = \count($this->adapters);
+        $this->adapterCount = count($this->adapters);
 
-        $this->syncItem = \Closure::bind(
+        $this->syncItem = Closure::bind(
             function ($sourceItem, $item) use ($defaultLifetime) {
                 $item->value = $sourceItem->value;
                 $item->expiry = $sourceItem->expiry;

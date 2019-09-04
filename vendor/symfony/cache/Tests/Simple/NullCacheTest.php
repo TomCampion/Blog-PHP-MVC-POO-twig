@@ -12,6 +12,7 @@
 namespace Symfony\Component\Cache\Tests\Simple;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\Cache\Simple\NullCache;
 
 /**
@@ -43,7 +44,7 @@ class NullCacheTest extends TestCase
 
         $keys = ['foo', 'bar', 'baz', 'biz'];
 
-        $default = new \stdClass();
+        $default = new stdClass();
         $items = $cache->getMultiple($keys, $default);
         $count = 0;
 

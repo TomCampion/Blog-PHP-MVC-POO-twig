@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Mime;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use Symfony\Component\Mime\Exception\LogicException;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\DataPart;
@@ -18,6 +20,7 @@ use Symfony\Component\Mime\Part\Multipart\AlternativePart;
 use Symfony\Component\Mime\Part\Multipart\MixedPart;
 use Symfony\Component\Mime\Part\Multipart\RelatedPart;
 use Symfony\Component\Mime\Part\TextPart;
+use function is_resource;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -62,12 +65,12 @@ class Email extends Message
     /**
      * @return $this
      */
-    public function date(\DateTimeInterface $dateTime)
+    public function date(DateTimeInterface $dateTime)
     {
         return $this->setHeaderBody('Date', 'Date', $dateTime);
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): ?DateTimeImmutable
     {
         return $this->getHeaders()->getHeaderBody('Date');
     }
@@ -454,7 +457,7 @@ class Email extends Message
         $htmlPart = null;
         $html = $this->html;
         if (null !== $this->html) {
-            if (\is_resource($html)) {
+            if (is_resource($html)) {
                 if (stream_get_meta_data($html)['seekable'] ?? false) {
                     rewind($html);
                 }
@@ -548,7 +551,7 @@ class Email extends Message
      */
     public function __serialize(): array
     {
-        if (\is_resource($this->text)) {
+        if (is_resource($this->text)) {
             if (stream_get_meta_data($this->text)['seekable'] ?? false) {
                 rewind($this->text);
             }
@@ -556,7 +559,7 @@ class Email extends Message
             $this->text = stream_get_contents($this->text);
         }
 
-        if (\is_resource($this->html)) {
+        if (is_resource($this->html)) {
             if (stream_get_meta_data($this->html)['seekable'] ?? false) {
                 rewind($this->html);
             }
@@ -565,7 +568,7 @@ class Email extends Message
         }
 
         foreach ($this->attachments as $i => $attachment) {
-            if (isset($attachment['body']) && \is_resource($attachment['body'])) {
+            if (isset($attachment['body']) && is_resource($attachment['body'])) {
                 if (stream_get_meta_data($attachment['body'])['seekable'] ?? false) {
                     rewind($attachment['body']);
                 }

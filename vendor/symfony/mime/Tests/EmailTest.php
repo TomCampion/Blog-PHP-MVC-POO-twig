@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Mime\Tests;
 
+use DateTimeImmutable;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -33,7 +35,7 @@ class EmailTest extends TestCase
     public function testDate()
     {
         $e = new Email();
-        $e->date($d = new \DateTimeImmutable());
+        $e->date($d = new DateTimeImmutable());
         $this->assertSame($d, $e->getDate());
     }
 
@@ -234,7 +236,7 @@ class EmailTest extends TestCase
 
     public function testGenerateBodyThrowsWhenEmptyBody()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         (new Email())->getBody();
     }
 

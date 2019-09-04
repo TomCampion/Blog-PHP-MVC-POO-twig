@@ -11,10 +11,13 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use PHPUnit_Framework_MockObject_MockObject;
+use stdClass;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\Tests\Fixtures\ExternalAdapter;
 
@@ -34,7 +37,7 @@ class ChainAdapterTest extends AdapterTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage At least one adapter must be specified.
      */
     public function testEmptyAdaptersException()
@@ -43,12 +46,12 @@ class ChainAdapterTest extends AdapterTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The class "stdClass" does not implement
      */
     public function testInvalidAdapterException()
     {
-        new ChainAdapter([new \stdClass()]);
+        new ChainAdapter([new stdClass()]);
     }
 
     public function testPrune()
@@ -73,7 +76,7 @@ class ChainAdapterTest extends AdapterTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|PruneableCacheInterface
+     * @return PHPUnit_Framework_MockObject_MockObject|PruneableCacheInterface
      */
     private function getPruneableMock()
     {
@@ -90,7 +93,7 @@ class ChainAdapterTest extends AdapterTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|PruneableCacheInterface
+     * @return PHPUnit_Framework_MockObject_MockObject|PruneableCacheInterface
      */
     private function getFailingPruneableMock()
     {
@@ -107,7 +110,7 @@ class ChainAdapterTest extends AdapterTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdapterInterface
+     * @return PHPUnit_Framework_MockObject_MockObject|AdapterInterface
      */
     private function getNonPruneableMock()
     {

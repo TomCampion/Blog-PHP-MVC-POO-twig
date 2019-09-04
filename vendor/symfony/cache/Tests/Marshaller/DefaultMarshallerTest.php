@@ -11,8 +11,10 @@
 
 namespace Symfony\Component\Cache\Tests\Marshaller;
 
+use DomainException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Marshaller\DefaultMarshaller;
+use function extension_loaded;
 
 class DefaultMarshallerTest extends TestCase
 {
@@ -24,7 +26,7 @@ class DefaultMarshallerTest extends TestCase
             'b' => function () {},
         ];
 
-        $expected = ['a' => \extension_loaded('igbinary') ? igbinary_serialize(123) : serialize(123)];
+        $expected = ['a' => extension_loaded('igbinary') ? igbinary_serialize(123) : serialize(123)];
         $this->assertSame($expected, $marshaller->marshall($values, $failed));
         $this->assertSame(['b'], $failed);
     }
@@ -51,7 +53,7 @@ class DefaultMarshallerTest extends TestCase
     }
 
     /**
-     * @expectedException \DomainException
+     * @expectedException DomainException
      * @expectedExceptionMessage Class not found: NotExistingClass
      */
     public function testNativeUnserializeNotFoundClass()
@@ -62,7 +64,7 @@ class DefaultMarshallerTest extends TestCase
 
     /**
      * @requires extension igbinary
-     * @expectedException \DomainException
+     * @expectedException DomainException
      * @expectedExceptionMessage Class not found: NotExistingClass
      */
     public function testIgbinaryUnserializeNotFoundClass()
@@ -72,7 +74,7 @@ class DefaultMarshallerTest extends TestCase
     }
 
     /**
-     * @expectedException \DomainException
+     * @expectedException DomainException
      * @expectedExceptionMessage unserialize(): Error at offset 0 of 3 bytes
      */
     public function testNativeUnserializeInvalid()
@@ -88,7 +90,7 @@ class DefaultMarshallerTest extends TestCase
 
     /**
      * @requires extension igbinary
-     * @expectedException \DomainException
+     * @expectedException DomainException
      * @expectedExceptionMessage igbinary_unserialize_zval: unknown type '61', position 5
      */
     public function testIgbinaryUnserializeInvalid()

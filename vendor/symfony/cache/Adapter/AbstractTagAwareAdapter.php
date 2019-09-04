@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Closure;
+use Exception;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
@@ -18,6 +20,13 @@ use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\AbstractAdapterTrait;
 use Symfony\Component\Cache\Traits\ContractsTrait;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
+use function array_key_exists;
+use function count;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function strlen;
 
 /**
  * Abstract for native TagAware adapters.
@@ -41,17 +50,17 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
     protected function __construct(string $namespace = '', int $defaultLifetime = 0)
     {
         $this->namespace = '' === $namespace ? '' : CacheItem::validateKey($namespace).':';
-        if (null !== $this->maxIdLength && \strlen($namespace) > $this->maxIdLength - 24) {
-            throw new InvalidArgumentException(sprintf('Namespace must be %d chars max, %d given ("%s")', $this->maxIdLength - 24, \strlen($namespace), $namespace));
+        if (null !== $this->maxIdLength && strlen($namespace) > $this->maxIdLength - 24) {
+            throw new InvalidArgumentException(sprintf('Namespace must be %d chars max, %d given ("%s")', $this->maxIdLength - 24, strlen($namespace), $namespace));
         }
-        $this->createCacheItem = \Closure::bind(
+        $this->createCacheItem = Closure::bind(
             static function ($key, $value, $isHit) use ($defaultLifetime) {
                 $item = new CacheItem();
                 $item->key = $key;
                 $item->defaultLifetime = $defaultLifetime;
                 $item->isTaggable = true;
                 // If structure does not match what we expect return item as is (no value and not a hit)
-                if (!\is_array($value) || !\array_key_exists('value', $value)) {
+                if (!is_array($value) || !array_key_exists('value', $value)) {
                     return $item;
                 }
                 $item->isHit = $isHit;
@@ -70,9 +79,9 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
             null,
             CacheItem::class
         );
-        $getId = \Closure::fromCallable([$this, 'getId']);
+        $getId = Closure::fromCallable([$this, 'getId']);
         $tagPrefix = self::TAGS_PREFIX;
-        $this->mergeByLifetime = \Closure::bind(
+        $this->mergeByLifetime = Closure::bind(
             static function ($deferred, &$expiredIds) use ($getId, $tagPrefix) {
                 $byLifetime = [];
                 $now = microtime(true);
@@ -168,18 +177,18 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
             try {
                 $values = $this->extractTagData($values, $addTagData, $removeTagData);
                 $e = $this->doSave($values, $lifetime, $addTagData, $removeTagData);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
             if (true === $e || [] === $e) {
                 continue;
             }
-            if (\is_array($e) || 1 === \count($values)) {
-                foreach (\is_array($e) ? $e : array_keys($values) as $id) {
+            if (is_array($e) || 1 === count($values)) {
+                foreach (is_array($e) ? $e : array_keys($values) as $id) {
                     $ok = false;
                     $v = $values[$id];
-                    $type = \is_object($v) ? \get_class($v) : \gettype($v);
-                    $message = sprintf('Failed to save key "{key}" of type %s%s', $type, $e instanceof \Exception ? ': '.$e->getMessage() : '.');
-                    CacheItem::log($this->logger, $message, ['key' => substr($id, \strlen($this->namespace)), 'exception' => $e instanceof \Exception ? $e : null]);
+                    $type = is_object($v) ? get_class($v) : gettype($v);
+                    $message = sprintf('Failed to save key "{key}" of type %s%s', $type, $e instanceof Exception ? ': '.$e->getMessage() : '.');
+                    CacheItem::log($this->logger, $message, ['key' => substr($id, strlen($this->namespace)), 'exception' => $e instanceof Exception ? $e : null]);
                 }
             } else {
                 foreach ($values as $id => $v) {
@@ -195,15 +204,15 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
                     $v = $byLifetime[$lifetime][$id];
                     $values = $this->extractTagData([$id => $v], $addTagData, $removeTagData);
                     $e = $this->doSave($values, $lifetime, $addTagData, $removeTagData);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
                 if (true === $e || [] === $e) {
                     continue;
                 }
                 $ok = false;
-                $type = \is_object($v) ? \get_class($v) : \gettype($v);
-                $message = sprintf('Failed to save key "{key}" of type %s%s', $type, $e instanceof \Exception ? ': '.$e->getMessage() : '.');
-                CacheItem::log($this->logger, $message, ['key' => substr($id, \strlen($this->namespace)), 'exception' => $e instanceof \Exception ? $e : null]);
+                $type = is_object($v) ? get_class($v) : gettype($v);
+                $message = sprintf('Failed to save key "{key}" of type %s%s', $type, $e instanceof Exception ? ': '.$e->getMessage() : '.');
+                CacheItem::log($this->logger, $message, ['key' => substr($id, strlen($this->namespace)), 'exception' => $e instanceof Exception ? $e : null]);
             }
         }
 
@@ -239,7 +248,7 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
             if ($this->doDelete(array_values($ids), $tagData)) {
                 return true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         $ok = true;
@@ -251,9 +260,9 @@ abstract class AbstractTagAwareAdapter implements TagAwareAdapterInterface, TagA
                 if ($this->doDelete([$id])) {
                     continue;
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
-            $message = 'Failed to delete key "{key}"'.($e instanceof \Exception ? ': '.$e->getMessage() : '.');
+            $message = 'Failed to delete key "{key}"'.($e instanceof Exception ? ': '.$e->getMessage() : '.');
             CacheItem::log($this->logger, $message, ['key' => $key, 'exception' => $e]);
             $ok = false;
         }

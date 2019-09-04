@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Cache\Exception\CacheException;
 
 /**
@@ -33,7 +36,7 @@ trait FilesystemTrait
         $time = time();
         $pruned = true;
 
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
             if (!$h = @fopen($file, 'rb')) {
                 continue;
             }

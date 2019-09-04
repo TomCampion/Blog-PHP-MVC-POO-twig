@@ -11,12 +11,17 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Cache\Exception\LogicException;
 use Symfony\Component\Cache\Marshaller\DefaultMarshaller;
 use Symfony\Component\Cache\Marshaller\MarshallerInterface;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\Traits\FilesystemTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use function in_array;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Stores tag id <> cache id relationship as a symlink, and lookup on invalidation calls.
@@ -62,7 +67,7 @@ class FilesystemTagAwareAdapter extends AbstractTagAwareAdapter implements Prune
         foreach ($addTagData as $tagId => $ids) {
             $tagFolder = $this->getTagFolder($tagId);
             foreach ($ids as $id) {
-                if ($failed && \in_array($id, $failed, true)) {
+                if ($failed && in_array($id, $failed, true)) {
                     continue;
                 }
 
@@ -76,7 +81,7 @@ class FilesystemTagAwareAdapter extends AbstractTagAwareAdapter implements Prune
         foreach ($removeTagData as $tagId => $ids) {
             $tagFolder = $this->getTagFolder($tagId);
             foreach ($ids as $id) {
-                if ($failed && \in_array($id, $failed, true)) {
+                if ($failed && in_array($id, $failed, true)) {
                     continue;
                 }
 
@@ -120,7 +125,7 @@ class FilesystemTagAwareAdapter extends AbstractTagAwareAdapter implements Prune
                 continue;
             }
 
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($tagsFolder, \FilesystemIterator::SKIP_DOTS)) as $itemLink) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($tagsFolder, FilesystemIterator::SKIP_DOTS)) as $itemLink) {
                 if (!$itemLink->isLink()) {
                     throw new LogicException('Expected a (sym)link when iterating over tag folder, non link found: '.$itemLink);
                 }
@@ -144,6 +149,6 @@ class FilesystemTagAwareAdapter extends AbstractTagAwareAdapter implements Prune
 
     private function getTagFolder(string $tagId): string
     {
-        return $this->getFile($tagId, false, $this->directory.self::TAG_FOLDER.\DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR;
+        return $this->getFile($tagId, false, $this->directory.self::TAG_FOLDER. DIRECTORY_SEPARATOR). DIRECTORY_SEPARATOR;
     }
 }

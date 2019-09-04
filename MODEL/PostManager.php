@@ -1,6 +1,7 @@
 <?php
 namespace Tom\Blog\Model;
 
+use Exception;
 use Tom\Blog\Model\Posts;
 
 Class PostManager extends Manager {
@@ -52,10 +53,10 @@ Class PostManager extends Manager {
                         $posts = $query->fetchAll();
                         return $posts;
                     }else{
-                        throw new \Exception("Impossible d'effectuer un tri par ordre : ".$order);
+                        throw new Exception("Impossible d'effectuer un tri par ordre : ".$order);
                     }
                 }else{
-                    throw new \Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
+                    throw new Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
                 }
             } catch (Exception $e) {
             echo 'Impossible de selectionner les posts : '.$e->getMessage().'<br>';

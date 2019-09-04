@@ -13,6 +13,7 @@ namespace Symfony\Component\Mime\Tests\Encoder;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Encoder\QpEncoder;
+use function chr;
 
 class QpEncoderTest extends TestCase
 {
@@ -45,7 +46,7 @@ class QpEncoderTest extends TestCase
 
         $encoder = new QpEncoder();
         foreach (array_merge(range(33, 60), range(62, 126)) as $ordinal) {
-            $char = \chr($ordinal);
+            $char = chr($ordinal);
             $this->assertSame($char, $encoder->encodeString($char));
         }
     }
@@ -77,8 +78,8 @@ class QpEncoderTest extends TestCase
 
         $encoder = new QpEncoder();
 
-        $HT = \chr(0x09); // 9
-        $SPACE = \chr(0x20); // 32
+        $HT = chr(0x09); // 9
+        $SPACE = chr(0x20); // 32
 
         // HT
         $string = 'a'.$HT.$HT."\r\n".'b';
@@ -168,7 +169,7 @@ class QpEncoderTest extends TestCase
         // According to Rule (1 & 2)
         $encoder = new QpEncoder();
         foreach (range(0, 32) as $ordinal) {
-            $char = \chr($ordinal);
+            $char = chr($ordinal);
             $this->assertEquals(sprintf('=%02X', $ordinal), $encoder->encodeString($char));
         }
     }
@@ -185,7 +186,7 @@ class QpEncoderTest extends TestCase
         // According to Rule (1 & 2)
         $encoder = new QpEncoder();
         foreach (range(127, 255) as $ordinal) {
-            $this->assertSame(sprintf('=%02X', $ordinal), $encoder->encodeString(\chr($ordinal), 'iso-8859-1'));
+            $this->assertSame(sprintf('=%02X', $ordinal), $encoder->encodeString(chr($ordinal), 'iso-8859-1'));
         }
     }
 

@@ -11,9 +11,18 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Exception;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\VarExporter\VarExporter;
+use function count;
+use function dirname;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_int;
+use function is_object;
+use function is_string;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -45,7 +54,7 @@ trait PhpArrayTrait
                 throw new InvalidArgumentException(sprintf('Cache file is not writable: %s.', $this->file));
             }
         } else {
-            $directory = \dirname($this->file);
+            $directory = dirname($this->file);
 
             if (!is_dir($directory) && !@mkdir($directory, 0777, true)) {
                 throw new InvalidArgumentException(sprintf('Cache directory does not exist and cannot be created: %s.', $directory));
@@ -69,25 +78,25 @@ return [[
 EOF;
 
         foreach ($values as $key => $value) {
-            CacheItem::validateKey(\is_int($key) ? (string) $key : $key);
+            CacheItem::validateKey(is_int($key) ? (string) $key : $key);
             $isStaticValue = true;
 
             if (null === $value) {
                 $value = "'N;'";
-            } elseif (\is_object($value) || \is_array($value)) {
+            } elseif (is_object($value) || is_array($value)) {
                 try {
                     $value = VarExporter::export($value, $isStaticValue);
-                } catch (\Exception $e) {
-                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, \is_object($value) ? \get_class($value) : 'array'), 0, $e);
+                } catch (Exception $e) {
+                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, is_object($value) ? get_class($value) : 'array'), 0, $e);
                 }
-            } elseif (\is_string($value)) {
+            } elseif (is_string($value)) {
                 // Wrap "N;" in a closure to not confuse it with an encoded `null`
                 if ('N;' === $value) {
                     $isStaticValue = false;
                 }
                 $value = var_export($value, true);
             } elseif (!is_scalar($value)) {
-                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, \gettype($value)));
+                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, gettype($value)));
             } else {
                 $value = var_export($value, true);
             }
@@ -99,7 +108,7 @@ EOF;
             $hash = hash('md5', $value);
 
             if (null === $id = $dumpedMap[$hash] ?? null) {
-                $id = $dumpedMap[$hash] = \count($dumpedMap);
+                $id = $dumpedMap[$hash] = count($dumpedMap);
                 $dumpedValues .= "{$id} => {$value},\n";
             }
 
@@ -143,7 +152,7 @@ EOF;
         }
         $values = (include $this->file) ?: [[], []];
 
-        if (2 !== \count($values) || !isset($values[0], $values[1])) {
+        if (2 !== count($values) || !isset($values[0], $values[1])) {
             $this->keys = $this->values = [];
         } else {
             list($this->keys, $this->values) = $values;

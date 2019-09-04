@@ -19,6 +19,7 @@ use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\Test\DefinedTest;
 use Twig\Node\Node;
+use function count;
 
 /**
  * Returns the value or the default value when it is undefined or empty.
@@ -35,7 +36,7 @@ class DefaultFilter extends FilterExpression
 
         if ('default' === $filterName->getAttribute('value') && ($node instanceof NameExpression || $node instanceof GetAttrExpression)) {
             $test = new DefinedTest(clone $node, 'defined', new Node(), $node->getTemplateLine());
-            $false = \count($arguments) ? $arguments->getNode(0) : new ConstantExpression('', $node->getTemplateLine());
+            $false = count($arguments) ? $arguments->getNode(0) : new ConstantExpression('', $node->getTemplateLine());
 
             $node = new ConditionalExpression($test, $default, $false, $node->getTemplateLine());
         } else {

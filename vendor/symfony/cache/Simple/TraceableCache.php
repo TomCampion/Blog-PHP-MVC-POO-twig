@@ -12,10 +12,14 @@
 namespace Symfony\Component\Cache\Simple;
 
 use Psr\SimpleCache\CacheInterface as Psr16CacheInterface;
+use stdClass;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Traversable;
+use function is_array;
+use function is_object;
 
 @trigger_error(sprintf('The "%s" class is deprecated since Symfony 4.3, use "%s" and type-hint for "%s" instead.', TraceableCache::class, TraceableAdapter::class, CacheInterface::class), E_USER_DEPRECATED);
 
@@ -31,7 +35,7 @@ class TraceableCache implements Psr16CacheInterface, PruneableInterface, Resetta
     public function __construct(Psr16CacheInterface $pool)
     {
         $this->pool = $pool;
-        $this->miss = new \stdClass();
+        $this->miss = new stdClass();
     }
 
     /**
@@ -39,7 +43,7 @@ class TraceableCache implements Psr16CacheInterface, PruneableInterface, Resetta
      */
     public function get($key, $default = null)
     {
-        $miss = null !== $default && \is_object($default) ? $default : $this->miss;
+        $miss = null !== $default && is_object($default) ? $default : $this->miss;
         $event = $this->start(__FUNCTION__);
         try {
             $value = $this->pool->get($key, $miss);
@@ -103,7 +107,7 @@ class TraceableCache implements Psr16CacheInterface, PruneableInterface, Resetta
         $event = $this->start(__FUNCTION__);
         $event->result['keys'] = [];
 
-        if ($values instanceof \Traversable) {
+        if ($values instanceof Traversable) {
             $values = function () use ($values, $event) {
                 foreach ($values as $k => $v) {
                     $event->result['keys'][] = $k;
@@ -111,7 +115,7 @@ class TraceableCache implements Psr16CacheInterface, PruneableInterface, Resetta
                 }
             };
             $values = $values();
-        } elseif (\is_array($values)) {
+        } elseif (is_array($values)) {
             $event->result['keys'] = array_keys($values);
         }
 
@@ -127,7 +131,7 @@ class TraceableCache implements Psr16CacheInterface, PruneableInterface, Resetta
      */
     public function getMultiple($keys, $default = null)
     {
-        $miss = null !== $default && \is_object($default) ? $default : $this->miss;
+        $miss = null !== $default && is_object($default) ? $default : $this->miss;
         $event = $this->start(__FUNCTION__);
         try {
             $result = $this->pool->getMultiple($keys, $miss);
@@ -169,7 +173,7 @@ class TraceableCache implements Psr16CacheInterface, PruneableInterface, Resetta
     public function deleteMultiple($keys)
     {
         $event = $this->start(__FUNCTION__);
-        if ($keys instanceof \Traversable) {
+        if ($keys instanceof Traversable) {
             $keys = $event->result['keys'] = iterator_to_array($keys, false);
         } else {
             $event->result['keys'] = $keys;

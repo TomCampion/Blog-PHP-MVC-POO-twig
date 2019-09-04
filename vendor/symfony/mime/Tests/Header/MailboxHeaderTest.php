@@ -13,6 +13,7 @@ namespace Symfony\Component\Mime\Tests\Header;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Exception\AddressEncoderException;
 use Symfony\Component\Mime\Header\MailboxHeader;
 use Symfony\Component\Mime\NamedAddress;
 
@@ -60,7 +61,7 @@ class MailboxHeaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Mime\Exception\AddressEncoderException
+     * @expectedException AddressEncoderException
      */
     public function testUtf8CharsInLocalPartThrows()
     {

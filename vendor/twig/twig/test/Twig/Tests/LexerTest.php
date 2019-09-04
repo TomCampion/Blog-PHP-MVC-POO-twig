@@ -9,13 +9,15 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
 use Twig\Token;
 
-class Twig_Tests_LexerTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_LexerTest extends TestCase
 {
     public function testNameLabelForTag()
     {
@@ -235,7 +237,7 @@ class Twig_Tests_LexerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\SyntaxError
+     * @expectedException SyntaxError
      * @expectedExceptionMessage Unclosed """
      */
     public function testStringWithUnterminatedInterpolation()
@@ -305,7 +307,7 @@ class Twig_Tests_LexerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\SyntaxError
+     * @expectedException SyntaxError
      * @expectedExceptionMessage Unclosed "variable" in "index" at line 3
      */
     public function testUnterminatedVariable()
@@ -324,7 +326,7 @@ bar
     }
 
     /**
-     * @expectedException \Twig\Error\SyntaxError
+     * @expectedException SyntaxError
      * @expectedExceptionMessage Unclosed "block" in "index" at line 3
      */
     public function testUnterminatedBlock()
