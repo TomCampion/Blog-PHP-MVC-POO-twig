@@ -20,8 +20,15 @@ class BlogController extends Controller{
     }
 
     public function executeBlog(){
-        $publishedPosts = $this->PostManager->getPublishedPosts();
-        echo  $this->twig->render('blog.twig', ['publishedPosts' => $publishedPosts ]);
+        $nbrpost = 4;
+        if(empty($_POST['page'])){
+            $_POST['page'] = 1;
+        }
+        if($_POST['page'] > ceil($this->PostManager->getPostsNumber()/$nbrpost)){
+            $_POST['page'] = ceil($this->PostManager->getPostsNumber()/$nbrpost);
+        }
+        $publishedPosts = $this->PostManager->getPublishedPosts((int)$_POST['page'], $nbrpost);
+        echo  $this->twig->render('blog.twig', ['publishedPosts' => $publishedPosts, 'page'=> (int)$_POST['page']]);
     }
 
     public function executeAddComment($params){
