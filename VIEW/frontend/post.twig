@@ -60,6 +60,12 @@
                                             <p class="media-comment">
                                                {{comment.content}}
                                             </p>
+                                            {% if session.id == comment.user_id %}
+                                                <a class="editComment comment{{ comment.id }}" onclick="editComment({{ comment.id }})" >edit</a>
+                                            {% endif %}
+                                            <p class="dateEditComments">
+                                                Commentaire édité le {{comment.updateDate |date("d/m/Y H:i")}}
+                                            </p>
                                         </div>
                                     </div>
                                 </li>
@@ -91,6 +97,15 @@
         </div>
 </div>
     <!--/comment-->
+    <script>
+        function editComment(comment_id) {
+            if($('.comment'+comment_id).prev()[0].tagName == 'P'){
+                $('.comment'+comment_id).prev().replaceWith('<form method="post" action="editComment-'+comment_id+'"><textarea class="tcom'+comment_id+' textareaEditComment" name="editComment">'+$('.comment'+comment_id).prev().html().trim()+'</textarea><input type="submit" value="enregistrer modification"></form>');
+            }else{
+                $('.comment'+comment_id).prev().replaceWith('<p class="media-comment">'+$('.tcom'+comment_id+'').html()+'</p>');
+            }
+        }
+    </script>
 
 <script type="text/javascript">
                     function customAjaxScroll() {
