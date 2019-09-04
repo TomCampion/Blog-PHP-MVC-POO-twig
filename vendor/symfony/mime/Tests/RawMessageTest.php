@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Mime\Tests;
 
+use ArrayObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\RawMessage;
 
@@ -25,7 +26,7 @@ class RawMessageTest extends TestCase
         $this->assertEquals('string', $message->toString());
         $this->assertEquals('string', implode('', iterator_to_array($message->toIterable())));
 
-        $message = new RawMessage(new \ArrayObject(['some', ' ', 'string']));
+        $message = new RawMessage(new ArrayObject(['some', ' ', 'string']));
         $this->assertEquals('some string', $message->toString());
         $this->assertEquals('some string', implode('', iterator_to_array($message->toIterable())));
         // calling methods more than once work

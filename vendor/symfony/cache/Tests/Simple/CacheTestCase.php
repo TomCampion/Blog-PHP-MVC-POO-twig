@@ -12,8 +12,11 @@
 namespace Symfony\Component\Cache\Tests\Simple;
 
 use Cache\IntegrationTests\SimpleCacheTest;
+use DateInterval;
+use Exception;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\PruneableInterface;
+use function array_key_exists;
 
 abstract class CacheTestCase extends SimpleCacheTest
 {
@@ -21,7 +24,7 @@ abstract class CacheTestCase extends SimpleCacheTest
     {
         parent::setUp();
 
-        if (!\array_key_exists('testPrune', $this->skippedTests) && !$this->createSimpleCache() instanceof PruneableInterface) {
+        if (!array_key_exists('testPrune', $this->skippedTests) && !$this->createSimpleCache() instanceof PruneableInterface) {
             $this->skippedTests['testPrune'] = 'Not a pruneable cache pool.';
         }
     }
@@ -87,10 +90,10 @@ abstract class CacheTestCase extends SimpleCacheTest
         $cache = $this->createSimpleCache();
         $cache->clear();
 
-        $cache->set('foo', 'foo-val', new \DateInterval('PT05S'));
-        $cache->set('bar', 'bar-val', new \DateInterval('PT10S'));
-        $cache->set('baz', 'baz-val', new \DateInterval('PT15S'));
-        $cache->set('qux', 'qux-val', new \DateInterval('PT20S'));
+        $cache->set('foo', 'foo-val', new DateInterval('PT05S'));
+        $cache->set('bar', 'bar-val', new DateInterval('PT10S'));
+        $cache->set('baz', 'baz-val', new DateInterval('PT15S'));
+        $cache->set('qux', 'qux-val', new DateInterval('PT20S'));
 
         sleep(30);
         $cache->prune();
@@ -100,9 +103,9 @@ abstract class CacheTestCase extends SimpleCacheTest
         $this->assertTrue($this->isPruned($cache, 'qux'));
 
         $cache->set('foo', 'foo-val');
-        $cache->set('bar', 'bar-val', new \DateInterval('PT20S'));
-        $cache->set('baz', 'baz-val', new \DateInterval('PT40S'));
-        $cache->set('qux', 'qux-val', new \DateInterval('PT80S'));
+        $cache->set('bar', 'bar-val', new DateInterval('PT20S'));
+        $cache->set('baz', 'baz-val', new DateInterval('PT40S'));
+        $cache->set('qux', 'qux-val', new DateInterval('PT80S'));
 
         $cache->prune();
         $this->assertFalse($this->isPruned($cache, 'foo'));
@@ -136,6 +139,6 @@ class NotUnserializable
 {
     public function __wakeup()
     {
-        throw new \Exception(__CLASS__);
+        throw new Exception(__CLASS__);
     }
 }

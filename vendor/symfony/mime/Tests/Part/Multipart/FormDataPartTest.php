@@ -12,6 +12,7 @@
 namespace Symfony\Component\Mime\Tests\Part\Multipart;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Component\Mime\Part\TextPart;
@@ -20,7 +21,7 @@ class FormDataPartTest extends TestCase
 {
     public function testConstructor()
     {
-        $r = new \ReflectionProperty(TextPart::class, 'encoding');
+        $r = new ReflectionProperty(TextPart::class, 'encoding');
         $r->setAccessible(true);
 
         $b = new TextPart('content');

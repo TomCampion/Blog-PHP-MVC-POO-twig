@@ -61,13 +61,13 @@ class ProfileController extends Controller{
         }
     }
 
-    private function changePassword( String $password){
+    private function changePassword( String $password, String $password2){
         $message = '';
         if(strlen($password) < 3)
             $message = '<p class="msg_error">Votre mot de passe est trop court, il doit faire au moins 3 caractères </p>';
         if(strlen($password) > 254)
             $message = $message.'<p class="msg_error">La taille maximum du mot de passe est de 254 caractères ! </p>';
-        if($_POST['password'] !== $_POST['password2'])
+        if($password !== $password2)
             $message = $message.'<p class="msg_error">Vos mots de passe sont différents ! </p>';
 
         if (empty($message)) {
@@ -83,7 +83,7 @@ class ProfileController extends Controller{
     public function executeChangePassword(){
         $this->redirectedUnconnectedUsers();
         if(!empty($_POST['password']) and !empty($_POST['password2'])) {
-            $msg_password = $this->changePassword($_POST['password']);
+            $msg_password = $this->changePassword($_POST['password'], $_POST['password2']);
             echo $this->twig->render('profil.twig', ['msg' => $msg_password]);
         }else{
             $this->executeProfil();

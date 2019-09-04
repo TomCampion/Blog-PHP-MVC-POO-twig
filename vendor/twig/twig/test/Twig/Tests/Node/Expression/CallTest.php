@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
+use Twig\Error\SyntaxError;
 use Twig\Node\Expression\CallExpression;
 
-class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_Node_Expression_CallTest extends TestCase
 {
     public function testGetArguments()
     {
@@ -20,7 +22,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Positional arguments cannot be used after named arguments for function "date".
      */
     public function testGetArgumentsWhenPositionalArgumentsAfterNamedArguments()
@@ -30,7 +32,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Argument "format" is defined twice for function "date".
      */
     public function testGetArgumentsWhenArgumentIsDefinedTwice()
@@ -40,7 +42,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unknown argument "unknown" for function "date(format, timestamp)".
      */
     public function testGetArgumentsWithWrongNamedArgumentName()
@@ -50,7 +52,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Unknown arguments "unknown1", "unknown2" for function "date(format, timestamp)".
      */
     public function testGetArgumentsWithWrongNamedArgumentNames()
@@ -60,7 +62,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \Twig\Error\SyntaxError
+     * @expectedException        SyntaxError
      * @expectedExceptionMessage Argument "case_sensitivity" could not be assigned for function "substr_compare(main_str, str, offset, length, case_sensitivity)" because it is mapped to an internal PHP function which cannot determine default value for optional argument "length".
      */
     public function testResolveArgumentsWithMissingValueForOptionalArgument()
@@ -83,7 +85,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException        \LogicException
+     * @expectedException        LogicException
      * @expectedExceptionMessage The last parameter of "Twig_Tests_Node_Expression_CallTest::customFunctionWithArbitraryArguments" for function "foo" must be an array with default value, eg. "array $arg = []".
      */
     public function testResolveArgumentsWithMissingParameterForArbitraryArguments()
@@ -102,7 +104,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
 
     private function getArguments($call, $args)
     {
-        $m = new \ReflectionMethod($call, 'getArguments');
+        $m = new ReflectionMethod($call, 'getArguments');
         $m->setAccessible(true);
 
         return $m->invokeArgs($call, $args);
@@ -113,7 +115,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException              \LogicException
+     * @expectedException              LogicException
      * @expectedExceptionMessageRegExp #^The last parameter of "custom_Twig_Tests_Node_Expression_CallTest_function" for function "foo" must be an array with default value, eg\. "array \$arg \= \[\]"\.$#
      */
     public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
@@ -123,7 +125,7 @@ class Twig_Tests_Node_Expression_CallTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException              \LogicException
+     * @expectedException              LogicException
      * @expectedExceptionMessageRegExp #^The last parameter of "CallableTestClass\:\:__invoke" for function "foo" must be an array with default value, eg\. "array \$arg \= \[\]"\.$#
      */
     public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()

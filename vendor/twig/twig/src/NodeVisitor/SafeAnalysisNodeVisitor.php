@@ -22,6 +22,7 @@ use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Node;
+use function in_array;
 
 final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
 {
@@ -45,7 +46,7 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
                 continue;
             }
 
-            if (\in_array('html_attr', $bucket['value'])) {
+            if (in_array('html_attr', $bucket['value'])) {
                 $bucket['value'][] = 'html';
             }
 
@@ -122,7 +123,7 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
             }
         } elseif ($node instanceof GetAttrExpression && $node->getNode('node') instanceof NameExpression) {
             $name = $node->getNode('node')->getAttribute('name');
-            if (\in_array($name, $this->safeVars)) {
+            if (in_array($name, $this->safeVars)) {
                 $this->setSafe($node, ['all']);
             } else {
                 $this->setSafe($node, []);
@@ -140,11 +141,11 @@ final class SafeAnalysisNodeVisitor extends AbstractNodeVisitor
             return [];
         }
 
-        if (\in_array('all', $a)) {
+        if (in_array('all', $a)) {
             return $b;
         }
 
-        if (\in_array('all', $b)) {
+        if (in_array('all', $b)) {
             return $a;
         }
 

@@ -12,7 +12,10 @@
 namespace Symfony\Component\Cache\Tests\Adapter;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
+use Symfony\Component\Cache\Exception\InvalidArgumentException;
+use function strlen;
 
 class MaxIdLengthAdapterTest extends TestCase
 {
@@ -40,16 +43,16 @@ class MaxIdLengthAdapterTest extends TestCase
             ->setConstructorArgs([str_repeat('-', 26)])
             ->getMock();
 
-        $reflectionClass = new \ReflectionClass(AbstractAdapter::class);
+        $reflectionClass = new ReflectionClass(AbstractAdapter::class);
 
         $reflectionMethod = $reflectionClass->getMethod('getId');
         $reflectionMethod->setAccessible(true);
 
         // No versioning enabled
         $this->assertEquals('--------------------------:------------', $reflectionMethod->invokeArgs($cache, [str_repeat('-', 12)]));
-        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 12)])));
-        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 23)])));
-        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 40)])));
+        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 12)])));
+        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 23)])));
+        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 40)])));
 
         $reflectionProperty = $reflectionClass->getProperty('versioningIsEnabled');
         $reflectionProperty->setAccessible(true);
@@ -57,13 +60,13 @@ class MaxIdLengthAdapterTest extends TestCase
 
         // Versioning enabled
         $this->assertEquals('--------------------------:1:------------', $reflectionMethod->invokeArgs($cache, [str_repeat('-', 12)]));
-        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 12)])));
-        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 23)])));
-        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 40)])));
+        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 12)])));
+        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 23)])));
+        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, [str_repeat('-', 40)])));
     }
 
     /**
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Namespace must be 26 chars max, 40 given ("----------------------------------------")
      */
     public function testTooLongNamespace()

@@ -1,6 +1,9 @@
 <?php
 namespace Tom\Blog\Model;
 
+use Exception;
+use PDO;
+
 Class UserManager extends Manager {
 
     public function add( Users $usr ){
@@ -68,10 +71,10 @@ Class UserManager extends Manager {
                     $users = $query->fetchAll();
                     return $users;
                 }else{
-                    throw new \Exception("Impossible d'effectuer un tri par ordre : ".$order);
+                    throw new Exception("Impossible d'effectuer un tri par ordre : ".$order);
                 }
             }else{
-                throw new \Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
+                throw new Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
             }
         } catch (Exception $e) {
             echo 'Impossible de selectionner les utilisateurs : '.$e->getMessage().'<br>';
@@ -118,7 +121,7 @@ Class UserManager extends Manager {
     {
         try {
             $valid = true;
-            $db = new \PDO('mysql:host='.getenv("DB_HOST").';dbname='.getenv("DB_NAME").';charset=utf8', ''.getenv("DB_USER").'', ''.getenv("DB_PASSWORD").'');
+            $db = new PDO('mysql:host='.getenv("DB_HOST").';dbname='.getenv("DB_NAME").';charset=utf8', ''.getenv("DB_USER").'', ''.getenv("DB_PASSWORD").'');
             $query = $db->prepare('SELECT id FROM users WHERE email=?');
             $query->execute( array($email) );
             $record = $query->fetch();

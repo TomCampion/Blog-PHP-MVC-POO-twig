@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Profiler\Profile;
 
-class Twig_Tests_Profiler_ProfileTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_Profiler_ProfileTest extends TestCase
 {
     public function testConstructor()
     {

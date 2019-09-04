@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Model;
 
+use Exception;
+
 Class CommentManager extends Manager
 {
 
@@ -71,10 +73,10 @@ Class CommentManager extends Manager
                     $comments = $query->fetchAll();
                     return $comments;
                 }else{
-                    throw new \Exception("Impossible d'effectuer un tri par ordre : ".$order);
+                    throw new Exception("Impossible d'effectuer un tri par ordre : ".$order);
                 }
             }else{
-                throw new \Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
+                throw new Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
             }
         } catch (Exception $e) {
             echo 'Impossible de selectionner les commentaires : ' . $e->getMessage() . '<br>';
@@ -92,11 +94,11 @@ Class CommentManager extends Manager
 
     public function changeState (String $state, int $id){
         try {
-            if($state == \Tom\Blog\Model\Comments::VALID or $state == \Tom\Blog\Model\Comments::INVALID){
+            if($state == Comments::VALID or $state == Comments::INVALID){
                 $query = $this->db->prepare('UPDATE comments SET state= ? WHERE id= ?');
                 $query->execute( array($state, $id));
             }else{
-                throw new \Exception("Impossible de passer le statut du commentaire à : ".$state);
+                throw new Exception("Impossible de passer le statut du commentaire à : ".$state);
             }
         } catch (Exception $e) {
             echo 'Impossible de modifier le commentaire : '.$e->getMessage().'<br>';

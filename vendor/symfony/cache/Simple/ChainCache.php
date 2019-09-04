@@ -12,12 +12,17 @@
 namespace Symfony\Component\Cache\Simple;
 
 use Psr\SimpleCache\CacheInterface as Psr16CacheInterface;
+use stdClass;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Traversable;
+use function count;
+use function get_class;
+use function is_object;
 
 @trigger_error(sprintf('The "%s" class is deprecated since Symfony 4.3, use "%s" and type-hint for "%s" instead.', ChainCache::class, ChainAdapter::class, CacheInterface::class), E_USER_DEPRECATED);
 
@@ -48,13 +53,13 @@ class ChainCache implements Psr16CacheInterface, PruneableInterface, ResettableI
 
         foreach ($caches as $cache) {
             if (!$cache instanceof Psr16CacheInterface) {
-                throw new InvalidArgumentException(sprintf('The class "%s" does not implement the "%s" interface.', \get_class($cache), Psr16CacheInterface::class));
+                throw new InvalidArgumentException(sprintf('The class "%s" does not implement the "%s" interface.', get_class($cache), Psr16CacheInterface::class));
             }
         }
 
-        $this->miss = new \stdClass();
+        $this->miss = new stdClass();
         $this->caches = array_values($caches);
-        $this->cacheCount = \count($this->caches);
+        $this->cacheCount = count($this->caches);
         $this->defaultLifetime = 0 < $defaultLifetime ? $defaultLifetime : null;
     }
 
@@ -63,7 +68,7 @@ class ChainCache implements Psr16CacheInterface, PruneableInterface, ResettableI
      */
     public function get($key, $default = null)
     {
-        $miss = null !== $default && \is_object($default) ? $default : $this->miss;
+        $miss = null !== $default && is_object($default) ? $default : $this->miss;
 
         foreach ($this->caches as $i => $cache) {
             $value = $cache->get($key, $miss);
@@ -85,7 +90,7 @@ class ChainCache implements Psr16CacheInterface, PruneableInterface, ResettableI
      */
     public function getMultiple($keys, $default = null)
     {
-        $miss = null !== $default && \is_object($default) ? $default : $this->miss;
+        $miss = null !== $default && is_object($default) ? $default : $this->miss;
 
         return $this->generateItems($this->caches[0]->getMultiple($keys, $miss), 0, $miss, $default);
     }
@@ -170,7 +175,7 @@ class ChainCache implements Psr16CacheInterface, PruneableInterface, ResettableI
      */
     public function deleteMultiple($keys)
     {
-        if ($keys instanceof \Traversable) {
+        if ($keys instanceof Traversable) {
             $keys = iterator_to_array($keys, false);
         }
         $deleted = true;
@@ -203,7 +208,7 @@ class ChainCache implements Psr16CacheInterface, PruneableInterface, ResettableI
      */
     public function setMultiple($values, $ttl = null)
     {
-        if ($values instanceof \Traversable) {
+        if ($values instanceof Traversable) {
             $valuesIterator = $values;
             $values = function () use ($valuesIterator, &$values) {
                 $generatedValues = [];

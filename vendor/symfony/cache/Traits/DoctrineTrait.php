@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Error;
+use ErrorException;
+
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  *
@@ -37,7 +40,7 @@ trait DoctrineTrait
         $unserializeCallbackHandler = ini_set('unserialize_callback_func', parent::class.'::handleUnserializeCallback');
         try {
             return $this->provider->fetchMultiple($ids);
-        } catch (\Error $e) {
+        } catch (Error $e) {
             $trace = $e->getTrace();
 
             if (isset($trace[0]['function']) && !isset($trace[0]['class'])) {
@@ -45,7 +48,7 @@ trait DoctrineTrait
                     case 'unserialize':
                     case 'apcu_fetch':
                     case 'apc_fetch':
-                        throw new \ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
+                        throw new ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
                 }
             }
 

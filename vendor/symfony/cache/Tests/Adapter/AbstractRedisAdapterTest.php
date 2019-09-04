@@ -11,7 +11,9 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use Redis;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
+use function extension_loaded;
 
 abstract class AbstractRedisAdapterTest extends AdapterTestCase
 {
@@ -30,10 +32,10 @@ abstract class AbstractRedisAdapterTest extends AdapterTestCase
 
     public static function setupBeforeClass()
     {
-        if (!\extension_loaded('redis')) {
+        if (!extension_loaded('redis')) {
             self::markTestSkipped('Extension redis required.');
         }
-        if (!@((new \Redis())->connect(getenv('REDIS_HOST')))) {
+        if (!@((new Redis())->connect(getenv('REDIS_HOST')))) {
             $e = error_get_last();
             self::markTestSkipped($e['message']);
         }

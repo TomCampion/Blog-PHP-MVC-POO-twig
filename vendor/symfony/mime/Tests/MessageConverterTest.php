@@ -12,6 +12,7 @@
 namespace Symfony\Component\Mime\Tests;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Mime\MessageConverter;
@@ -66,7 +67,7 @@ class MessageConverterTest extends TestCase
 
     private function assertConversion(Email $expected)
     {
-        $r = new \ReflectionMethod($expected, 'generateBody');
+        $r = new ReflectionMethod($expected, 'generateBody');
         $r->setAccessible(true);
 
         $message = new Message($expected->getHeaders(), $r->invoke($expected));

@@ -13,6 +13,7 @@ namespace Symfony\Component\Mime\Header;
 
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
+use function is_array;
 
 /**
  * An ID MIME Header for something like Message-ID or Content-ID (one or more addresses).
@@ -63,7 +64,7 @@ final class IdentificationHeader extends AbstractHeader
      */
     public function setId($id)
     {
-        $this->setIds(\is_array($id) ? $id : [$id]);
+        $this->setIds(is_array($id) ? $id : [$id]);
     }
 
     /**

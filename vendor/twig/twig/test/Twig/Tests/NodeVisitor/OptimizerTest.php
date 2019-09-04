@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\BlockReferenceExpression;
@@ -17,7 +18,7 @@ use Twig\Node\ForNode;
 use Twig\Node\Node;
 use Twig\Source;
 
-class Twig_Tests_NodeVisitor_OptimizerTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_NodeVisitor_OptimizerTest extends TestCase
 {
     public function testRenderBlockOptimizer()
     {

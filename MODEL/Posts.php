@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Model;
 
+use Exception;
+
 Class Posts extends Entity {
 
     private $id;
@@ -35,7 +37,7 @@ Class Posts extends Entity {
         if($id > 0){
             $this->id = $id;
         }else{
-            throw new \Exception("User id can not be < 0");
+            throw new Exception("User id can not be < 0");
         }
     }
 
@@ -58,10 +60,10 @@ Class Posts extends Entity {
             if(strlen($title) <= 100){
                 $this->title = $title;
             }else{
-                throw new \Exception("The maximum length of the title is 100 characters");
+                throw new Exception("The maximum length of the title is 100 characters");
             }
         }else{
-            throw new \Exception("Firstname must be a String");
+            throw new Exception("Firstname must be a String");
         }
     }
 
@@ -81,13 +83,13 @@ Class Posts extends Entity {
     public function setAuthor($author)
     {
         if (is_string($author)){
-            if(strlen($author) <= 45){
+            if(strlen($author) <= 90){
                 $this->author = $author;
             }else{
-                throw new \Exception("The maximum length of the author attribute is 45 characters");
+                throw new Exception("The maximum length of the author attribute is 45 characters");
             }
         }else{
-            throw new \Exception("Author attribute must be a String");
+            throw new Exception("Author attribute must be a String");
         }
     }
 
@@ -110,10 +112,10 @@ Class Posts extends Entity {
             if(strlen($standfirst) <= 255){
                 $this->standfirst = $standfirst;
             }else{
-                throw new \Exception("The maximum length of the standfirst is 255 characters");
+                throw new Exception("The maximum length of the standfirst is 255 characters");
             }
         }else{
-            throw new \Exception("Standfirst must be a String");
+            throw new Exception("Standfirst must be a String");
         }
     }
 
@@ -136,10 +138,10 @@ Class Posts extends Entity {
             if(strlen($content) <= 65535){
                 $this->content = $content;
             }else{
-                throw new \Exception("The maximum length of the content is 65535 characters");
+                throw new Exception("The maximum length of the content is 65535 characters");
             }
         }else{
-            throw new \Exception("Content must be a String");
+            throw new Exception("Content must be a String");
         }
     }
 
@@ -163,10 +165,10 @@ Class Posts extends Entity {
             if($creationDate != '1970-01-01'){
                 $this->creationDate = $creationDate;
             }else{
-                throw new \Exception("Invalid date format for creationDate");
+                throw new Exception("Invalid date format for creationDate");
             }
         }else{
-            throw new \Exception("creationDate must be a String");
+            throw new Exception("creationDate must be a String");
         }
 
 
@@ -192,10 +194,10 @@ Class Posts extends Entity {
             if($updateDate != '1970-01-01') {
                 $this->updateDate = $updateDate;
             }else{
-                throw new \Exception("Invalid date format for updateDate");
+                throw new Exception("Invalid date format for updateDate");
             }
         }else{
-            throw new \Exception("updateDate must be a String");
+            throw new Exception("updateDate must be a String");
         }
     }
 
@@ -217,7 +219,7 @@ Class Posts extends Entity {
         if($state === self::DRAFT or $state === self::PUBLISHED  or $state === self::TRASH ){
             $this->state = $state;
         }else{
-            throw new \Exception("State attribute must be equal to 'draft', 'published' or 'trash'");
+            throw new Exception("State attribute must be equal to 'draft', 'published' or 'trash'");
         }
     }
 }

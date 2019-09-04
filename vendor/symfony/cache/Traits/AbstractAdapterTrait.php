@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Closure;
+use Exception;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\CacheItem;
 
@@ -24,12 +26,12 @@ trait AbstractAdapterTrait
     use AbstractTrait;
 
     /**
-     * @var \Closure needs to be set by class, signature is function(string <key>, mixed <value>, bool <isHit>)
+     * @var Closure needs to be set by class, signature is function(string <key>, mixed <value>, bool <isHit>)
      */
     private $createCacheItem;
 
     /**
-     * @var \Closure needs to be set by class, signature is function(array <deferred>, string <namespace>, array <&expiredIds>)
+     * @var Closure needs to be set by class, signature is function(array <deferred>, string <namespace>, array <&expiredIds>)
      */
     private $mergeByLifetime;
 
@@ -51,7 +53,7 @@ trait AbstractAdapterTrait
             foreach ($this->doFetch([$id]) as $value) {
                 $isHit = true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             CacheItem::log($this->logger, 'Failed to fetch key "{key}": '.$e->getMessage(), ['key' => $key, 'exception' => $e]);
         }
 
@@ -73,7 +75,7 @@ trait AbstractAdapterTrait
         }
         try {
             $items = $this->doFetch($ids);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             CacheItem::log($this->logger, 'Failed to fetch items: '.$e->getMessage(), ['keys' => $keys, 'exception' => $e]);
             $items = [];
         }
@@ -128,7 +130,7 @@ trait AbstractAdapterTrait
                 unset($keys[$id]);
                 yield $key => $f($key, $value, true);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             CacheItem::log($this->logger, 'Failed to fetch items: '.$e->getMessage(), ['keys' => array_values($keys), 'exception' => $e]);
         }
 

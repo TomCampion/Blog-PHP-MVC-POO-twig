@@ -11,7 +11,14 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use BadMethodCallException;
+use ErrorException;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
+use function strlen;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -34,14 +41,14 @@ trait FilesystemCommonTrait
             if (preg_match('#[^-+_.A-Za-z0-9]#', $namespace, $match)) {
                 throw new InvalidArgumentException(sprintf('Namespace contains "%s" but only characters in [-+_.A-Za-z0-9] are allowed.', $match[0]));
             }
-            $directory .= \DIRECTORY_SEPARATOR.$namespace;
+            $directory .= DIRECTORY_SEPARATOR.$namespace;
         }
         if (!file_exists($directory)) {
             @mkdir($directory, 0777, true);
         }
-        $directory .= \DIRECTORY_SEPARATOR;
+        $directory .= DIRECTORY_SEPARATOR;
         // On Windows the whole path is limited to 258 chars
-        if ('\\' === \DIRECTORY_SEPARATOR && \strlen($directory) > 234) {
+        if ('\\' === DIRECTORY_SEPARATOR && strlen($directory) > 234) {
             throw new InvalidArgumentException(sprintf('Cache directory too long (%s)', $directory));
         }
 
@@ -55,7 +62,7 @@ trait FilesystemCommonTrait
     {
         $ok = true;
 
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->directory, \FilesystemIterator::SKIP_DOTS)) as $file) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->directory, FilesystemIterator::SKIP_DOTS)) as $file) {
             $ok = ($file->isDir() || $this->doUnlink($file) || !file_exists($file)) && $ok;
         }
 
@@ -105,7 +112,7 @@ trait FilesystemCommonTrait
     {
         // Use MD5 to favor speed over security, which is not an issue here
         $hash = str_replace('/', '-', base64_encode(hash('md5', static::class.$id, true)));
-        $dir = ($directory ?? $this->directory).strtoupper($hash[0].\DIRECTORY_SEPARATOR.$hash[1].\DIRECTORY_SEPARATOR);
+        $dir = ($directory ?? $this->directory).strtoupper($hash[0]. DIRECTORY_SEPARATOR.$hash[1]. DIRECTORY_SEPARATOR);
 
         if ($mkdir && !file_exists($dir)) {
             @mkdir($dir, 0777, true);
@@ -119,17 +126,17 @@ trait FilesystemCommonTrait
      */
     public static function throwError($type, $message, $file, $line)
     {
-        throw new \ErrorException($message, 0, $type, $file, $line);
+        throw new ErrorException($message, 0, $type, $file, $line);
     }
 
     public function __sleep()
     {
-        throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
+        throw new BadMethodCallException('Cannot serialize '.__CLASS__);
     }
 
     public function __wakeup()
     {
-        throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
+        throw new BadMethodCallException('Cannot unserialize '.__CLASS__);
     }
 
     public function __destruct()

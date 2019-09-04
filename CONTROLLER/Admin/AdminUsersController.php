@@ -29,10 +29,18 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
             if (!empty($_POST['action']) and !empty($_POST['users'])) {
                 foreach($_POST['users'] as $valeur)
                 {
-                    if($_POST['action'] == 'setAdmin')$this->userManager->setAdmin($valeur);
-                    if($_POST['action'] == 'revokeAdmin')$this->userManager->revokeAdmin($valeur);
-                    if($_POST['action'] == 'restrict')$this->userManager->restrictUser($valeur);
-                    if($_POST['action'] == 'revokeRestrict')$this->userManager->revokeRestrict($valeur);
+                    if($_POST['action'] == 'setAdmin'){
+                        $this->userManager->setAdmin($valeur);
+                    }
+                    if($_POST['action'] == 'revokeAdmin'){
+                        $this->userManager->revokeAdmin($valeur);
+                    }
+                    if($_POST['action'] == 'restrict'){
+                        $this->userManager->restrictUser($valeur);
+                    }
+                    if($_POST['action'] == 'revokeRestrict'){
+                        $this->userManager->revokeRestrict($valeur);
+                    }
                 }
                 $this->executeUsers();
             }else{

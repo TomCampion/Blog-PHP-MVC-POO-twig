@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Simple;
 
+use Memcached;
 use Symfony\Component\Cache\Adapter\MemcachedAdapter;
 use Symfony\Component\Cache\Marshaller\MarshallerInterface;
 use Symfony\Component\Cache\Traits\MemcachedTrait;
@@ -27,7 +28,7 @@ class MemcachedCache extends AbstractCache
 
     protected $maxIdLength = 250;
 
-    public function __construct(\Memcached $client, string $namespace = '', int $defaultLifetime = 0, MarshallerInterface $marshaller = null)
+    public function __construct(Memcached $client, string $namespace = '', int $defaultLifetime = 0, MarshallerInterface $marshaller = null)
     {
         $this->init($client, $namespace, $defaultLifetime, $marshaller);
     }

@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
+use Twig\Error\LoaderError;
 use Twig\Loader\ArrayLoader;
 
-class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_Loader_ArrayTest extends TestCase
 {
     /**
-     * @expectedException \Twig\Error\LoaderError
+     * @expectedException LoaderError
      */
     public function testGetSourceContextWhenTemplateDoesNotExist()
     {
@@ -53,7 +55,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\LoaderError
+     * @expectedException LoaderError
      */
     public function testGetCacheKeyWhenTemplateDoesNotExist()
     {
@@ -77,7 +79,7 @@ class Twig_Tests_Loader_ArrayTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\LoaderError
+     * @expectedException LoaderError
      */
     public function testIsFreshWhenTemplateDoesNotExist()
     {

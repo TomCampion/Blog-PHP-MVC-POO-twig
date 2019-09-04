@@ -9,11 +9,12 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 use Twig\Loader\LoaderInterface;
 
-class CustomExtensionTest extends \PHPUnit\Framework\TestCase
+class CustomExtensionTest extends TestCase
 {
     /**
      * @dataProvider provideInvalidExtensions
@@ -35,7 +36,7 @@ class CustomExtensionTest extends \PHPUnit\Framework\TestCase
     public function provideInvalidExtensions()
     {
         return [
-            [new InvalidOperatorExtension(new \stdClass()), '"InvalidOperatorExtension::getOperators()" must return an array with operators, got "stdClass".'],
+            [new InvalidOperatorExtension(new stdClass()), '"InvalidOperatorExtension::getOperators()" must return an array with operators, got "stdClass".'],
             [new InvalidOperatorExtension([1, 2, 3]), '"InvalidOperatorExtension::getOperators()" must return an array of 2 elements, got 3.'],
         ];
     }

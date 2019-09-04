@@ -11,17 +11,19 @@
 
 namespace Symfony\Component\Cache\Tests\Traits;
 
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use Symfony\Component\Cache\CacheItem;
 
 /**
  * Common assertions for TagAware adapters.
  *
- * @method \Symfony\Component\Cache\Adapter\TagAwareAdapterInterface createCachePool() Must be implemented by TestCase
+ * @method TagAwareAdapterInterface createCachePool() Must be implemented by TestCase
  */
 trait TagAwareTestTrait
 {
     /**
-     * @expectedException \Psr\Cache\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testInvalidTag()
     {

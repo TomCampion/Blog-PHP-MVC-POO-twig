@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Tests\Simple;
 
+use RedisArray;
+
 /**
  * @group legacy
  */
@@ -22,6 +24,6 @@ class RedisArrayCacheTest extends AbstractRedisCacheTest
         if (!class_exists('RedisArray')) {
             self::markTestSkipped('The RedisArray class is required.');
         }
-        self::$redis = new \RedisArray([getenv('REDIS_HOST')], ['lazy_connect' => true]);
+        self::$redis = new RedisArray([getenv('REDIS_HOST')], ['lazy_connect' => true]);
     }
 }

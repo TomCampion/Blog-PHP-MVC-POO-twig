@@ -11,7 +11,10 @@
 
 namespace Symfony\Component\Cache\Tests\Simple;
 
+use Closure;
 use Symfony\Component\Cache\Simple\PhpArrayCache;
+use Traversable;
+use function is_array;
 
 class PhpArrayCacheWrapper extends PhpArrayCache
 {
@@ -19,7 +22,7 @@ class PhpArrayCacheWrapper extends PhpArrayCache
 
     public function set($key, $value, $ttl = null)
     {
-        (\Closure::bind(function () use ($key, $value) {
+        (Closure::bind(function () use ($key, $value) {
             $this->data[$key] = $value;
             $this->warmUp($this->data);
             list($this->keys, $this->values) = eval(substr(file_get_contents($this->file), 6));
@@ -30,10 +33,10 @@ class PhpArrayCacheWrapper extends PhpArrayCache
 
     public function setMultiple($values, $ttl = null)
     {
-        if (!\is_array($values) && !$values instanceof \Traversable) {
+        if (!is_array($values) && !$values instanceof Traversable) {
             return parent::setMultiple($values, $ttl);
         }
-        (\Closure::bind(function () use ($values) {
+        (Closure::bind(function () use ($values) {
             foreach ($values as $key => $value) {
                 $this->data[$key] = $value;
             }

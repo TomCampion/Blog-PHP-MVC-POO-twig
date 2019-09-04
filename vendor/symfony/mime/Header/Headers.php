@@ -11,9 +11,13 @@
 
 namespace Symfony\Component\Mime\Header;
 
+use DateTimeInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Exception\LogicException;
 use Symfony\Component\Mime\NamedAddress;
+use function count;
+use function get_class;
+use function in_array;
 
 /**
  * A collection of headers.
@@ -104,7 +108,7 @@ final class Headers
     /**
      * @return $this
      */
-    public function addDateHeader(string $name, \DateTimeInterface $dateTime)
+    public function addDateHeader(string $name, DateTimeInterface $dateTime)
     {
         return $this->add(new DateHeader($name, $dateTime));
     }
@@ -153,10 +157,10 @@ final class Headers
         $name = strtolower($header->getName());
 
         if (isset($map[$name]) && !$header instanceof $map[$name]) {
-            throw new LogicException(sprintf('The "%s" header must be an instance of "%s" (got "%s").', $header->getName(), $map[$name], \get_class($header)));
+            throw new LogicException(sprintf('The "%s" header must be an instance of "%s" (got "%s").', $header->getName(), $map[$name], get_class($header)));
         }
 
-        if (\in_array($name, self::$uniqueHeaders, true) && isset($this->headers[$name]) && \count($this->headers[$name]) > 0) {
+        if (in_array($name, self::$uniqueHeaders, true) && isset($this->headers[$name]) && count($this->headers[$name]) > 0) {
             throw new LogicException(sprintf('Impossible to set header "%s" as it\'s already defined and must be unique.', $header->getName()));
         }
 
@@ -204,7 +208,7 @@ final class Headers
 
     public static function isUniqueHeader(string $name): bool
     {
-        return \in_array($name, self::$uniqueHeaders, true);
+        return in_array($name, self::$uniqueHeaders, true);
     }
 
     public function toString(): string

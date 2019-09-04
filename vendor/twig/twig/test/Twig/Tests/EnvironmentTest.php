@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
@@ -28,7 +30,7 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
-class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_EnvironmentTest extends TestCase
 {
     public function testAutoescapeOption()
     {
@@ -108,7 +110,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
-        } catch (\LogicException $e) {
+        } catch (LogicException $e) {
             $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
@@ -120,7 +122,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
-        } catch (\LogicException $e) {
+        } catch (LogicException $e) {
             $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
@@ -133,7 +135,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
-        } catch (\LogicException $e) {
+        } catch (LogicException $e) {
             $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
 
@@ -143,7 +145,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         try {
             $twig->addGlobal('bar', 'bar');
             $this->fail();
-        } catch (\LogicException $e) {
+        } catch (LogicException $e) {
             $this->assertArrayNotHasKey('bar', $twig->getGlobals());
         }
     }
@@ -304,7 +306,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
         $twig = new Environment($loader);
         $twig->addExtension($extension);
 
-        $this->assertInstanceOf(ExtensionInterface::class, $twig->getExtension(\get_class($extension)));
+        $this->assertInstanceOf(ExtensionInterface::class, $twig->getExtension(get_class($extension)));
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 
@@ -325,7 +327,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \LogicException
+     * @expectedException LogicException
      * @expectedExceptionMessage Unable to register extension "Twig_Tests_EnvironmentTest_Extension" as it is already registered.
      */
     public function testOverrideExtension()
@@ -363,7 +365,7 @@ class Twig_Tests_EnvironmentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\RuntimeError
+     * @expectedException RuntimeError
      * @expectedExceptionMessage Failed to load Twig template "testFailLoadTemplate.twig", index "112233": cache might be corrupted in "testFailLoadTemplate.twig".
      */
     public function testFailLoadTemplate()

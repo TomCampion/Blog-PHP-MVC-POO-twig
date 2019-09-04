@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Closure;
+
 /**
  * @author Alessandro Chitolina <alekitto@gmail.com>
  *
@@ -21,7 +23,7 @@ class RedisClusterProxy
     private $redis;
     private $initializer;
 
-    public function __construct(\Closure $initializer)
+    public function __construct(Closure $initializer)
     {
         $this->initializer = $initializer;
     }

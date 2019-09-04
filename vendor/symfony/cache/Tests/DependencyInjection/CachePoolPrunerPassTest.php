@@ -17,7 +17,9 @@ use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Cache\DependencyInjection\CachePoolPrunerPass;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
+use function count;
 
 class CachePoolPrunerPassTest extends TestCase
 {
@@ -45,8 +47,8 @@ class CachePoolPrunerPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $definitionsBefore = \count($container->getDefinitions());
-        $aliasesBefore = \count($container->getAliases());
+        $definitionsBefore = count($container->getDefinitions());
+        $aliasesBefore = count($container->getAliases());
 
         $pass = new CachePoolPrunerPass();
         $pass->process($container);
@@ -57,7 +59,7 @@ class CachePoolPrunerPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Class "Symfony\Component\Cache\Tests\DependencyInjection\NotFound" used for service "pool.not-found" cannot be found.
      */
     public function testCompilerPassThrowsOnInvalidDefinitionClass()

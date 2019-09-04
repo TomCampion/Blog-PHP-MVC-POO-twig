@@ -11,12 +11,14 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use Closure;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Component\Cache\Traits\ArrayTrait;
 use Symfony\Contracts\Cache\CacheInterface;
+use function is_string;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -34,7 +36,7 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
     public function __construct(int $defaultLifetime = 0, bool $storeSerialized = true)
     {
         $this->storeSerialized = $storeSerialized;
-        $this->createCacheItem = \Closure::bind(
+        $this->createCacheItem = Closure::bind(
             function ($key, $value, $isHit) use ($defaultLifetime) {
                 $item = new CacheItem();
                 $item->key = $key;
@@ -87,7 +89,7 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
     public function getItems(array $keys = [])
     {
         foreach ($keys as $key) {
-            if (!\is_string($key) || !isset($this->expiries[$key])) {
+            if (!is_string($key) || !isset($this->expiries[$key])) {
                 CacheItem::validateKey($key);
             }
         }

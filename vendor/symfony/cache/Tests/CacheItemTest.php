@@ -11,8 +11,13 @@
 
 namespace Symfony\Component\Cache\Tests;
 
+use Closure;
+use Exception;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Symfony\Component\Cache\CacheItem;
+use Symfony\Component\Cache\Exception\InvalidArgumentException;
+use Symfony\Component\Cache\Exception\LogicException;
 
 class CacheItemTest extends TestCase
 {
@@ -23,7 +28,7 @@ class CacheItemTest extends TestCase
 
     /**
      * @dataProvider provideInvalidKey
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Cache key
      */
     public function testInvalidKey($key)
@@ -48,34 +53,34 @@ class CacheItemTest extends TestCase
             [1],
             [1.1],
             [[[]]],
-            [new \Exception('foo')],
+            [new Exception('foo')],
         ];
     }
 
     public function testTag()
     {
         $item = new CacheItem();
-        $r = new \ReflectionProperty($item, 'isTaggable');
+        $r = new ReflectionProperty($item, 'isTaggable');
         $r->setAccessible(true);
         $r->setValue($item, true);
 
         $this->assertSame($item, $item->tag('foo'));
         $this->assertSame($item, $item->tag(['bar', 'baz']));
 
-        (\Closure::bind(function () use ($item) {
+        (Closure::bind(function () use ($item) {
             $this->assertSame(['foo' => 'foo', 'bar' => 'bar', 'baz' => 'baz'], $item->newMetadata[CacheItem::METADATA_TAGS]);
         }, $this, CacheItem::class))();
     }
 
     /**
      * @dataProvider provideInvalidKey
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Cache tag
      */
     public function testInvalidTag($tag)
     {
         $item = new CacheItem();
-        $r = new \ReflectionProperty($item, 'isTaggable');
+        $r = new ReflectionProperty($item, 'isTaggable');
         $r->setAccessible(true);
         $r->setValue($item, true);
 
@@ -83,13 +88,13 @@ class CacheItemTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Cache\Exception\LogicException
+     * @expectedException LogicException
      * @expectedExceptionMessage Cache item "foo" comes from a non tag-aware pool: you cannot tag it.
      */
     public function testNonTaggableItem()
     {
         $item = new CacheItem();
-        $r = new \ReflectionProperty($item, 'key');
+        $r = new ReflectionProperty($item, 'key');
         $r->setAccessible(true);
         $r->setValue($item, 'foo');
 

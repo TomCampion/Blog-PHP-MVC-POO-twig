@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use RedisArray;
 use Symfony\Component\Cache\Adapter\RedisTagAwareAdapter;
 use Symfony\Component\Cache\Tests\Traits\TagAwareTestTrait;
 
@@ -26,7 +27,7 @@ class RedisTagAwareArrayAdapterTest extends RedisArrayAdapterTest
 
     public function createCachePool($defaultLifetime = 0)
     {
-        $this->assertInstanceOf(\RedisArray::class, self::$redis);
+        $this->assertInstanceOf(RedisArray::class, self::$redis);
         $adapter = new RedisTagAwareAdapter(self::$redis, str_replace('\\', '.', __CLASS__), $defaultLifetime);
 
         return $adapter;

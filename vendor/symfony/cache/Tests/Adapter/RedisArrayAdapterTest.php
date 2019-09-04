@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use RedisArray;
+
 class RedisArrayAdapterTest extends AbstractRedisAdapterTest
 {
     public static function setupBeforeClass()
@@ -19,6 +21,6 @@ class RedisArrayAdapterTest extends AbstractRedisAdapterTest
         if (!class_exists('RedisArray')) {
             self::markTestSkipped('The RedisArray class is required.');
         }
-        self::$redis = new \RedisArray([getenv('REDIS_HOST')], ['lazy_connect' => true]);
+        self::$redis = new RedisArray([getenv('REDIS_HOST')], ['lazy_connect' => true]);
     }
 }

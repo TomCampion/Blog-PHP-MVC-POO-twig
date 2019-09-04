@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Closure;
+use Redis;
+
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  *
@@ -22,7 +25,7 @@ class RedisProxy
     private $initializer;
     private $ready = false;
 
-    public function __construct(\Redis $redis, \Closure $initializer)
+    public function __construct(Redis $redis, Closure $initializer)
     {
         $this->redis = $redis;
         $this->initializer = $initializer;

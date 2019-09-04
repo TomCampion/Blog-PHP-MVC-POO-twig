@@ -12,8 +12,12 @@
 namespace Symfony\Component\Cache\Adapter;
 
 use Predis;
+use Predis\Client;
 use Predis\Connection\Aggregate\ClusterInterface;
 use Predis\Response\Status;
+use Redis;
+use RedisArray;
+use RedisCluster;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\Exception\LogicException;
 use Symfony\Component\Cache\Marshaller\MarshallerInterface;
@@ -70,19 +74,19 @@ class RedisTagAwareAdapter extends AbstractTagAwareAdapter
     private $redisServerSupportSPOP = null;
 
     /**
-     * @param \Redis|\RedisArray|\RedisCluster|\Predis\Client $redisClient     The redis client
+     * @param Redis|RedisArray|RedisCluster|Client $redisClient     The redis client
      * @param string                                          $namespace       The default namespace
      * @param int                                             $defaultLifetime The default lifetime
      * @param MarshallerInterface|null                        $marshaller
      *
-     * @throws \Symfony\Component\Cache\Exception\LogicException If phpredis with version lower than 3.1.3.
+     * @throws LogicException If phpredis with version lower than 3.1.3.
      */
     public function __construct($redisClient, string $namespace = '', int $defaultLifetime = 0, MarshallerInterface $marshaller = null)
     {
         $this->init($redisClient, $namespace, $defaultLifetime, $marshaller);
 
         // Make sure php-redis is 3.1.3 or higher configured for Redis classes
-        if (!$this->redis instanceof Predis\Client && version_compare(phpversion('redis'), '3.1.3', '<')) {
+        if (!$this->redis instanceof Client && version_compare(phpversion('redis'), '3.1.3', '<')) {
             throw new LogicException('RedisTagAwareAdapter requires php-redis 3.1.3 or higher, alternatively use predis/predis');
         }
     }
@@ -141,7 +145,7 @@ class RedisTagAwareAdapter extends AbstractTagAwareAdapter
             return true;
         }
 
-        $predisCluster = $this->redis instanceof \Predis\Client && $this->redis->getConnection() instanceof ClusterInterface;
+        $predisCluster = $this->redis instanceof Client && $this->redis->getConnection() instanceof ClusterInterface;
         $this->pipeline(static function () use ($ids, $tagData, $predisCluster) {
             if ($predisCluster) {
                 foreach ($ids as $id) {

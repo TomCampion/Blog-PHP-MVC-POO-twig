@@ -11,8 +11,15 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use APCuIterator;
+use Error;
+use ErrorException;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\Exception\CacheException;
+use Throwable;
+use function count;
+use function function_exists;
+use const PHP_SAPI;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -23,7 +30,7 @@ trait ApcuTrait
 {
     public static function isSupported()
     {
-        return \function_exists('apcu_fetch') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN);
+        return function_exists('apcu_fetch') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN);
     }
 
     private function init($namespace, $defaultLifetime, $version)
@@ -31,7 +38,7 @@ trait ApcuTrait
         if (!static::isSupported()) {
             throw new CacheException('APCu is not enabled');
         }
-        if ('cli' === \PHP_SAPI) {
+        if ('cli' === PHP_SAPI) {
             ini_set('apc.use_request_time', 0);
         }
         parent::__construct($namespace, $defaultLifetime);
@@ -61,8 +68,8 @@ trait ApcuTrait
             }
 
             return $values;
-        } catch (\Error $e) {
-            throw new \ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
+        } catch (Error $e) {
+            throw new ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
         } finally {
             ini_set('unserialize_callback_func', $unserializeCallbackHandler);
         }
@@ -81,8 +88,8 @@ trait ApcuTrait
      */
     protected function doClear($namespace)
     {
-        return isset($namespace[0]) && class_exists('APCuIterator', false) && ('cli' !== \PHP_SAPI || filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN))
-            ? apcu_delete(new \APCuIterator(sprintf('/^%s/', preg_quote($namespace, '/')), APC_ITER_KEY))
+        return isset($namespace[0]) && class_exists('APCuIterator', false) && ('cli' !== PHP_SAPI || filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN))
+            ? apcu_delete(new APCuIterator(sprintf('/^%s/', preg_quote($namespace, '/')), APC_ITER_KEY))
             : apcu_clear_cache();
     }
 
@@ -109,8 +116,8 @@ trait ApcuTrait
             }
 
             return array_keys($failures);
-        } catch (\Throwable $e) {
-            if (1 === \count($values)) {
+        } catch (Throwable $e) {
+            if (1 === count($values)) {
                 // Workaround https://github.com/krakjoe/apcu/issues/170
                 apcu_delete(key($values));
             }

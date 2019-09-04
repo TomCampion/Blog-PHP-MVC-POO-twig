@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Cache\DataCollector;
 
+use Exception;
 use Symfony\Component\Cache\Adapter\TraceableAdapter;
 use Symfony\Component\Cache\Adapter\TraceableAdapterEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +42,7 @@ class CacheDataCollector extends DataCollector implements LateDataCollectorInter
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, Exception $exception = null)
     {
         $empty = ['calls' => [], 'config' => [], 'options' => [], 'statistics' => []];
         $this->data = ['instances' => $empty, 'total' => $empty];

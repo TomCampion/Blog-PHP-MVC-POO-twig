@@ -11,10 +11,18 @@
 
 namespace Symfony\Component\Cache;
 
+use DateInterval;
+use DateTime;
+use DateTimeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\Exception\LogicException;
 use Symfony\Contracts\Cache\ItemInterface;
+use function get_class;
+use function gettype;
+use function is_int;
+use function is_object;
+use function is_string;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -75,10 +83,10 @@ final class CacheItem implements ItemInterface
     {
         if (null === $expiration) {
             $this->expiry = $this->defaultLifetime > 0 ? microtime(true) + $this->defaultLifetime : null;
-        } elseif ($expiration instanceof \DateTimeInterface) {
+        } elseif ($expiration instanceof DateTimeInterface) {
             $this->expiry = (float) $expiration->format('U.u');
         } else {
-            throw new InvalidArgumentException(sprintf('Expiration date must implement DateTimeInterface or be null, "%s" given', \is_object($expiration) ? \get_class($expiration) : \gettype($expiration)));
+            throw new InvalidArgumentException(sprintf('Expiration date must implement DateTimeInterface or be null, "%s" given', is_object($expiration) ? get_class($expiration) : gettype($expiration)));
         }
 
         return $this;
@@ -91,12 +99,12 @@ final class CacheItem implements ItemInterface
     {
         if (null === $time) {
             $this->expiry = $this->defaultLifetime > 0 ? microtime(true) + $this->defaultLifetime : null;
-        } elseif ($time instanceof \DateInterval) {
-            $this->expiry = microtime(true) + \DateTime::createFromFormat('U', 0)->add($time)->format('U.u');
-        } elseif (\is_int($time)) {
+        } elseif ($time instanceof DateInterval) {
+            $this->expiry = microtime(true) + DateTime::createFromFormat('U', 0)->add($time)->format('U.u');
+        } elseif (is_int($time)) {
             $this->expiry = $time + microtime(true);
         } else {
-            throw new InvalidArgumentException(sprintf('Expiration date must be an integer, a DateInterval or null, "%s" given', \is_object($time) ? \get_class($time) : \gettype($time)));
+            throw new InvalidArgumentException(sprintf('Expiration date must be an integer, a DateInterval or null, "%s" given', is_object($time) ? get_class($time) : gettype($time)));
         }
 
         return $this;
@@ -114,8 +122,8 @@ final class CacheItem implements ItemInterface
             $tags = [$tags];
         }
         foreach ($tags as $tag) {
-            if (!\is_string($tag)) {
-                throw new InvalidArgumentException(sprintf('Cache tag must be string, "%s" given', \is_object($tag) ? \get_class($tag) : \gettype($tag)));
+            if (!is_string($tag)) {
+                throw new InvalidArgumentException(sprintf('Cache tag must be string, "%s" given', is_object($tag) ? get_class($tag) : gettype($tag)));
             }
             if (isset($this->newMetadata[self::METADATA_TAGS][$tag])) {
                 continue;
@@ -165,8 +173,8 @@ final class CacheItem implements ItemInterface
      */
     public static function validateKey($key)
     {
-        if (!\is_string($key)) {
-            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given', \is_object($key) ? \get_class($key) : \gettype($key)));
+        if (!is_string($key)) {
+            throw new InvalidArgumentException(sprintf('Cache key must be string, "%s" given', is_object($key) ? get_class($key) : gettype($key)));
         }
         if ('' === $key) {
             throw new InvalidArgumentException('Cache key length must be greater than zero');

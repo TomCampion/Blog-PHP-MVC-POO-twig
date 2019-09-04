@@ -11,8 +11,11 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
+use Redis;
+use RedisArray;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\Traits\RedisProxy;
 
 class RedisAdapterTest extends AbstractRedisAdapterTest
@@ -37,14 +40,14 @@ class RedisAdapterTest extends AbstractRedisAdapterTest
     public function testCreateConnection($dsnScheme)
     {
         $redis = RedisAdapter::createConnection($dsnScheme.':?host[h1]&host[h2]&host[/foo:]');
-        $this->assertInstanceOf(\RedisArray::class, $redis);
+        $this->assertInstanceOf(RedisArray::class, $redis);
         $this->assertSame(['h1:6379', 'h2:6379', '/foo'], $redis->_hosts());
         @$redis = null; // some versions of phpredis connect on destruct, let's silence the warning
 
         $redisHost = getenv('REDIS_HOST');
 
         $redis = RedisAdapter::createConnection($dsnScheme.'://'.$redisHost);
-        $this->assertInstanceOf(\Redis::class, $redis);
+        $this->assertInstanceOf(Redis::class, $redis);
         $this->assertTrue($redis->isConnected());
         $this->assertSame(0, $redis->getDbNum());
 
@@ -63,7 +66,7 @@ class RedisAdapterTest extends AbstractRedisAdapterTest
 
     /**
      * @dataProvider provideFailedCreateConnection
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Redis connection failed
      */
     public function testFailedCreateConnection($dsn)
@@ -82,7 +85,7 @@ class RedisAdapterTest extends AbstractRedisAdapterTest
 
     /**
      * @dataProvider provideInvalidCreateConnection
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid Redis DSN
      */
     public function testInvalidCreateConnection($dsn)

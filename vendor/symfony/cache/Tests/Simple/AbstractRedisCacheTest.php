@@ -11,7 +11,9 @@
 
 namespace Symfony\Component\Cache\Tests\Simple;
 
+use Redis;
 use Symfony\Component\Cache\Simple\RedisCache;
+use function extension_loaded;
 
 /**
  * @group legacy
@@ -33,10 +35,10 @@ abstract class AbstractRedisCacheTest extends CacheTestCase
 
     public static function setupBeforeClass()
     {
-        if (!\extension_loaded('redis')) {
+        if (!extension_loaded('redis')) {
             self::markTestSkipped('Extension redis required.');
         }
-        if (!@((new \Redis())->connect(getenv('REDIS_HOST')))) {
+        if (!@((new Redis())->connect(getenv('REDIS_HOST')))) {
             $e = error_get_last();
             self::markTestSkipped($e['message']);
         }

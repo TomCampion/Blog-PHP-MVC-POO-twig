@@ -13,6 +13,7 @@ namespace Twig\Node;
 
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
+use function count;
 
 /**
  * Represents a macro node.
@@ -41,7 +42,7 @@ class MacroNode extends Node
             ->write(sprintf('public function macro_%s(', $this->getAttribute('name')))
         ;
 
-        $count = \count($this->getNode('arguments'));
+        $count = count($this->getNode('arguments'));
         $pos = 0;
         foreach ($this->getNode('arguments') as $name => $default) {
             $compiler

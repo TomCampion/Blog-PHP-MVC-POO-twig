@@ -11,10 +11,12 @@
 
 namespace Symfony\Component\Mime;
 
+use DateTimeImmutable;
 use Symfony\Component\Mime\Exception\LogicException;
 use Symfony\Component\Mime\Header\Headers;
 use Symfony\Component\Mime\Part\AbstractPart;
 use Symfony\Component\Mime\Part\TextPart;
+use function count;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -84,7 +86,7 @@ class Message extends RawMessage
         $headers->addTextHeader('MIME-Version', '1.0');
 
         if (!$headers->has('Date')) {
-            $headers->addDateHeader('Date', new \DateTimeImmutable());
+            $headers->addDateHeader('Date', new DateTimeImmutable());
         }
 
         // determine the "real" sender
@@ -92,7 +94,7 @@ class Message extends RawMessage
         $sender = $senders[0];
         if ($headers->has('Sender')) {
             $sender = $headers->get('Sender')->getAddress();
-        } elseif (\count($senders) > 1) {
+        } elseif (count($senders) > 1) {
             $headers->addMailboxHeader('Sender', $sender);
         }
 

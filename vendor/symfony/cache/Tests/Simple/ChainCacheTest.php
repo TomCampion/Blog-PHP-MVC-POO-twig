@@ -11,7 +11,10 @@
 
 namespace Symfony\Component\Cache\Tests\Simple;
 
+use PHPUnit_Framework_MockObject_MockObject;
 use Psr\SimpleCache\CacheInterface;
+use stdClass;
+use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\Simple\ArrayCache;
 use Symfony\Component\Cache\Simple\ChainCache;
@@ -29,7 +32,7 @@ class ChainCacheTest extends CacheTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage At least one cache must be specified.
      */
     public function testEmptyCachesException()
@@ -38,12 +41,12 @@ class ChainCacheTest extends CacheTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The class "stdClass" does not implement
      */
     public function testInvalidCacheException()
     {
-        new ChainCache([new \stdClass()]);
+        new ChainCache([new stdClass()]);
     }
 
     public function testPrune()
@@ -68,7 +71,7 @@ class ChainCacheTest extends CacheTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|PruneableCacheInterface
+     * @return PHPUnit_Framework_MockObject_MockObject|PruneableCacheInterface
      */
     private function getPruneableMock()
     {
@@ -85,7 +88,7 @@ class ChainCacheTest extends CacheTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|PruneableCacheInterface
+     * @return PHPUnit_Framework_MockObject_MockObject|PruneableCacheInterface
      */
     private function getFailingPruneableMock()
     {
@@ -102,7 +105,7 @@ class ChainCacheTest extends CacheTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|CacheInterface
+     * @return PHPUnit_Framework_MockObject_MockObject|CacheInterface
      */
     private function getNonPruneableMock()
     {

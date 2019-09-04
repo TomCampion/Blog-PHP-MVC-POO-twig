@@ -12,12 +12,15 @@
 namespace Symfony\Component\Cache\Tests\Adapter;
 
 use Cache\IntegrationTests\CachePoolTest;
+use DateInterval;
+use Exception;
 use PHPUnit\Framework\Assert;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Contracts\Cache\CallbackInterface;
+use function array_key_exists;
 
 abstract class AdapterTestCase extends CachePoolTest
 {
@@ -25,7 +28,7 @@ abstract class AdapterTestCase extends CachePoolTest
     {
         parent::setUp();
 
-        if (!\array_key_exists('testPrune', $this->skippedTests) && !$this->createCachePool() instanceof PruneableInterface) {
+        if (!array_key_exists('testPrune', $this->skippedTests) && !$this->createCachePool() instanceof PruneableInterface) {
             $this->skippedTests['testPrune'] = 'Not a pruneable cache pool.';
         }
     }
@@ -200,7 +203,7 @@ abstract class AdapterTestCase extends CachePoolTest
         /** @var PruneableInterface|CacheItemPoolInterface $cache */
         $cache = $this->createCachePool();
 
-        $doSet = function ($name, $value, \DateInterval $expiresAfter = null) use ($cache) {
+        $doSet = function ($name, $value, DateInterval $expiresAfter = null) use ($cache) {
             $item = $cache->getItem($name);
             $item->set($value);
 
@@ -211,10 +214,10 @@ abstract class AdapterTestCase extends CachePoolTest
             $cache->save($item);
         };
 
-        $doSet('foo', 'foo-val', new \DateInterval('PT05S'));
-        $doSet('bar', 'bar-val', new \DateInterval('PT10S'));
-        $doSet('baz', 'baz-val', new \DateInterval('PT15S'));
-        $doSet('qux', 'qux-val', new \DateInterval('PT20S'));
+        $doSet('foo', 'foo-val', new DateInterval('PT05S'));
+        $doSet('bar', 'bar-val', new DateInterval('PT10S'));
+        $doSet('baz', 'baz-val', new DateInterval('PT15S'));
+        $doSet('qux', 'qux-val', new DateInterval('PT20S'));
 
         sleep(30);
         $cache->prune();
@@ -224,9 +227,9 @@ abstract class AdapterTestCase extends CachePoolTest
         $this->assertTrue($this->isPruned($cache, 'qux'));
 
         $doSet('foo', 'foo-val');
-        $doSet('bar', 'bar-val', new \DateInterval('PT20S'));
-        $doSet('baz', 'baz-val', new \DateInterval('PT40S'));
-        $doSet('qux', 'qux-val', new \DateInterval('PT80S'));
+        $doSet('bar', 'bar-val', new DateInterval('PT20S'));
+        $doSet('baz', 'baz-val', new DateInterval('PT40S'));
+        $doSet('qux', 'qux-val', new DateInterval('PT80S'));
 
         $cache->prune();
         $this->assertFalse($this->isPruned($cache, 'foo'));
@@ -258,6 +261,6 @@ class NotUnserializable
 {
     public function __wakeup()
     {
-        throw new \Exception(__CLASS__);
+        throw new Exception(__CLASS__);
     }
 }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Tests\Simple;
 
+use RedisCluster;
+
 /**
  * @group legacy
  */
@@ -25,6 +27,6 @@ class RedisClusterCacheTest extends AbstractRedisCacheTest
             self::markTestSkipped('REDIS_CLUSTER_HOSTS env var is not defined.');
         }
 
-        self::$redis = new \RedisCluster(null, explode(' ', $hosts));
+        self::$redis = new RedisCluster(null, explode(' ', $hosts));
     }
 }

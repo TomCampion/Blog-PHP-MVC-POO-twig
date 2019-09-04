@@ -12,6 +12,7 @@
 namespace Symfony\Component\Mime\Encoder;
 
 use Symfony\Component\Mime\CharacterStream;
+use function strlen;
 
 /**
  * @author Chris Corbyn
@@ -39,7 +40,7 @@ final class Rfc2231Encoder implements EncoderInterface
 
         while (null !== $char = $charStream->read(4)) {
             $encodedChar = rawurlencode($char);
-            if (0 !== \strlen($currentLine) && \strlen($currentLine.$encodedChar) > $thisLineLength) {
+            if (0 !== strlen($currentLine) && strlen($currentLine.$encodedChar) > $thisLineLength) {
                 $lines[] = '';
                 $currentLine = &$lines[$lineCount++];
                 $thisLineLength = $maxLineLength;

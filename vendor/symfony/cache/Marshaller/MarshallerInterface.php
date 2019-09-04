@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Marshaller;
 
+use Exception;
+
 /**
  * Serializes/unserializes PHP values.
  *
@@ -34,7 +36,7 @@ interface MarshallerInterface
      *
      * @return mixed
      *
-     * @throws \Exception Whenever unserialization fails
+     * @throws Exception Whenever unserialization fails
      */
     public function unmarshall(string $value);
 }

@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\SandboxExtension;
@@ -18,15 +19,15 @@ use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Template;
 
-class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_TemplateTest extends TestCase
 {
     /**
-     * @expectedException \LogicException
+     * @expectedException LogicException
      */
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
     {
         $template = $this->getMockForAbstractClass(Template::class, [], '', false);
-        $template->displayBlock('foo', [], ['foo' => [new \stdClass(), 'foo']]);
+        $template->displayBlock('foo', [], ['foo' => [new stdClass(), 'foo']]);
     }
 
     /**
@@ -45,7 +46,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
             'array' => ['foo' => 'foo'],
             'array_access' => new Twig_TemplateArrayAccessObject(),
             'magic_exception' => new Twig_TemplateMagicPropertyObjectWithException(),
-            'object' => new \stdClass(),
+            'object' => new stdClass(),
         ];
 
         try {
@@ -119,7 +120,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\RuntimeError
+     * @expectedException RuntimeError
      * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
      */
     public function testRenderBlockWithUndefinedBlock()
@@ -128,7 +129,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         $template = new Twig_TemplateTest($twig, 'index.twig');
         try {
             $template->renderBlock('unknown', []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ob_end_clean();
 
             throw $e;
@@ -136,7 +137,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\RuntimeError
+     * @expectedException RuntimeError
      * @expectedExceptionMessage Block "unknown" on template "index.twig" does not exist in "index.twig".
      */
     public function testDisplayBlockWithUndefinedBlock()
@@ -147,7 +148,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\RuntimeError
+     * @expectedException RuntimeError
      * @expectedExceptionMessage Block "foo" should not call parent() in "index.twig" as the block does not exist in the parent template "parent.twig"
      */
     public function testDisplayBlockWithUndefinedParentBlock()
@@ -265,7 +266,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         ];
 
         $objectArray = new Twig_TemplateArrayAccessObject();
-        $arrayObject = new \ArrayObject($array);
+        $arrayObject = new ArrayObject($array);
         $stdObject = (object) $array;
         $magicPropertyObject = new Twig_TemplateMagicPropertyObject();
         $propertyObject = new Twig_TemplatePropertyObject();
@@ -313,7 +314,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
         foreach ($testObjects as $testObject) {
             foreach ($basicTests as $test) {
                 // properties cannot be numbers
-                if (($testObject[0] instanceof \stdClass || $testObject[0] instanceof Twig_TemplatePropertyObject) && is_numeric($test[2])) {
+                if (($testObject[0] instanceof stdClass || $testObject[0] instanceof Twig_TemplatePropertyObject) && is_numeric($test[2])) {
                     continue;
                 }
 
@@ -386,7 +387,7 @@ class Twig_Tests_TemplateTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\RuntimeError
+     * @expectedException RuntimeError
      */
     public function testGetIsMethods()
     {
@@ -454,7 +455,7 @@ class Twig_TemplateTest extends Template
     }
 }
 
-class Twig_TemplateArrayAccessObject implements \ArrayAccess
+class Twig_TemplateArrayAccessObject implements ArrayAccess
 {
     protected $protected = 'protected';
 
@@ -473,12 +474,12 @@ class Twig_TemplateArrayAccessObject implements \ArrayAccess
 
     public function offsetExists($name)
     {
-        return \array_key_exists($name, $this->attributes);
+        return array_key_exists($name, $this->attributes);
     }
 
     public function offsetGet($name)
     {
-        return \array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
+        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
     }
 
     public function offsetSet($name, $value)
@@ -510,12 +511,12 @@ class Twig_TemplateMagicPropertyObject
 
     public function __isset($name)
     {
-        return \array_key_exists($name, $this->attributes);
+        return array_key_exists($name, $this->attributes);
     }
 
     public function __get($name)
     {
-        return \array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
+        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
     }
 }
 
@@ -523,7 +524,7 @@ class Twig_TemplateMagicPropertyObjectWithException
 {
     public function __isset($key)
     {
-        throw new \Exception('Hey! Don\'t try to isset me!');
+        throw new Exception('Hey! Don\'t try to isset me!');
     }
 }
 
@@ -540,15 +541,15 @@ class Twig_TemplatePropertyObject
     protected $protected = 'protected';
 }
 
-class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject implements \IteratorAggregate
+class Twig_TemplatePropertyObjectAndIterator extends Twig_TemplatePropertyObject implements IteratorAggregate
 {
     public function getIterator()
     {
-        return new \ArrayIterator(['foo', 'bar']);
+        return new ArrayIterator(['foo', 'bar']);
     }
 }
 
-class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements \ArrayAccess
+class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObject implements ArrayAccess
 {
     private $data = [
         'defined' => 'defined',
@@ -562,7 +563,7 @@ class Twig_TemplatePropertyObjectAndArrayAccess extends Twig_TemplatePropertyObj
 
     public function offsetExists($offset)
     {
-        return \array_key_exists($offset, $this->data);
+        return array_key_exists($offset, $this->data);
     }
 
     public function offsetGet($offset)
@@ -701,7 +702,7 @@ class Twig_TemplateMethodAndPropObject
     }
 }
 
-class Twig_TemplateArrayAccess implements \ArrayAccess
+class Twig_TemplateArrayAccess implements ArrayAccess
 {
     public $vars = [
         'foo' => 'bar',
@@ -710,7 +711,7 @@ class Twig_TemplateArrayAccess implements \ArrayAccess
 
     public function offsetExists($offset)
     {
-        return \array_key_exists($offset, $this->children);
+        return array_key_exists($offset, $this->children);
     }
 
     public function offsetGet($offset)
@@ -741,6 +742,6 @@ class Twig_TemplateMagicMethodExceptionObject
 {
     public function __call($method, $arguments)
     {
-        throw new \BadMethodCallException(sprintf('Unknown method "%s".', $method));
+        throw new BadMethodCallException(sprintf('Unknown method "%s".', $method));
     }
 }

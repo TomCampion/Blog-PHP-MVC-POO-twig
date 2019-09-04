@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
-class Twig_Tests_TemplateWrapperTest extends \PHPUnit\Framework\TestCase
+class Twig_Tests_TemplateWrapperTest extends TestCase
 {
     public function testHasGetBlocks()
     {

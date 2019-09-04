@@ -11,10 +11,23 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use Error;
+use ErrorException;
+use Memcached;
 use Symfony\Component\Cache\Exception\CacheException;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\Marshaller\DefaultMarshaller;
 use Symfony\Component\Cache\Marshaller\MarshallerInterface;
+use function array_key_exists;
+use function constant;
+use function count;
+use function extension_loaded;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_int;
+use function is_string;
+use function strlen;
 
 /**
  * @author Rob Frawley 2nd <rmf@src.run>
@@ -37,20 +50,20 @@ trait MemcachedTrait
 
     public static function isSupported()
     {
-        return \extension_loaded('memcached') && version_compare(phpversion('memcached'), '2.2.0', '>=');
+        return extension_loaded('memcached') && version_compare(phpversion('memcached'), '2.2.0', '>=');
     }
 
-    private function init(\Memcached $client, $namespace, $defaultLifetime, ?MarshallerInterface $marshaller)
+    private function init(Memcached $client, $namespace, $defaultLifetime, ?MarshallerInterface $marshaller)
     {
         if (!static::isSupported()) {
             throw new CacheException('Memcached >= 2.2.0 is required');
         }
-        if ('Memcached' === \get_class($client)) {
-            $opt = $client->getOption(\Memcached::OPT_SERIALIZER);
-            if (\Memcached::SERIALIZER_PHP !== $opt && \Memcached::SERIALIZER_IGBINARY !== $opt) {
+        if ('Memcached' === get_class($client)) {
+            $opt = $client->getOption(Memcached::OPT_SERIALIZER);
+            if (Memcached::SERIALIZER_PHP !== $opt && Memcached::SERIALIZER_IGBINARY !== $opt) {
                 throw new CacheException('MemcachedAdapter: "serializer" option must be "php" or "igbinary".');
             }
-            $this->maxIdLength -= \strlen($client->getOption(\Memcached::OPT_PREFIX_KEY));
+            $this->maxIdLength -= strlen($client->getOption(Memcached::OPT_PREFIX_KEY));
             $this->client = $client;
         } else {
             $this->lazyClient = $client;
@@ -73,30 +86,30 @@ trait MemcachedTrait
      * @param array[]|string|string[] $servers An array of servers, a DSN, or an array of DSNs
      * @param array                   $options An array of options
      *
-     * @return \Memcached
+     * @return Memcached
      *
-     * @throws \ErrorException When invalid options or servers are provided
+     * @throws ErrorException When invalid options or servers are provided
      */
     public static function createConnection($servers, array $options = [])
     {
-        if (\is_string($servers)) {
+        if (is_string($servers)) {
             $servers = [$servers];
-        } elseif (!\is_array($servers)) {
-            throw new InvalidArgumentException(sprintf('MemcachedAdapter::createClient() expects array or string as first argument, %s given.', \gettype($servers)));
+        } elseif (!is_array($servers)) {
+            throw new InvalidArgumentException(sprintf('MemcachedAdapter::createClient() expects array or string as first argument, %s given.', gettype($servers)));
         }
         if (!static::isSupported()) {
             throw new CacheException('Memcached >= 2.2.0 is required');
         }
-        set_error_handler(function ($type, $msg, $file, $line) { throw new \ErrorException($msg, 0, $type, $file, $line); });
+        set_error_handler(function ($type, $msg, $file, $line) { throw new ErrorException($msg, 0, $type, $file, $line); });
         try {
             $options += static::$defaultClientOptions;
-            $client = new \Memcached($options['persistent_id']);
+            $client = new Memcached($options['persistent_id']);
             $username = $options['username'];
             $password = $options['password'];
 
             // parse any DSN in $servers
             foreach ($servers as $i => $dsn) {
-                if (\is_array($dsn)) {
+                if (is_array($dsn)) {
                     continue;
                 }
                 if (0 !== strpos($dsn, 'memcached:')) {
@@ -117,7 +130,7 @@ trait MemcachedTrait
                     parse_str($params['query'], $query);
 
                     if (isset($query['host'])) {
-                        if (!\is_array($hosts = $query['host'])) {
+                        if (!is_array($hosts = $query['host'])) {
                             throw new InvalidArgumentException(sprintf('Invalid Memcached DSN: %s', $dsn));
                         }
                         foreach ($hosts as $host => $weight) {
@@ -141,7 +154,7 @@ trait MemcachedTrait
                 }
                 if (isset($params['path']) && preg_match('#/(\d+)$#', $params['path'], $m)) {
                     $params['weight'] = $m[1];
-                    $params['path'] = substr($params['path'], 0, -\strlen($m[0]));
+                    $params['path'] = substr($params['path'], 0, -strlen($m[0]));
                 }
                 $params += [
                     'host' => isset($params['host']) ? $params['host'] : $params['path'],
@@ -163,20 +176,20 @@ trait MemcachedTrait
             // set client's options
             unset($options['persistent_id'], $options['username'], $options['password'], $options['weight'], $options['lazy']);
             $options = array_change_key_case($options, CASE_UPPER);
-            $client->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
-            $client->setOption(\Memcached::OPT_NO_BLOCK, true);
-            $client->setOption(\Memcached::OPT_TCP_NODELAY, true);
-            if (!\array_key_exists('LIBKETAMA_COMPATIBLE', $options) && !\array_key_exists(\Memcached::OPT_LIBKETAMA_COMPATIBLE, $options)) {
-                $client->setOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE, true);
+            $client->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
+            $client->setOption(Memcached::OPT_NO_BLOCK, true);
+            $client->setOption(Memcached::OPT_TCP_NODELAY, true);
+            if (!array_key_exists('LIBKETAMA_COMPATIBLE', $options) && !array_key_exists(Memcached::OPT_LIBKETAMA_COMPATIBLE, $options)) {
+                $client->setOption(Memcached::OPT_LIBKETAMA_COMPATIBLE, true);
             }
             foreach ($options as $name => $value) {
-                if (\is_int($name)) {
+                if (is_int($name)) {
                     continue;
                 }
                 if ('HASH' === $name || 'SERIALIZER' === $name || 'DISTRIBUTION' === $name) {
-                    $value = \constant('Memcached::'.$name.'_'.strtoupper($value));
+                    $value = constant('Memcached::'.$name.'_'.strtoupper($value));
                 }
-                $opt = \constant('Memcached::OPT_'.$name);
+                $opt = constant('Memcached::OPT_'.$name);
 
                 unset($options[$name]);
                 $options[$opt] = $value;
@@ -192,7 +205,7 @@ trait MemcachedTrait
 
                 $newServers = [];
                 foreach ($servers as $server) {
-                    if (1 < \count($server)) {
+                    if (1 < count($server)) {
                         $server = array_values($server);
                         unset($server[2]);
                         $server[1] = (int) $server[1];
@@ -258,8 +271,8 @@ trait MemcachedTrait
             }
 
             return $result;
-        } catch (\Error $e) {
-            throw new \ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
+        } catch (Error $e) {
+            throw new ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
         }
     }
 
@@ -268,7 +281,7 @@ trait MemcachedTrait
      */
     protected function doHave($id)
     {
-        return false !== $this->getClient()->get(rawurlencode($id)) || $this->checkResultCode(\Memcached::RES_SUCCESS === $this->client->getResultCode());
+        return false !== $this->getClient()->get(rawurlencode($id)) || $this->checkResultCode(Memcached::RES_SUCCESS === $this->client->getResultCode());
     }
 
     /**
@@ -279,7 +292,7 @@ trait MemcachedTrait
         $ok = true;
         $encodedIds = array_map('rawurlencode', $ids);
         foreach ($this->checkResultCode($this->getClient()->deleteMulti($encodedIds)) as $result) {
-            if (\Memcached::RES_SUCCESS !== $result && \Memcached::RES_NOTFOUND !== $result) {
+            if (Memcached::RES_SUCCESS !== $result && Memcached::RES_NOTFOUND !== $result) {
                 $ok = false;
             }
         }
@@ -299,7 +312,7 @@ trait MemcachedTrait
     {
         $code = $this->client->getResultCode();
 
-        if (\Memcached::RES_SUCCESS === $code || \Memcached::RES_NOTFOUND === $code) {
+        if (Memcached::RES_SUCCESS === $code || Memcached::RES_NOTFOUND === $code) {
             return $result;
         }
 
@@ -307,7 +320,7 @@ trait MemcachedTrait
     }
 
     /**
-     * @return \Memcached
+     * @return Memcached
      */
     private function getClient()
     {
@@ -315,11 +328,11 @@ trait MemcachedTrait
             return $this->client;
         }
 
-        $opt = $this->lazyClient->getOption(\Memcached::OPT_SERIALIZER);
-        if (\Memcached::SERIALIZER_PHP !== $opt && \Memcached::SERIALIZER_IGBINARY !== $opt) {
+        $opt = $this->lazyClient->getOption(Memcached::OPT_SERIALIZER);
+        if (Memcached::SERIALIZER_PHP !== $opt && Memcached::SERIALIZER_IGBINARY !== $opt) {
             throw new CacheException('MemcachedAdapter: "serializer" option must be "php" or "igbinary".');
         }
-        if ('' !== $prefix = (string) $this->lazyClient->getOption(\Memcached::OPT_PREFIX_KEY)) {
+        if ('' !== $prefix = (string) $this->lazyClient->getOption(Memcached::OPT_PREFIX_KEY)) {
             throw new CacheException(sprintf('MemcachedAdapter: "prefix_key" option must be empty when using proxified connections, "%s" given.', $prefix));
         }
 

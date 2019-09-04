@@ -11,8 +11,15 @@
 
 namespace Symfony\Component\Cache\Traits;
 
+use DomainException;
+use Error;
+use ErrorException;
+use Exception;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Cache\CacheItem;
+use Traversable;
+use function is_string;
+use function strlen;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -39,7 +46,7 @@ trait AbstractTrait
      *
      * @param array $ids The cache identifiers to fetch
      *
-     * @return array|\Traversable The corresponding values found in the cache
+     * @return array|Traversable The corresponding values found in the cache
      */
     abstract protected function doFetch(array $ids);
 
@@ -93,7 +100,7 @@ trait AbstractTrait
 
         try {
             return $this->doHave($id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             CacheItem::log($this->logger, 'Failed to check if key "{key}" is cached: '.$e->getMessage(), ['key' => $key, 'exception' => $e]);
 
             return false;
@@ -110,7 +117,7 @@ trait AbstractTrait
             $namespaceVersion = substr_replace(base64_encode(pack('V', mt_rand())), static::NS_SEPARATOR, 5);
             try {
                 $cleared = $this->doSave([static::NS_SEPARATOR.$this->namespace => $namespaceVersion], 0);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $cleared = false;
             }
             if ($cleared = true === $cleared || [] === $cleared) {
@@ -121,7 +128,7 @@ trait AbstractTrait
 
         try {
             return $this->doClear($this->namespace) || $cleared;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             CacheItem::log($this->logger, 'Failed to clear the cache: '.$e->getMessage(), ['exception' => $e]);
 
             return false;
@@ -152,7 +159,7 @@ trait AbstractTrait
             if ($this->doDelete($ids)) {
                 return true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         $ok = true;
@@ -164,9 +171,9 @@ trait AbstractTrait
                 if ($this->doDelete([$id])) {
                     continue;
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
-            $message = 'Failed to delete key "{key}"'.($e instanceof \Exception ? ': '.$e->getMessage() : '.');
+            $message = 'Failed to delete key "{key}"'.($e instanceof Exception ? ': '.$e->getMessage() : '.');
             CacheItem::log($this->logger, $message, ['key' => $key, 'exception' => $e]);
             $ok = false;
         }
@@ -215,7 +222,7 @@ trait AbstractTrait
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @deprecated since Symfony 4.2, use DefaultMarshaller instead.
      */
@@ -231,9 +238,9 @@ trait AbstractTrait
             if (false !== $value = unserialize($value)) {
                 return $value;
             }
-            throw new \DomainException('Failed to unserialize cached value');
-        } catch (\Error $e) {
-            throw new \ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
+            throw new DomainException('Failed to unserialize cached value');
+        } catch (Error $e) {
+            throw new ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
         } finally {
             ini_set('unserialize_callback_func', $unserializeCallbackHandler);
         }
@@ -252,11 +259,11 @@ trait AbstractTrait
                     $this->namespaceVersion = substr_replace(base64_encode(pack('V', time())), static::NS_SEPARATOR, 5);
                     $this->doSave([static::NS_SEPARATOR.$this->namespace => $this->namespaceVersion], 0);
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
         }
 
-        if (\is_string($key) && isset($this->ids[$key])) {
+        if (is_string($key) && isset($this->ids[$key])) {
             return $this->namespace.$this->namespaceVersion.$this->ids[$key];
         }
         CacheItem::validateKey($key);
@@ -265,9 +272,9 @@ trait AbstractTrait
         if (null === $this->maxIdLength) {
             return $this->namespace.$this->namespaceVersion.$key;
         }
-        if (\strlen($id = $this->namespace.$this->namespaceVersion.$key) > $this->maxIdLength) {
+        if (strlen($id = $this->namespace.$this->namespaceVersion.$key) > $this->maxIdLength) {
             // Use MD5 to favor speed over security, which is not an issue here
-            $this->ids[$key] = $id = substr_replace(base64_encode(hash('md5', $key, true)), static::NS_SEPARATOR, -(\strlen($this->namespaceVersion) + 2));
+            $this->ids[$key] = $id = substr_replace(base64_encode(hash('md5', $key, true)), static::NS_SEPARATOR, -(strlen($this->namespaceVersion) + 2));
             $id = $this->namespace.$this->namespaceVersion.$id;
         }
 
@@ -279,6 +286,6 @@ trait AbstractTrait
      */
     public static function handleUnserializeCallback($class)
     {
-        throw new \DomainException('Class not found: '.$class);
+        throw new DomainException('Class not found: '.$class);
     }
 }

@@ -11,12 +11,16 @@
 
 namespace Symfony\Component\Cache\Adapter;
 
+use BadMethodCallException;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\PruneableInterface;
 use Symfony\Component\Cache\ResettableInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use function get_class;
+use function gettype;
+use function is_object;
 
 /**
  * An adapter that collects data about all cache calls.
@@ -41,7 +45,7 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
     public function get(string $key, callable $callback, float $beta = null, array &$metadata = null)
     {
         if (!$this->pool instanceof CacheInterface) {
-            throw new \BadMethodCallException(sprintf('Cannot call "%s::get()": this class doesn\'t implement "%s".', \get_class($this->pool), CacheInterface::class));
+            throw new BadMethodCallException(sprintf('Cannot call "%s::get()": this class doesn\'t implement "%s".', get_class($this->pool), CacheInterface::class));
         }
 
         $isHit = true;
@@ -54,7 +58,7 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
         $event = $this->start(__FUNCTION__);
         try {
             $value = $this->pool->get($key, $callback, $beta, $metadata);
-            $event->result[$key] = \is_object($value) ? \get_class($value) : \gettype($value);
+            $event->result[$key] = is_object($value) ? get_class($value) : gettype($value);
         } finally {
             $event->end = microtime(true);
         }

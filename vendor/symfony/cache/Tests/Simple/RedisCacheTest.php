@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Cache\Tests\Simple;
 
+use Redis;
+use Symfony\Component\Cache\Exception\InvalidArgumentException;
 use Symfony\Component\Cache\Simple\RedisCache;
 
 /**
@@ -29,7 +31,7 @@ class RedisCacheTest extends AbstractRedisCacheTest
         $redisHost = getenv('REDIS_HOST');
 
         $redis = RedisCache::createConnection('redis://'.$redisHost);
-        $this->assertInstanceOf(\Redis::class, $redis);
+        $this->assertInstanceOf(Redis::class, $redis);
         $this->assertTrue($redis->isConnected());
         $this->assertSame(0, $redis->getDbNum());
 
@@ -48,7 +50,7 @@ class RedisCacheTest extends AbstractRedisCacheTest
 
     /**
      * @dataProvider provideFailedCreateConnection
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Redis connection failed
      */
     public function testFailedCreateConnection($dsn)
@@ -67,7 +69,7 @@ class RedisCacheTest extends AbstractRedisCacheTest
 
     /**
      * @dataProvider provideInvalidCreateConnection
-     * @expectedException \Symfony\Component\Cache\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid Redis DSN
      */
     public function testInvalidCreateConnection($dsn)
