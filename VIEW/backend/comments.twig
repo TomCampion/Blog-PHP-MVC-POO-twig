@@ -1,0 +1,76 @@
+{% extends 'layout.twig' %}
+
+ {% block title %}Gestion des Commentaires{% endblock %}
+
+ {% block content %}
+
+     {% if session.id is not empty and session.admin == 1 %}
+
+         <section class="pt-page pt-page-6">
+         <div class="border-block-top-110"></div>
+         <div class="section-inner">
+             <div class="section-title-block">
+                 <div class="section-title-wrapper">
+                     <h2 class="section-title">Gestion des Commentaires</h2>
+                 </div>
+             </div>
+
+             <form method="post" action="comments">
+                 <p>Trier les résultats par <select name="sort">
+                         <option value="id">ID</option>
+                         <option value="state">state</option>
+                         <option value="content">content</option>
+                         <option value="author">author</option>
+                         <option value="user_id">user_id</option>
+                         <option value="post_id">post_id</option>
+                         <option value="creationDate">date de création</option>
+                         <option value="updateDate">date de modification</option>
+                     </select>
+                     ordre
+                     <select name="order">
+                         <option value="ASC">croissant</option>
+                         <option value="DESC">décroissant</option>
+                     </select>
+                     <input type="submit" value="trier">
+                 </p>
+             </form>
+
+             <div class="row">
+                 <div class="col-lg-12 col-md-12 mx-auto">
+                     <table class="table table-striped">
+                         <thead class="thead-dark">
+                         <tr>
+                             <th scope="col">ID</th>
+                             <th scope="col">state</th>
+                             <th scope="col">content</th>
+                             <th scope="col">author</th>
+                             <th scope="col">user_id</th>
+                             <th scope="col">post_id</th>
+                             <th scope="col">Date de création</th>
+                             <th scope="col">Date de modification</th>
+                         </tr>
+                         </thead>
+                         {% for comment in comments %}
+                         <tbody>
+                         <tr>
+                             <td>{{comment.id}}</td>
+                             <td>{{comment.state}}</td>
+                             <td>{{ comment.content}}</td>
+                             <td>{{comment.author}}</td>
+                             <td>{{comment.user_id}}</td>
+                             <td><a href="post-{{comment.post_id}}"> {{comment.post_id}}</a></td>
+                             <td>{{comment.creationDate |date("d/m/Y H:i")}}</td>
+                             <td>{{comment.updateDate ? comment.updateDate|date("d/m/Y H:i")}}</td>
+                         </tr>
+                         {% endfor %}
+                         </tbody>
+                     </table>
+                 </div>
+             </div>
+         </div>
+
+     {% else %}
+         <h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>
+     {% endif %}
+
+ {% endblock %}

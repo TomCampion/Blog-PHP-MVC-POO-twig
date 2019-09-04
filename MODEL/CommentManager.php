@@ -66,7 +66,7 @@ Class CommentManager extends Manager
             }
             if($column == 'id' or $column == 'content' or $column == 'author' or $column == 'user_id' or $column == 'post_id' or $column == 'state' or $column == 'creationDate' or $column == 'updateDate') {
                 if($order == 'ASC' or $order == 'DESC') {
-                    $query = $this->db->prepare('SELECT * FROM comments ORDER BY $column $order');
+                    $query = $this->db->prepare("SELECT * FROM comments ORDER BY $column $order");
                     $query->execute();
                     $comments = $query->fetchAll();
                     return $comments;
