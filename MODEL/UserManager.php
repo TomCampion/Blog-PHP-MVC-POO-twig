@@ -55,19 +55,12 @@ Class UserManager extends Manager {
         }
     }
 
-    public function getList(){
+    public function getList(String $column = NULL, String $order = NULL){
         try {
-            $query = $this->db->prepare('SELECT * FROM users');
-            $query->execute();
-            $users = $query->fetchAll();
-            return $users;
-        } catch (Exception $e) {
-            echo 'Impossible de selectionner les utilisateurs : '.$e->getMessage().'<br>';
-        }
-    }
-
-    public function sortUsers( String $column, String $order){
-        try {
+            if($column == NULL and $order == NULL){
+                $column = 'id';
+                $order = 'ASC';
+            }
             if($column == 'id' or $column == 'firstname' or $column == 'lastname' or $column == 'email' or $column == 'restricted' or $column == 'admin' or $column == 'register_date') {
                 if($order == 'ASC' or $order == 'DESC') {
                     $query = $this->db->prepare("SELECT * FROM users ORDER BY $column $order");
@@ -81,10 +74,9 @@ Class UserManager extends Manager {
                 throw new \Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
             }
         } catch (Exception $e) {
-            echo 'Impossible de trier les utilisateurs : '.$e->getMessage().'<br>';
+            echo 'Impossible de selectionner les utilisateurs : '.$e->getMessage().'<br>';
         }
     }
-
 
     public function revokeAdmin (int $id){
         try {

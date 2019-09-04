@@ -14,7 +14,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
     public function executeUsers(){
         if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
             if (!empty($_POST['sort']) and !empty($_POST['order'])) {
-                $users = $this->userManager->sortUsers($_POST['sort'], $_POST['order']);
+                $users = $this->userManager->getList($_POST['sort'], $_POST['order']);
             } else {
                 $users = $this->userManager->getList();
             }
@@ -34,6 +34,8 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
                     if($_POST['action'] == 'restrict')$this->userManager->restrictUser($valeur);
                     if($_POST['action'] == 'revokeRestrict')$this->userManager->revokeRestrict($valeur);
                 }
+                $this->executeUsers();
+            }else{
                 $this->executeUsers();
             }
         }else{
