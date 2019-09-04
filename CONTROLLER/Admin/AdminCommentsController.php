@@ -24,5 +24,23 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
         }
     }
 
+    public function executeChangeCommentState(){
+        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+            if (!empty($_POST['state']) and !empty($_POST['comments'])) {
+                foreach($_POST['comments'] as $valeur)
+                {
+                    if($_POST['state'] == 'valid'){
+                        $state = \Tom\Blog\Model\Comments::VALID;
+                    }elseif($_POST['state'] == 'invalid'){
+                        $state = \Tom\Blog\Model\Comments::INVALID;
+                    }
+                    $this->CommentManager->changeState($state, $valeur);
+                }
+            }
+            $this->executeComments();
+        }else{
+            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+        }
+    }
 
 }
