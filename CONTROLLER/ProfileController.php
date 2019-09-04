@@ -17,6 +17,12 @@ class ProfileController extends Controller{
         echo  $this->twig->render('profil.twig');
     }
 
+    private function redirectedUnconnectedUsers(){
+        if(empty($_SESSION['id'])){
+            header('Location: accueil');
+        }
+    }
+
     private function editProfile(String $firstname, String $lastname, String $email){
         $message = '';
         if(!$this->helper->isAlpha($firstname))
@@ -46,6 +52,7 @@ class ProfileController extends Controller{
 
     public function executeEditProfile()
     {
+        $this->redirectedUnconnectedUsers();
         if(!empty($_POST['nom']) and !empty($_POST['prenom']) and !empty($_POST['email'])) {
             $msg_edit = $this->editProfile($_POST['prenom'], $_POST['nom'], $_POST['email']);
             echo $this->twig->render('profil.twig', ['msg' => $msg_edit]);
@@ -74,6 +81,7 @@ class ProfileController extends Controller{
     }
 
     public function executeChangePassword(){
+        $this->redirectedUnconnectedUsers();
         if(!empty($_POST['password']) and !empty($_POST['password2'])) {
             $msg_password = $this->changePassword($_POST['password']);
             echo $this->twig->render('profil.twig', ['msg' => $msg_password]);
