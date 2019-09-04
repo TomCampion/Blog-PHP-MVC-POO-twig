@@ -16,6 +16,7 @@
              </div>
 
              <form method="post" action="comments">
+                 <input type="hidden" name="token" value="{{ csrf_token('sortComments') }}"/>
                  <p>Trier les résultats par <select name="sort">
                          <option value="id">ID</option>
                          <option value="state">state</option>
@@ -36,6 +37,7 @@
              </form>
 
              <form method="post" action="changeCommentState">
+                 <input type="hidden" name="tokenState" value="{{ csrf_token('commentState') }}"/>
                  <select name="state">
                      <option value="valid">Valid comment(s)</option>
                      <option value="invalid">Invalid comment(s)</option>
@@ -47,6 +49,7 @@
                      <table class="table table-striped">
                          <thead class="thead-dark">
                          <tr>
+                             <th scope="col"></th>
                              <th scope="col">ID</th>
                              <th scope="col">state</th>
                              <th scope="col">content</th>
@@ -62,6 +65,7 @@
                          <tbody>
                          <tr>
                              <td><input type="checkbox" name="comments[]" value="{{comment.id}}"></td>
+                             <td>{{comment.id}}</td>
                              <td>{{comment.state}}</td>
                              <td>{{ comment.content}}</td>
                              <td>{{comment.author}}</td>
@@ -69,7 +73,11 @@
                              <td><a href="post-{{comment.post_id}}"> {{comment.post_id}}</a></td>
                              <td>{{comment.creationDate |date("d/m/Y H:i")}}</td>
                              <td>{{comment.updateDate ? comment.updateDate|date("d/m/Y H:i")}}</td>
-                             <td><a id="deleteComment" href="deleteComment-{{comment.id}}">Delete</a></td>
+                             <td><form method="post" action="deleteComment" >
+                                     <input type="hidden" name="token" value="{{ csrf_token('deleteComment') }}"/>
+                                     <input type="hidden" name="comment_id" value="{{comment.id}}"/>
+                                     <input type="submit" value="delete">
+                                 </form></td>
                          </tr>
                          {% endfor %}
                          </tbody>

@@ -13,7 +13,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
 
     public function executeUsers(){
         if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
-            if (!empty($_POST['sort']) and !empty($_POST['order'])) {
+            if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortUsers_token'] == $_POST['token']) {
                 $users = $this->userManager->getList($_POST['sort'], $_POST['order']);
             } else {
                 $users = $this->userManager->getList();
@@ -25,29 +25,32 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeUserAction(){
-        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
-            if (!empty($_POST['action']) and !empty($_POST['users'])) {
-                foreach($_POST['users'] as $valeur)
-                {
-                    if($_POST['action'] == 'setAdmin'){
-                        $this->userManager->setAdmin($valeur);
+        if ($_SESSION['usersAction_token'] == $_POST['token']) {
+            if (!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+                if (!empty($_POST['action']) and !empty($_POST['users'])) {
+                    foreach ($_POST['users'] as $valeur) {
+                        if ($_POST['action'] == 'setAdmin') {
+                            $this->userManager->setAdmin($valeur);
+                        }
+                        if ($_POST['action'] == 'revokeAdmin') {
+                            $this->userManager->revokeAdmin($valeur);
+                        }
+                        if ($_POST['action'] == 'restrict') {
+                            $this->userManager->restrictUser($valeur);
+                        }
+                        if ($_POST['action'] == 'revokeRestrict') {
+                            $this->userManager->revokeRestrict($valeur);
+                        }
                     }
-                    if($_POST['action'] == 'revokeAdmin'){
-                        $this->userManager->revokeAdmin($valeur);
-                    }
-                    if($_POST['action'] == 'restrict'){
-                        $this->userManager->restrictUser($valeur);
-                    }
-                    if($_POST['action'] == 'revokeRestrict'){
-                        $this->userManager->revokeRestrict($valeur);
-                    }
+                    $this->executeUsers();
+                } else {
+                    $this->executeUsers();
                 }
-                $this->executeUsers();
-            }else{
-                $this->executeUsers();
+            } else {
+                echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
             }
         }else{
-            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+            header('Location: users');
         }
     }
 

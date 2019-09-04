@@ -86,6 +86,7 @@
 
                           <div class="tab-pane" id="edit">
                             <form id="editprofile" role="form" action="editprofile" method="post">
+                              <input type="hidden" name="token" value="{{ csrf_token('editProfile') }}"/>
                               <div class="form-group row">
                                 <label class="col-lg-3 col-form-label form-control-label">Prénom</label>
                                 <div class="col-lg-9">
@@ -116,6 +117,7 @@
                             <h4>Changer le mot de passe</h4>
                             <hr>
                             <form id="changePassword" role="form" action="changePassword" method="post">
+                              <input type="hidden" name="token" value="{{ csrf_token('changePassword') }}"/>
                             <div class="form-group row">
                               <label class="col-lg-3 col-form-label form-control-label">Nouveau mot de passe</label>
                               <div class="col-lg-9">

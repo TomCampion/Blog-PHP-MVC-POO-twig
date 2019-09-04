@@ -18,6 +18,7 @@
             <a href="add_post"><button id="add_post" type="button" class="btn btn-primary btn-lg">Ajouter un Post</button></a>
 
             <form method="post" action="posts">
+                <input type="hidden" name="token" value="{{ csrf_token('sortPosts') }}"/>
                 <p>Trier les résultats par <select name="sort">
                         <option value="id">ID</option>
                         <option value="state">statut</option>
@@ -65,7 +66,11 @@
                         <td>{{post.updateDate ? post.updateDate|date("d/m/Y")}}</td>
                         <td><a href="post-{{post.id}}">Voir</a><br><a href="editPost-{{post.id}}">Edit</a>
                             {% if post.state == 'trash' %}
-                                <a id="deletePost" href="deletePost-{{post.id}}">Delete</a>
+                                <form method="post" action="deletePost" >
+                                    <input type="hidden" name="token" value="{{ csrf_token('deletePost') }}"/>
+                                    <input type="hidden" name="post_id" value="{{post.id}}"/>
+                                    <input type="submit" value="delete">
+                                </form>
                             {% endif %}
                         </td>
                     </tr>

@@ -5,6 +5,7 @@ class SecurityController extends Controller{
 
     private $helper;
     private $userManager;
+    private $csrfTokenManager;
 
     public function __construct()
     {
@@ -54,47 +55,51 @@ class SecurityController extends Controller{
     }
 
     private function register(String $firstname, String $lastname, String $email, String $password){
-        $message = $this->checkFirstname($firstname);
-        $message .= $this->checkLastname($lastname);
-        $message .= $this->checkEmail($email);
-        $message .= $this->checkPassword($password);
-        if(!$this->userManager->isEmailUnique($email))
-            $message .= '<p class="msg_error">Cette adresse e-mail est déjà utilisé </p>';
-        if (empty($message)){
-            $data = [
-                'firstname' => $firstname,
-                'lastname' => $lastname,
-                'email' => $email,
-                'password' => password_hash($password, PASSWORD_ARGON2I),
-                'admin' => false,
-                'restricted' => false
-            ];
-            $user = new \Tom\Blog\Model\Users();
-            $user->hydrate($data);
-            $this->userManager->add($user);
-            $message = '<p class="msg_success">Votre compte à bien été crée ! Vous pouvez désormais vous connecté </p>';
+        if ($_SESSION['register_token'] == $_POST['token']) {
+            $message = $this->checkFirstname($firstname);
+            $message .= $this->checkLastname($lastname);
+            $message .= $this->checkEmail($email);
+            $message .= $this->checkPassword($password);
+            if (!$this->userManager->isEmailUnique($email))
+                $message .= '<p class="msg_error">Cette adresse e-mail est déjà utilisé </p>';
+            if (empty($message)) {
+                $data = [
+                    'firstname' => $firstname,
+                    'lastname' => $lastname,
+                    'email' => $email,
+                    'password' => password_hash($password, PASSWORD_ARGON2I),
+                    'admin' => false,
+                    'restricted' => false
+                ];
+                $user = new \Tom\Blog\Model\Users();
+                $user->hydrate($data);
+                $this->userManager->add($user);
+                $message = '<p class="msg_success">Votre compte à bien été crée ! Vous pouvez désormais vous connecté </p>';
+            }
+            return $message;
         }
-        return $message;
     }
 
     private function login(String $email, String $password)
     {
-        $message = $this->checkEmail($email);
-        $message .= $this->checkPassword($password);
-        if (empty($message)){
-            $user = $this->userManager->authenticate($email, $password);
-            if( !empty($user) ){
-                foreach ($user as $key => $value) {
-                    if($key == 'id' or $key == 'firstname' or $key == 'lastname' or $key == 'email' or $key == 'admin' or $key == 'restricted' or $key =='register_date'){
-                        $_SESSION[$key]=$value;
+        if ($_SESSION['login_token'] == $_POST['token']) {
+            $message = $this->checkEmail($email);
+            $message .= $this->checkPassword($password);
+            if (empty($message)) {
+                $user = $this->userManager->authenticate($email, $password);
+                if (!empty($user)) {
+                    foreach ($user as $key => $value) {
+                        if ($key == 'id' or $key == 'firstname' or $key == 'lastname' or $key == 'email' or $key == 'admin' or $key == 'restricted' or $key == 'register_date') {
+                            $_SESSION[$key] = $value;
+                        }
                     }
+                    header('Location: profil');
+                } else {
+                    $message = '<p class="msg_error">Vos identifiants ne sont pas reconnus, vérifiez l’adresse mail et le mot de passe saisis</p>';
                 }
-                header('Location: profil');
-            }else{
-                $message = '<p class="msg_error">Vos identifiants ne sont pas reconnus, vérifiez l’adresse mail et le mot de passe saisis</p>';
             }
+            return $message;
         }
-        return $message;
     }
 
     public function executeAuthentification()
@@ -122,8 +127,12 @@ class SecurityController extends Controller{
 
     public function executeLogout()
     {
-        session_unset();
-        session_destroy();
-        header('Location: accueil');
+        if ($_SESSION['logout_token'] == $_POST['token']) {
+            session_unset();
+            session_destroy();
+            header('Location: accueil');
+        }else{
+            header('Location: connexion');
+        }
     }
 }
