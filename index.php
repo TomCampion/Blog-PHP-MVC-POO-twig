@@ -23,7 +23,7 @@ $router->map('GET','/a_propos', [$FrontendController, "executeA_propos"]);
 $router->map('GET','/cv', [$FrontendController, "executeCv"]);
 $router->map('GET','/portfolio', [$FrontendController, "executePortfolio"]);
 $router->map('GET','/projet1', [$FrontendController, "executeProjet1"]);
-$router->map('GET','/blog', [$BlogController, "executeBlog"]);
+$router->map('GET|POST','/blog', [$BlogController, "executeBlog"]);
 $router->map('GET','/connexion', [$SecurityController, "executeLoginPage"]);
 $router->map('GET','/contact', [$FrontendController, "executeContact"]);
 $router->map('GET','/profil', [$ProfileController, "executeProfil"]);

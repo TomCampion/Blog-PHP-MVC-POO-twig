@@ -2458,3 +2458,7 @@ h2.post-title:hover {
   bottom: 15px;
   font-size: 12px;
 }
+
+.pagination{
+  display: inline;
+}

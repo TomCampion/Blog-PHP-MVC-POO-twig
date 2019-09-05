@@ -36,11 +36,20 @@
 
                   {% endfor %}
 
-                  <!-- Pager -
                   <div class="clearfix">
-                    <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+                    <form class="pagination" method="post" action="blog">
+                      <input type="hidden" name="page" value="{{page + 1}}">
+                      <input type="submit"  value="Voir les posts plus anciens">
+                    </form>
+                      {% if page > 1 %}
+                    <form class="pagination" method="post" action="blog">
+                        <input type="hidden" name="page" value="{{ page - 1}}">
+                        <input type="submit"  value="Voir les posts plus récents">
+                    </form>
+                      {% endif %}
+                    </form>
                   </div>
-                   -->
+
                   </div>
                 </div>
 
