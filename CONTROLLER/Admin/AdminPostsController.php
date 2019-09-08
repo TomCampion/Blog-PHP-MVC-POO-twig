@@ -13,7 +13,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
 
     public function executePosts(){
         if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
-            if (!empty($_POST['sort']) and !empty($_POST['order'])) {
+            if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortPosts_token'] == $_POST['token']) {
                 $posts = $this->postManager->getList($_POST['sort'], $_POST['order']);
             } else {
                 $posts = $this->postManager->getList();
@@ -25,16 +25,20 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     private function addPost(String $title, String $standfirst, String $content, String $state){
-        $data = [
-            'title' => $title,
-            'standfirst' => $standfirst,
-            'content' => $content,
-            'state' => $state,
-            'author' => $_SESSION['firstname'].' '.$_SESSION['lastname']
-        ];
-        $post = new \Tom\Blog\Model\Posts();
-        $post->hydrate($data);
-        $this->postManager->add($post);
+        if ($_SESSION['addPost_token'] == $_POST['token']) {
+            $data = [
+                'title' => $title,
+                'standfirst' => $standfirst,
+                'content' => $content,
+                'state' => $state,
+                'author' => $_SESSION['firstname'] . ' ' . $_SESSION['lastname']
+            ];
+            $post = new \Tom\Blog\Model\Posts();
+            $post->hydrate($data);
+            $this->postManager->add($post);
+        }else{
+            header('Location: add_post');
+        }
     }
 
     public function executeAddPost(){
@@ -51,17 +55,21 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     private function editPost(int $id, String $title, String $standfirst, String $content, String $state, String $author){
-        $data = [
-            'id' => $id,
-            'title' => $title,
-            'standfirst' => $standfirst,
-            'content' => $content,
-            'state' => $state,
-            'author' => $author
-        ];
-        $post = new \Tom\Blog\Model\Posts();
-        $post->hydrate($data);
-        $this->postManager->update($post);
+        if ($_SESSION['editPost_token'] == $_POST['token']) {
+            $data = [
+                'id' => $id,
+                'title' => $title,
+                'standfirst' => $standfirst,
+                'content' => $content,
+                'state' => $state,
+                'author' => $author
+            ];
+            $post = new \Tom\Blog\Model\Posts();
+            $post->hydrate($data);
+            $this->postManager->update($post);
+        }else{
+            header('Location: add_post');
+        }
     }
 
     public function executeEditPost($params){
@@ -78,12 +86,16 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
         }
     }
 
-    public function executeDeletePost ($params){
-        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
-            $post = $this->postManager->delete($params['id']);
-            header('Location: posts');
+    public function executeDeletePost(){
+        if ($_SESSION['deletePost_token'] == $_POST['token']) {
+            if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+                $post = $this->postManager->delete($_POST['post_id']);
+                header('Location: posts');
+            }else{
+                echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+            }
         }else{
-            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+            header('Location: posts');
         }
     }
 

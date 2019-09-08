@@ -18,7 +18,7 @@
                      <h4>Se connecter</h4>
 
                       <form  method="post" action="authentification">
-
+                          <input type="hidden" name="token" value="{{ csrf_token('login') }}"/>
                       <div class="messages">{{ message_connexion|raw }}</div>  
 
                       <div class="controls">
@@ -46,7 +46,7 @@
                     <h4>Pas encore de compte ? Inscrivez vous ! </h4>
 
                     <form  method="post" action="register">
-
+                        <input type="hidden" name="token" value="{{ csrf_token('register') }}"/>
                       <div class="messages">{{ message_register|raw }}</div>
 
                       <div class="controls">
@@ -85,6 +85,7 @@
                     {% else %}
                     <h4>Vous êtes déja connecté ! </h4>
                     <form method="post" action="logout" >
+                        <input type="hidden" name="token" value="{{ csrf_token('logout') }}"/>
                       <input type="submit" class="button btn-send" value="Se déconnecter">
                     </form>
                     {% endif %}

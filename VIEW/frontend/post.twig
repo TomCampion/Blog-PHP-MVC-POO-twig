@@ -77,6 +77,7 @@
                         <div class="tab-pane" id="add-comment">
                             {% if session.id is not empty %}
                             <form action="" method="post" class="form-horizontal" id="commentForm" role="form">
+                                <input type="hidden" name="token" value="{{ csrf_token('addComment') }}"/>
                                 <div class="form-group">
                                     <label for="addComment" class="col-sm-2 control-label">Commentaire</label>
                                     <div class="col-sm-10">
@@ -103,7 +104,7 @@
     <script>
         function editComment(comment_id) {
             if($('.comment'+comment_id).prev()[0].tagName == 'P'){
-                $('.comment'+comment_id).prev().replaceWith('<form method="post" action="editComment-'+comment_id+'"><textarea class="tcom'+comment_id+' textareaEditComment" name="editComment">'+$('.comment'+comment_id).prev().html().trim()+'</textarea><input type="submit" value="enregistrer modification"></form>');
+                $('.comment'+comment_id).prev().replaceWith('<form method="post" action="editComment-'+comment_id+'"><input type="hidden" name="token" value="{{ csrf_token("editComment") }}"/><textarea class="tcom'+comment_id+' textareaEditComment" name="editComment">'+$('.comment'+comment_id).prev().html().trim()+'</textarea><input type="submit" value="enregistrer modification"></form>');
             }else{
                 $('.comment'+comment_id).prev().replaceWith('<p class="media-comment">'+$('.tcom'+comment_id+'').html()+'</p>');
             }

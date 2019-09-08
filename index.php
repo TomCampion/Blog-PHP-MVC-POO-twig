@@ -44,10 +44,10 @@ $router->map('POST','/usersAction', [$AdminUsersController, "executeUserAction"]
 $router->map('GET|POST','/posts', [$AdminPostsController, "executePosts"]);
 $router->map('GET|POST','/add_post', [$AdminPostsController, "executeAddPost"]);
 $router->map('GET|POST','/editPost-[i:id]', [$AdminPostsController, "executeEditPost"]);
-$router->map('GET|POST','/deletePost-[i:id]', [$AdminPostsController, "executeDeletePost"]);
+$router->map('GET|POST','/deletePost', [$AdminPostsController, "executeDeletePost"]);
 $router->map('GET|POST','/comments', [$AdminCommentsController, "executeComments"]);
 $router->map('POST','/changeCommentState', [$AdminCommentsController, "executeChangeCommentState"]);
-$router->map('GET|POST','/deleteComment-[i:id]', [$AdminCommentsController, "executeDeleteComment"]);
+$router->map('GET|POST','/deleteComment', [$AdminCommentsController, "executeDeleteComment"]);
 
 
 $match = $router->match();
