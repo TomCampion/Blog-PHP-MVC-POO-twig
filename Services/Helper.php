@@ -22,4 +22,11 @@ class Helper{
         return $valid;
     }
 
+    public function isAdmin($admin){
+        if($admin == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

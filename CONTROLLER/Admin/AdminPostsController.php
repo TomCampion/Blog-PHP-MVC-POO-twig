@@ -4,15 +4,17 @@ namespace Tom\Blog\AdminController;
 class AdminPostsController extends \Tom\Blog\Controller\Controller{
 
     private $postManager;
+    private $Helper;
 
     public function __construct()
     {
         parent::__construct('backend');
         $this->postManager = new \Tom\Blog\Model\PostManager();
+        $this->Helper = new \Tom\Blog\Services\Helper();
     }
 
     public function executePosts(){
-        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+        if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
             if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortPosts_token'] == $_POST['token']) {
                 $posts = $this->postManager->getList($_POST['sort'], $_POST['order']);
             } else {
@@ -42,7 +44,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeAddPost(){
-        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+        if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
             if(!empty($_POST['title']) and !empty($_POST['standfirst']) and !empty($_POST['content']) and !empty($_POST['state'])){
                 $this->addPost($_POST['title'], $_POST['standfirst'], $_POST['content'], $_POST['state']);
                 header('Location: posts');
@@ -73,7 +75,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeEditPost($params){
-        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+        if($this->Helper->isAdmin($_SESSION['admin'])) {
             if(!empty($params['id']) and !empty($_POST['title']) and !empty($_POST['standfirst']) and !empty($_POST['content']) and !empty($_POST['state'])){
                 $this->editPost($params['id'], $_POST['title'], $_POST['standfirst'], $_POST['content'], $_POST['state'], $_POST['author']);
                 header('Location: posts');
@@ -88,7 +90,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
 
     public function executeDeletePost(){
         if ($_SESSION['deletePost_token'] == $_POST['token']) {
-            if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+            if($this->Helper->isAdmin($_SESSION['admin'])) {
                 $post = $this->postManager->delete($_POST['post_id']);
                 header('Location: posts');
             }else{

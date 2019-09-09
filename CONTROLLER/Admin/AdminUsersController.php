@@ -4,15 +4,17 @@ namespace Tom\Blog\AdminController;
 class AdminUsersController extends \Tom\Blog\Controller\Controller{
 
     private $userManager;
+    private $Helper;
 
     public function __construct()
     {
         parent::__construct('backend');
         $this->userManager = new \Tom\Blog\Model\UserManager();
+        $this->Helper = new \Tom\Blog\Services\Helper();
     }
 
     public function executeUsers(){
-        if(!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+        if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
             if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortUsers_token'] == $_POST['token']) {
                 $users = $this->userManager->getList($_POST['sort'], $_POST['order']);
             } else {
@@ -26,7 +28,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
 
     public function executeUserAction(){
         if ($_SESSION['usersAction_token'] == $_POST['token']) {
-            if (!empty($_SESSION['admin']) and $_SESSION['admin'] == 1) {
+            if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
                 if (!empty($_POST['action']) and !empty($_POST['users'])) {
                     foreach ($_POST['users'] as $valeur) {
                         if ($_POST['action'] == 'setAdmin') {
