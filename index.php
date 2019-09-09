@@ -12,6 +12,7 @@ $FrontendController = new Controller\FrontendController();
 $BlogController = new Controller\BlogController();
 $SecurityController = new Controller\SecurityController();
 $ProfileController = new Controller\ProfileController();
+$ContactController = new Controller\ContactController();
 $AdminUsersController = new AdminController\AdminUsersController();
 $AdminPostsController = new AdminController\AdminPostsController();
 $AdminCommentsController = new AdminController\AdminCommentsController();
@@ -30,6 +31,7 @@ $router->map('GET','/profil', [$ProfileController, "executeProfil"]);
 
 $router->map('GET','/post-[i:id]', [$BlogController, "executePost"]);
 
+$router->map('POST','/contact', [$ContactController, "executeSendMail"]);
 $router->map('POST','/post-[i:id]', [$BlogController, "executeAddComment"]);
 $router->map('GET|POST','/editComment-[i:id]', [$BlogController, "executeEditComment"]);
 $router->map('POST','/register', [$SecurityController, "executeRegister"]);
