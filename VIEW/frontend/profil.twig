@@ -46,40 +46,28 @@
                                 <h5>{{ session.email}}</h5>
                                 <h5>Date de création de compte : {{ session.register_date |date("d/m/Y H:i")}}</h5>
                               </div>
-                              <!--
+
                               <div class="col-md-12">
                                 <h4 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span>Dernier(s) Commentaire(s) posté(s)</h4>
                                 <table class="table table-sm table-hover table-striped">
                                   <tbody>
                                   <tr>
-                                    <td>
-                                      <strong>Abby</strong> joined ACME Project Team in <strong>`Collaboration`</strong>
-                                    </td>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Commentaire</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col"></th>
                                   </tr>
-                                  <tr>
-                                    <td>
-                                      <strong>Gary</strong> deleted My Board1 in <strong>`Discussions`</strong>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <strong>Kensington</strong> deleted MyBoard3 in <strong>`Discussions`</strong>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <strong>John</strong> deleted My Board1 in <strong>`Discussions`</strong>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <strong>Skell</strong> deleted his post Look at Why this is.. in <strong>`Discussions`</strong>
-                                    </td>
-                                  </tr>
-                                  </tbody>
+                              {% for comment in comments %}
+                                <tr>
+                                    <td>{{comment.creationDate}}</td>
+                                    <td>{{ comment.content }}</td>
+                                    <td>{{ comment.state }}</td>
+                                    <td><a href="post-{{ comment.post_id }}">Voir post</a></td>
+                                </tr>
+                              {% endfor %}
+                                </tbody>
                                 </table>
                               </div>
-                              -->
                             </div>
                             <!--/row-->
                           </div>

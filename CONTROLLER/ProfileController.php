@@ -5,16 +5,19 @@ class ProfileController extends Controller{
 
     private $helper;
     private $userManager;
+    private $commentManager;
 
     public function __construct()
     {
         parent::__construct();
         $this->helper = new \Tom\Blog\Services\Helper();
         $this->userManager = new \Tom\Blog\Model\UserManager();
+        $this->commentManager = new \Tom\Blog\Model\CommentManager();
     }
 
     public function executeProfil(){
-        echo  $this->twig->render('profil.twig');
+        $comments = $this->commentManager->getCommentsFromUser($_SESSION['id'], 10);
+        echo  $this->twig->render('profil.twig',['comments' => $comments]);
     }
 
     private function redirectedUnconnectedUsers(){
