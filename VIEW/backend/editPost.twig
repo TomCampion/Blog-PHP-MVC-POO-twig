@@ -18,6 +18,7 @@
              <div class="row">
                  <div class="col-lg-12 col-md-12 mx-auto">
                      <form id="formAddPost" method="post">
+                         <input type="hidden" name="token" value="{{ csrf_token('editPost') }}"/>
                          <label for="addTitle">Title</label>
                          <input maxlength="255" id="addTitle" type="text" name="title" value="{{ post.title }}" required>
                          <label for="addStandfirst">Standfirst</label>

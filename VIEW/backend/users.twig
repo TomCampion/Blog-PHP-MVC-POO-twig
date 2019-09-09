@@ -16,6 +16,7 @@
             </div>
 
             <form method="post" action="users">
+                <input type="hidden" name="token" value="{{ csrf_token('sortUsers') }}"/>
                 <p>Trier les résultats par <select name="sort">
                         <option value="id">ID</option>
                         <option value="firstname">Prénom</option>
@@ -35,6 +36,7 @@
             </form>
 
             <form method="post" action="usersAction">
+                <input type="hidden" name="token" value="{{ csrf_token('usersAction') }}"/>
                  <select name="action">
                         <option value="setAdmin">Mettre admin</option>
                         <option value="revokeAdmin">Enlever admin</option>
