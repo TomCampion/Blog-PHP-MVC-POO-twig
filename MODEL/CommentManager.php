@@ -59,6 +59,21 @@ Class CommentManager extends Manager
         }
     }
 
+    public function getCommentsFromUser ( int $user_id, int $limit){
+        try {
+            if ($user_id > 0) {
+                $query = $this->db->prepare("SELECT * FROM comments WHERE user_id=$user_id LIMIT $limit");
+                $query->execute();
+                $comment = $query->fetchAll();
+                return $comment;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            echo 'Impossible de selectionner les commentaires de l\'utilisateur '.$user_id.' : ' . $e->getMessage() . '<br>';
+        }
+    }
+
     public function getList(String $column = NULL, String $order = NULL)
     {
         try {
