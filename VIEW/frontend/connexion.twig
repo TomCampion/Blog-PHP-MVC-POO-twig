@@ -83,8 +83,8 @@
                       </div>
                     </form> 
                     {% else %}
-                    <h4>Vous êtes déja connecté ! </h4>
-                    <form method="post" action="logout" >
+                    <h2 id="connexionLogout">Vous êtes déja connecté ! </h2>
+                    <form id="formLogout" method="post" action="logout" >
                         <input type="hidden" name="token" value="{{ csrf_token('logout') }}"/>
                       <input type="submit" class="button btn-send" value="Se déconnecter">
                     </form>
