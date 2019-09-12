@@ -14,7 +14,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executePosts(){
-        if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
+        if($this->Helper->isAdmin()) {
             if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortPosts_token'] == $_POST['token']) {
                 $posts = $this->postManager->getList($_POST['sort'], $_POST['order']);
             } else {
@@ -44,7 +44,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeAddPost(){
-        if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
+        if($this->Helper->isAdmin()) {
             if(!empty($_POST['title']) and !empty($_POST['standfirst']) and !empty($_POST['content']) and !empty($_POST['state'])){
                 $this->addPost($_POST['title'], $_POST['standfirst'], $_POST['content'], $_POST['state']);
                 header('Location: posts');

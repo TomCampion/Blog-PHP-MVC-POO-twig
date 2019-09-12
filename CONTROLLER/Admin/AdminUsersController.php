@@ -14,7 +14,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeUsers(){
-        if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
+        if($this->Helper->isAdmin()) {
             if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortUsers_token'] == $_POST['token']) {
                 $users = $this->userManager->getList($_POST['sort'], $_POST['order']);
             } else {
@@ -28,7 +28,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
 
     public function executeUserAction(){
         if ($_SESSION['usersAction_token'] == $_POST['token']) {
-            if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
+            if($this->Helper->isAdmin()) {
                 if (!empty($_POST['action']) and !empty($_POST['users'])) {
                     foreach ($_POST['users'] as $valeur) {
                         if ($_POST['action'] == 'setAdmin') {

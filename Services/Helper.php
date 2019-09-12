@@ -22,8 +22,8 @@ class Helper{
         return $valid;
     }
 
-    public function isAdmin($admin){
-        if($admin == 1){
+    public function isAdmin(){
+        if(!empty($_SESSION['admin']) and $_SESSION['admin']== 1){
             return true;
         }else{
             return false;
