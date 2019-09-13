@@ -55,7 +55,7 @@ body {
 }
 
 a {
-  color: #fd9129;
+  color: #fd9129 !important;
   text-decoration: none;
   outline: none;
   -webkit-transition: all 0.3s ease-in-out;
@@ -2163,7 +2163,7 @@ ul.social-links li:last-child a {
 
 .header.header-color-light .site-main-menu li a,
 .header.header-color-light .site-main-menu li a:hover {
-  color: #222;
+  color: #222 !important;
   border-color: #f5f5f5;
 }
 
@@ -2480,4 +2480,10 @@ h2.post-title:hover {
 
 .testimonial-item{
   margin-top:20px;
+}
+
+.pagination>.active>a{
+  background-color: #fd9129 !important;
+  color:white !important;
+  border-color: #fd9129 !important ;
 }
