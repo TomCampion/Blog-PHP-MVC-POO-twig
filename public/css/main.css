@@ -2458,3 +2458,26 @@ h2.post-title:hover {
   bottom: 15px;
   font-size: 12px;
 }
+
+#adminLink{
+  position: absolute;
+  bottom: 10px;
+  margin-left: 20px;
+}
+
+#connexionLogout{
+  margin-top: 20vh;
+  text-align: center;
+}
+
+#formLogout{
+  text-align: center;
+}
+
+#section_connection h4{
+  margin-top: 50px;
+}
+
+.testimonial-item{
+  margin-top:20px;
+}
