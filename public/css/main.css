@@ -129,7 +129,7 @@ input[type=submit], input[type=button], button, a.button {
   border: 0;
   outline: 0;
   border: 2px solid #fd9129;
-  color: #222;
+  color: #222 !important;
   text-shadow: none;
   background: none;
   border-radius: 0;
@@ -140,7 +140,7 @@ input[type=submit], input[type=button], button, a.button {
 }
 
 input[type=submit]:hover, input[type=submit]:focus, input[type=button]:focus, button:hover, button:focus, a.button:hover, a.button:focus {
-  color: #fff;
+  color: #fff !important;
   background-color: #fd9129;
 }
 /* /Buttons */
