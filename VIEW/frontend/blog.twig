@@ -30,7 +30,7 @@
                       {{ post.standfirst}}
                     </h3>
                     </a>
-                    <p class="post-meta">Publié par <span class="auteur">{{ post.author}}</span> le {{ post.creationDate |date("d/m/Y", "Europe/Paris")}}</p>
+                    <p class="post-meta">Publié par <span class="auteur">{{ post.author}}</span> le {{ post.creationDate |date("d/m/Y", "Europe/Paris")}} {{ post.updateDate ? '- Dernière modification le ' ~ post.updateDate|date("d/m/Y")}}</p>
                   </div>
                   <hr>
 
