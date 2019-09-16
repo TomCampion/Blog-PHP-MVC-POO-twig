@@ -74,6 +74,17 @@ Class CommentManager extends Manager
         }
     }
 
+    public function getCommentsNumber(){
+        try {
+            $query = $this->db->prepare("SELECT COUNT(*) FROM comments ");
+            $query->execute();
+            $commentsNumber = $query->fetchColumn();
+            return (int)$commentsNumber;
+        } catch (Exception $e) {
+            echo 'Impossible de selectionner les commentaires publiés : '.$e->getMessage().'<br>';
+        }
+    }
+/*
     public function getList(String $column = NULL, String $order = NULL)
     {
         try {
@@ -97,7 +108,7 @@ Class CommentManager extends Manager
             echo 'Impossible de selectionner les commentaires : ' . $e->getMessage() . '<br>';
         }
     }
-
+*/
     public function update (Comments $comment){
         try {
             $query = $this->db->prepare('UPDATE comments SET content= ?, author =?, user_id= ?, post_id= ?, state= ?, updateDate= NOW() WHERE id= ?');
