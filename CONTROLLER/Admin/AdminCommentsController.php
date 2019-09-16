@@ -13,14 +13,23 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
         $this->Helper = new \Tom\Blog\Services\Helper();
     }
 
-    public function executeComments(){
-        if( $this->Helper->isAdmin()) {
-            if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortComments_token'] == $_POST['token']) {
-                $comments = $this->CommentManager->getList($_POST['sort'], $_POST['order']);
-            }else{
-                $comments = $this->CommentManager->getList();
+    public function executeComments($params = null){
+        $nbrpost = 10;
+        $nbr_pages = ceil($this->CommentManager->getCommentsNumber()/$nbrpost);
+
+        if(empty($params['page'])){
+            $params['page'] = 1;
+        }
+        if($params['page']  > $nbr_pages){
+            $params['page']  = ceil($this->CommentManager->getCommentsNumber()/$nbrpost);
+        }
+        if($this->Helper->isAdmin()) {
+            if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortUsers_token'] == $_POST['token']) {
+                $comments = $this->CommentManager->getList("comments",$_POST['sort'], $_POST['order'],(int)$params['page'] , $nbrpost);
+            } else {
+                $comments = $this->CommentManager->getList("comments",null, null, (int)$params['page'] , $nbrpost);
             }
-            echo $this->twig->render('comments.twig', ['comments' => $comments]);
+            echo $this->twig->render('comments.twig', ['comments' => $comments, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]);
         }else{
             echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
         }

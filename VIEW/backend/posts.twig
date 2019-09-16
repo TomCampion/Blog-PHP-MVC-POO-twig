@@ -77,6 +77,19 @@
                     </tbody>
                 </table>
             </div>
+            <div class="container">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" > << </a></li>
+                    {% for i in 1..nbr_pages %}
+                        {% if i == page %}
+                            <li class="page-item active"><a class="page-link" href="/blog/posts/{{i}}">{{i}}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="/blog/posts/{{i}}">{{i}}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="page-item"><a class="page-link" > >> </a></li>
+                </ul>
+            </div>
         </div>
     </div>
 

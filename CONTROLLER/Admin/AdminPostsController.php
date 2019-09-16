@@ -13,14 +13,23 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
         $this->Helper = new \Tom\Blog\Services\Helper();
     }
 
-    public function executePosts(){
+    public function executePosts($params = null){
+        $nbrpost = 10;
+        $nbr_pages = ceil($this->postManager->getPostsNumber()/$nbrpost);
+
+        if(empty($params['page'])){
+            $params['page'] = 1;
+        }
+        if($params['page']  > $nbr_pages){
+            $params['page']  = ceil($this->postManager->getPostsNumber()/$nbrpost);
+        }
         if($this->Helper->isAdmin()) {
-            if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortPosts_token'] == $_POST['token']) {
-                $posts = $this->postManager->getList($_POST['sort'], $_POST['order']);
+            if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortUsers_token'] == $_POST['token']) {
+                $posts = $this->postManager->getList("posts",$_POST['sort'], $_POST['order'],(int)$params['page'] , $nbrpost);
             } else {
-                $posts = $this->postManager->getList();
+                $posts = $this->postManager->getList("posts",null, null, (int)$params['page'] , $nbrpost);
             }
-            echo $this->twig->render('posts.twig', ['posts' => $posts]);
+            echo $this->twig->render('posts.twig', ['posts' => $posts, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]);
         }else{
             echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
         }

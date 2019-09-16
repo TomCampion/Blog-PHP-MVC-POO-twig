@@ -43,6 +43,17 @@ Class UserManager extends Manager {
         }
     }
 
+    public function getUsersNumber(){
+        try {
+            $query = $this->db->prepare("SELECT COUNT(*) FROM users ");
+            $query->execute();
+            $usersNumber = $query->fetchColumn();
+            return (int)$usersNumber;
+        } catch (Exception $e) {
+            echo 'Impossible de selectionner les utilisateurs publiés : '.$e->getMessage().'<br>';
+        }
+    }
+
     public function get( int $id ){
         try {
             if($id > 0){
@@ -57,8 +68,8 @@ Class UserManager extends Manager {
             echo 'Impossible de selectionner l\'utilisateur : '.$e->getMessage().'<br>';
         }
     }
-
-    public function getList(String $column = NULL, String $order = NULL){
+/*
+    public function getList(String $column = NULL, String $order = NULL, int $page, int $nbrpost ){
         try {
             if($column == NULL and $order == NULL){
                 $column = 'id';
@@ -66,7 +77,12 @@ Class UserManager extends Manager {
             }
             if($column == 'id' or $column == 'firstname' or $column == 'lastname' or $column == 'email' or $column == 'restricted' or $column == 'admin' or $column == 'register_date') {
                 if($order == 'ASC' or $order == 'DESC') {
-                    $query = $this->db->prepare("SELECT * FROM users ORDER BY $column $order");
+                    $query = $this->db->prepare("SELECT * FROM users ORDER BY :column :order LIMIT :offset, :limit");
+                    (int)$offset = $page*$nbrpost-$nbrpost;
+                    $query->bindParam(':column',  $column, PDO::PARAM_STR);
+                    $query->bindParam(':order', $order, PDO::PARAM_STR);
+                    $query->bindParam(':offset',  $offset, PDO::PARAM_INT);
+                    $query->bindParam(':limit', $nbrpost, PDO::PARAM_INT);
                     $query->execute();
                     $users = $query->fetchAll();
                     return $users;
@@ -80,7 +96,7 @@ Class UserManager extends Manager {
             echo 'Impossible de selectionner les utilisateurs : '.$e->getMessage().'<br>';
         }
     }
-
+*/
     public function revokeAdmin (int $id){
         try {
             $query = $this->db->prepare('UPDATE users SET admin=0 WHERE id=?');
