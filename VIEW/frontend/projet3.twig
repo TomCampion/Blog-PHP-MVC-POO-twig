@@ -1,0 +1,88 @@
+{% extends 'layout.twig' %}
+
+{% block title %}IZYhealth.com{% endblock %}
+
+{% block content %}
+<div id="ajax-page" class="ajax-page-content animated slideInDown">
+    <div class="ajax-page-wrapper">
+        <div class="ajax-page-nav">
+
+            <div class="nav-item ajax-page-close-button">
+                <a id="ajax-page-close-button" href="portfolio"><i class="pe-7s-icon pe-7s-close"></i></a>
+            </div>
+        </div>
+        <div class="border-block-top-110"></div>
+        <div class="ajax-page-title">
+            <h1>IZYhealth.com</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-7 col-md-7 portfolio-block">
+
+                <div class="portfolio-page-video embed-responsive embed-responsive-16by9">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/o8MdVvNzwtw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+                <script type="text/javascript">
+                    function customAjaxScroll() {
+                        var windowWidth = $(window).width();
+                        if (windowWidth > 991) {
+                            // Custom Ajax Page Scroll
+                            $("#ajax-page").mCustomScrollbar({
+                                scrollInertia: 8,
+                                documentTouchScroll: false,
+                                
+                            });
+                        } else {
+                            $("#ajax-page").mCustomScrollbar('destroy');
+                        }
+                    }
+
+                    jQuery(document).ready(function($){
+
+                        // Ajax Loaded Page Scroll
+                        customAjaxScroll();
+
+                    });
+
+                    jQuery(window).on('resize', function() {
+                        customAjaxScroll();
+                    });
+                </script>
+
+            </div>
+
+            <div class="col-sm-5 col-md-5 portfolio-block">
+                <!-- Project Description -->
+                <div class="block-title">
+                    <h3>Description</h3>
+                </div>
+                <ul class="project-general-info">
+                    <li><p><i class="fa fa-user"></i> Tom Campion</p></li>
+                    <li><p><i class="fa fa-globe"></i> <a href="https://www.izyhealth.com/" target="_blank">izyhealth.com</a></p></li>
+                    <li><p><i class="fa fa-calendar"></i> 28 Janvier 2019</p></li>
+                </ul>
+
+                <p class="text-justify">IZYhealth est un site qui présente une gamme de produits de santé innovants. On retrouve notamment une collection de vetements qui repousse touts les liquides même le sang. De plus, ces vetements sont antibactérien, antifongique, sans réaction allergique et sans odeur.
+                IZYhealth propose également un produit permettant de détecter les veines grâce à un système à infrarouge qui met en lumière la carte des veines directement sur le corps du patient</p>
+                <!-- /Project Description -->
+
+                <!-- Technology -->
+                <div class="tags-block">
+                    <div class="block-title">
+                        <h3>Technologies</h3>
+                    </div>
+                    <ul class="tags">
+                        <li><a>Wix</a></li>
+                        <li><a>HTML5</a></li>
+                        <li><a>CSS3</a></li>
+                        <li><a>Javascript</a></li>
+                    </ul>
+                </div>
+                <!-- /Technology -->
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

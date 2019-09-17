@@ -27,6 +27,22 @@ class FrontendController extends Controller{
         echo  $this->twig->render('projet1.twig');
     }
 
+    public function executeProjet2(){
+        echo  $this->twig->render('projet2.twig');
+    }
+
+    public function executeProjet3(){
+        echo  $this->twig->render('projet3.twig');
+    }
+
+    public function executeProjet4(){
+        echo  $this->twig->render('projet4.twig');
+    }
+
+    public function executeProjet5(){
+        echo  $this->twig->render('projet5.twig');
+    }
+
     public function execute404(){
         echo $this->twig->render('404.twig');
     }
