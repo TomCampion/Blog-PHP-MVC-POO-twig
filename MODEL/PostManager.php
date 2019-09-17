@@ -3,6 +3,7 @@ namespace Tom\Blog\Model;
 
 use Exception;
 use Tom\Blog\Model\Posts;
+use PDO;
 
 Class PostManager extends Manager {
 
@@ -72,10 +73,27 @@ Class PostManager extends Manager {
         }
     }
 
-    public function getPublishedPosts(){
+    public function getPostsNumber(){
         try {
-            $query = $this->db->prepare("SELECT * FROM posts WHERE state= ? ORDER BY creationDate DESC");
-            $query->execute(array(Posts::PUBLISHED));
+        $query = $this->db->prepare("SELECT COUNT(*) FROM posts ");
+        $query->execute();
+        $postsNumber = $query->fetchColumn();
+        return (int)$postsNumber;
+    } catch (Exception $e) {
+        echo 'Impossible de selectionner les posts publiés : '.$e->getMessage().'<br>';
+        }
+    }
+
+
+    public function getPublishedPosts( int $page, int $nbrpost ){
+        try {
+            $query = $this->db->prepare("SELECT * FROM posts WHERE state= :state ORDER BY creationDate DESC LIMIT :offset, :limit");
+            (int)$offset = $page*$nbrpost-$nbrpost;
+            (string)$state = Posts::PUBLISHED;
+            $query->bindParam(':offset',  $offset, PDO::PARAM_INT);
+            $query->bindParam(':limit', $nbrpost, PDO::PARAM_INT);
+            $query->bindParam(':state', $state, PDO::PARAM_STR);
+            $query->execute();
             $posts = $query->fetchAll();
             return $posts;
         } catch (Exception $e) {

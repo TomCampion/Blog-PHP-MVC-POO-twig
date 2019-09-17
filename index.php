@@ -29,6 +29,7 @@ $router->map('GET','/izyhealth', [$FrontendController, "executeProjet3"]);
 $router->map('GET','/dblleroux', [$FrontendController, "executeProjet4"]);
 $router->map('GET','/immobilier', [$FrontendController, "executeProjet5"]);
 $router->map('GET','/blog', [$BlogController, "executeBlog"]);
+$router->map('GET','/blog/[i:page]', [$BlogController, "executeBlog"]);
 $router->map('GET','/connexion', [$SecurityController, "executeLoginPage"]);
 $router->map('GET','/contact', [$FrontendController, "executeContact"]);
 $router->map('GET','/profil', [$ProfileController, "executeProfil"]);
