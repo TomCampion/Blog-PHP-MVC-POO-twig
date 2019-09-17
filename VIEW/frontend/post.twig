@@ -23,7 +23,7 @@
               <div class="row">
                 <div class="col-lg-12 col-md-12 mx-auto post_content">
                   {{ post.content | raw }}
-                  <p class="post-meta">Publié par <span class="auteur">{{ post.author}}</span> le {{ post.creationDate |date("d/m/Y", "Europe/Paris")}}</p>
+                    <p class="post-meta">Publié par <span class="auteur">{{ post.author}}</span> le {{ post.creationDate |date("d/m/Y", "Europe/Paris")}} {{ post.updateDate ? '- Dernière modification le' ~ post.updateDate|date("d/m/Y")}}</p>
                 </div>               
               </div>
           </article>
