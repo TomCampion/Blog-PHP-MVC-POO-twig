@@ -14,7 +14,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeComments(){
-        if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
+        if( $this->Helper->isAdmin()) {
             if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortComments_token'] == $_POST['token']) {
                 $comments = $this->CommentManager->getList($_POST['sort'], $_POST['order']);
             }else{
@@ -28,7 +28,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
 
     public function executeChangeCommentState(){
         if ($_SESSION['commentState_token'] == $_POST['tokenState']) {
-            if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
+            if($this->Helper->isAdmin()) {
                 if (!empty($_POST['state']) and !empty($_POST['comments'])) {
                     foreach($_POST['comments'] as $valeur)
                     {
@@ -51,7 +51,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
 
     public function executeDeleteComment(){
         if ($_SESSION['deleteComment_token'] == $_POST['token']) {
-            if(!empty($_SESSION['admin']) and $this->Helper->isAdmin($_SESSION['admin'])) {
+            if($this->Helper->isAdmin()) {
                 $post = $this->CommentManager->delete($_POST['comment_id']);
                 header('Location: comments');
             }else{
