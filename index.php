@@ -47,12 +47,15 @@ $router->map('POST','/changePassword', [$ProfileController, "executeChangePasswo
 
 //Admin part
 $router->map('GET|POST','/users', [$AdminUsersController, "executeUsers"]);
+$router->map('GET','/users/[i:page]', [$AdminUsersController, "executeUsers"]);
 $router->map('POST','/usersAction', [$AdminUsersController, "executeUserAction"]);
 $router->map('GET|POST','/posts', [$AdminPostsController, "executePosts"]);
+$router->map('GET|POST','/posts/[i:page]', [$AdminPostsController, "executePosts"]);
 $router->map('GET|POST','/add_post', [$AdminPostsController, "executeAddPost"]);
 $router->map('GET|POST','/editPost-[i:id]', [$AdminPostsController, "executeEditPost"]);
 $router->map('GET|POST','/deletePost', [$AdminPostsController, "executeDeletePost"]);
 $router->map('GET|POST','/comments', [$AdminCommentsController, "executeComments"]);
+$router->map('GET|POST','/comments/[i:page]', [$AdminCommentsController, "executeComments"]);
 $router->map('POST','/changeCommentState', [$AdminCommentsController, "executeChangeCommentState"]);
 $router->map('GET|POST','/deleteComment', [$AdminCommentsController, "executeDeleteComment"]);
 
