@@ -80,7 +80,7 @@
              </form>
             <div class="container">
                 <ul class="pagination">
-                    <li class="page-item"><a class="page-link" > << </a></li>
+                    <li class="page-item"><span> << </span></li>
                     {% for i in 1..nbr_pages %}
                         {% if i == page %}
                             <li class="page-item active"><a class="page-link" href="/blog/users/{{i}}">{{i}}</a></li>
@@ -88,7 +88,7 @@
                             <li class="page-item"><a class="page-link" href="/blog/users/{{i}}">{{i}}</a></li>
                         {% endif %}
                     {% endfor %}
-                    <li class="page-item"><a class="page-link" > >> </a></li>
+                    <li class="page-item"><span> >> </span></li>
                 </ul>
             </div>
     </div>

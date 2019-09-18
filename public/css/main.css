@@ -2487,3 +2487,8 @@ h2.post-title:hover {
   color:white !important;
   border-color: #fd9129 !important ;
 }
+
+.pagination span{
+  color: #fd9129 !important;
+  cursor: default;
+}
