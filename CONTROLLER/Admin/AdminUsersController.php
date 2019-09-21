@@ -31,7 +31,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
             }
             echo $this->twig->render('users.twig', ['users' => $users, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]);
         }else{
-            echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+            echo $this->twig->render('403.twig');
         }
     }
 
@@ -58,7 +58,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
                     $this->executeUsers();
                 }
             } else {
-                echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';
+                echo $this->twig->render('403.twig');
             }
         }else{
             header('Location: users');

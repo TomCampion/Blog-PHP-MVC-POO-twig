@@ -2492,3 +2492,7 @@ h2.post-title:hover {
   color: #fd9129 !important;
   cursor: default;
 }
+
+.error{
+  font-size:25px;
+}
