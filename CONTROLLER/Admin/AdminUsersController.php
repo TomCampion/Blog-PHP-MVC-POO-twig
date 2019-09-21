@@ -24,8 +24,8 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
             $params['page']  = ceil($this->userManager->getUsersNumber()/$nbrpost);
         }
         if($this->Helper->isAdmin()) {
-            if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortUsers_token'] == $_POST['token']) {
-                $users = $this->userManager->getList("users",$_POST['sort'], $_POST['order'],(int)$params['page'] , $nbrpost);
+            if (!empty(filter_input(INPUT_POST, 'sort')) and !empty(filter_input(INPUT_POST, 'order')) and $_SESSION['sortUsers_token'] == filter_input(INPUT_POST, 'token')) {
+                $users = $this->userManager->getList("users",filter_input(INPUT_POST, 'sort'), filter_input(INPUT_POST, 'order'),(int)$params['page'] , $nbrpost);
             } else {
                 $users = $this->userManager->getList("users",null, null, (int)$params['page'] , $nbrpost);
             }
@@ -36,20 +36,20 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeUserAction(){
-        if ($_SESSION['usersAction_token'] == $_POST['token']) {
+        if ($_SESSION['usersAction_token'] == filter_input(INPUT_POST, 'token')) {
             if($this->Helper->isAdmin()) {
-                if (!empty($_POST['action']) and !empty($_POST['users'])) {
-                    foreach ($_POST['users'] as $valeur) {
-                        if ($_POST['action'] == 'setAdmin') {
+                if (!empty(filter_input(INPUT_POST, 'action')) and !empty(filter_input(INPUT_POST, 'users',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))) {
+                    foreach (filter_input(INPUT_POST, 'users',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) as $valeur) {
+                        if (filter_input(INPUT_POST, 'action') == 'setAdmin') {
                             $this->userManager->setAdmin($valeur);
                         }
-                        if ($_POST['action'] == 'revokeAdmin') {
+                        if (filter_input(INPUT_POST, 'action') == 'revokeAdmin') {
                             $this->userManager->revokeAdmin($valeur);
                         }
-                        if ($_POST['action'] == 'restrict') {
+                        if (filter_input(INPUT_POST, 'action') == 'restrict') {
                             $this->userManager->restrictUser($valeur);
                         }
-                        if ($_POST['action'] == 'revokeRestrict') {
+                        if (filter_input(INPUT_POST, 'action') == 'revokeRestrict') {
                             $this->userManager->revokeRestrict($valeur);
                         }
                     }

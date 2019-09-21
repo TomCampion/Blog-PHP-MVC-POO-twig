@@ -24,8 +24,8 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
             $params['page']  = ceil($this->CommentManager->getCommentsNumber()/$nbrpost);
         }
         if($this->Helper->isAdmin()) {
-            if (!empty($_POST['sort']) and !empty($_POST['order']) and $_SESSION['sortUsers_token'] == $_POST['token']) {
-                $comments = $this->CommentManager->getList("comments",$_POST['sort'], $_POST['order'],(int)$params['page'] , $nbrpost);
+            if (!empty(filter_input(INPUT_POST, 'sort')) and !empty(filter_input(INPUT_POST, 'order')) and $_SESSION['sortUsers_token'] == filter_input(INPUT_POST, 'token')) {
+                $comments = $this->CommentManager->getList("comments",filter_input(INPUT_POST, 'sort'), filter_input(INPUT_POST, 'order'),(int)$params['page'] , $nbrpost);
             } else {
                 $comments = $this->CommentManager->getList("comments",null, null, (int)$params['page'] , $nbrpost);
             }
@@ -36,14 +36,14 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeChangeCommentState(){
-        if ($_SESSION['commentState_token'] == $_POST['tokenState']) {
+        if (!empty(filter_input(INPUT_POST, 'tokenState')) && $_SESSION['commentState_token'] == filter_input(INPUT_POST, 'tokenState')) {
             if($this->Helper->isAdmin()) {
-                if (!empty($_POST['state']) and !empty($_POST['comments'])) {
-                    foreach($_POST['comments'] as $valeur)
+                if (!empty(filter_input(INPUT_POST, 'state')) and !empty(filter_input(INPUT_POST, 'comments',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))) {
+                    foreach(filter_input(INPUT_POST, 'comments',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) as $valeur)
                     {
-                        if($_POST['state'] == 'valid'){
+                        if(filter_input(INPUT_POST, 'state') == 'valid'){
                             $state = \Tom\Blog\Model\Comments::VALID;
-                        }elseif($_POST['state'] == 'invalid'){
+                        }elseif(filter_input(INPUT_POST, 'state') == 'invalid'){
                             $state = \Tom\Blog\Model\Comments::INVALID;
                         }
                         $this->CommentManager->changeState($state, $valeur);
@@ -59,9 +59,9 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeDeleteComment(){
-        if ($_SESSION['deleteComment_token'] == $_POST['token']) {
+        if (!empty(filter_input(INPUT_POST, 'comment_id')) && $_SESSION['deleteComment_token'] == filter_input(INPUT_POST, 'token')) {
             if($this->Helper->isAdmin()) {
-                $post = $this->CommentManager->delete($_POST['comment_id']);
+                $post = $this->CommentManager->delete(filter_input(INPUT_POST, 'comment_id'));
                 header('Location: comments');
             }else{
                 echo '<h4>Vous devez être connecté avec un compte administrateur pour accéder à cette page ! <a href="connexion">Connectez-vous !</a> </h4>';

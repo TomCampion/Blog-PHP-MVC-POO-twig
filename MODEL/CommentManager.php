@@ -84,31 +84,7 @@ Class CommentManager extends Manager
             echo 'Impossible de selectionner les commentaires publiés : '.$e->getMessage().'<br>';
         }
     }
-/*
-    public function getList(String $column = NULL, String $order = NULL)
-    {
-        try {
-            if($column == NULL and $order == NULL){
-                $column = 'id';
-                $order = 'ASC';
-            }
-            if($column == 'id' or $column == 'content' or $column == 'author' or $column == 'user_id' or $column == 'post_id' or $column == 'state' or $column == 'creationDate' or $column == 'updateDate') {
-                if($order == 'ASC' or $order == 'DESC') {
-                    $query = $this->db->prepare("SELECT * FROM comments ORDER BY $column $order");
-                    $query->execute();
-                    $comments = $query->fetchAll();
-                    return $comments;
-                }else{
-                    throw new Exception("Impossible d'effectuer un tri par ordre : ".$order);
-                }
-            }else{
-                throw new Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
-            }
-        } catch (Exception $e) {
-            echo 'Impossible de selectionner les commentaires : ' . $e->getMessage() . '<br>';
-        }
-    }
-*/
+
     public function update (Comments $comment){
         try {
             $query = $this->db->prepare('UPDATE comments SET content= ?, author =?, user_id= ?, post_id= ?, state= ?, updateDate= NOW() WHERE id= ?');

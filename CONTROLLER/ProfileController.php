@@ -27,7 +27,7 @@ class ProfileController extends Controller{
     }
 
     private function editProfile(String $firstname, String $lastname, String $email){
-        if ($_SESSION['editProfile_token'] == $_POST['token']) {
+        if ($_SESSION['editProfile_token'] == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if(!$this->helper->isAlpha($firstname))
                 $message = $message.'<p class="msg_error">Le champ prénom ne peut contenir que des lettres ! </p>';
@@ -60,8 +60,8 @@ class ProfileController extends Controller{
     public function executeEditProfile()
     {
         $this->redirectedUnconnectedUsers();
-        if(!empty($_POST['nom']) and !empty($_POST['prenom']) and !empty($_POST['email'])) {
-            $msg_edit = $this->editProfile($_POST['prenom'], $_POST['nom'], $_POST['email']);
+        if(!empty(filter_input(INPUT_POST, 'nom')) and !empty(filter_input(INPUT_POST, 'prenom')) and !empty(filter_input(INPUT_POST, 'email'))) {
+            $msg_edit = $this->editProfile(filter_input(INPUT_POST, 'prenom'), filter_input(INPUT_POST, 'nom'), filter_input(INPUT_POST, 'email'));
             echo $this->twig->render('profil.twig', ['msg' => $msg_edit]);
         }else{
             $this->executeProfil();
@@ -69,7 +69,7 @@ class ProfileController extends Controller{
     }
 
     private function changePassword( String $password, String $password2){
-        if ($_SESSION['changePassword_token'] == $_POST['token']) {
+        if ($_SESSION['changePassword_token'] == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if(strlen($password) < 3)
                 $message = '<p class="msg_error">Votre mot de passe est trop court, il doit faire au moins 3 caractères </p>';
@@ -92,8 +92,8 @@ class ProfileController extends Controller{
 
     public function executeChangePassword(){
         $this->redirectedUnconnectedUsers();
-        if(!empty($_POST['password']) and !empty($_POST['password2'])) {
-            $msg_password = $this->changePassword($_POST['password'], $_POST['password2']);
+        if(!empty(filter_input(INPUT_POST, 'password')) and !empty(filter_input(INPUT_POST, 'password2'))) {
+            $msg_password = $this->changePassword(filter_input(INPUT_POST, 'password'), filter_input(INPUT_POST, 'password2'));
             echo $this->twig->render('profil.twig', ['msg' => $msg_password]);
         }else{
             $this->executeProfil();

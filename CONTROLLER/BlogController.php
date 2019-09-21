@@ -34,8 +34,8 @@ class BlogController extends Controller{
     }
 
     public function executeAddComment($params){
-        if(!empty($_POST['addComment']) and !empty($params['id'])  ) {
-            $msg_addComment = $this->AddComment($_POST['addComment'], $params['id']);
+        if(!empty(filter_input(INPUT_POST, 'addComment')) and !empty($params['id'])  ) {
+            $msg_addComment = $this->AddComment(filter_input(INPUT_POST, 'addComment'), $params['id']);
             echo $this->twig->render('post.twig', ['message_addComment' => $msg_addComment]);
         }else{
             $this->executeBlog();
@@ -43,15 +43,15 @@ class BlogController extends Controller{
     }
 
     public function executeEditComment($params){
-        if (!empty($_POST['editComment']) and !empty($params['id'])) {
-            $this->editComment($_POST['editComment'], $params['id']);
+        if (!empty(filter_input(INPUT_POST, 'editComment')) and !empty($params['id'])) {
+            $this->editComment(filter_input(INPUT_POST, 'editComment'), $params['id']);
         } else {
             $this->executeBlog();
         }
     }
 
     private function editComment( String $content, int $comment_id){
-        if ($_SESSION['editComment_token'] == $_POST['token']) {
+        if ($_SESSION['editComment_token'] == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if(strlen($content) < 3)
                 $message = '<p class="msg_error">Votre commentaire est trop court, il doit faire au moins 3 caractères </p>';
@@ -60,7 +60,7 @@ class BlogController extends Controller{
 
             if (empty($message)) {
                 $comment = $this->CommentManager->get($comment_id);
-                $comment->setContent($_POST['editComment']);
+                $comment->setContent(filter_input(INPUT_POST, 'editComment'));
                 $this->CommentManager->update($comment);
                 header ("Location: $_SERVER[HTTP_REFERER]" );
             }else{
@@ -73,7 +73,7 @@ class BlogController extends Controller{
     }
 
     private function addComment(String $content, int $post_id){
-        if ($_SESSION['addComment_token'] == $_POST['token']) {
+        if ($_SESSION['addComment_token'] == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if(strlen($content) < 3)
                 $message = '<p class="msg_error">Votre commentaire est trop court, il doit faire au moins 3 caractères </p>';
