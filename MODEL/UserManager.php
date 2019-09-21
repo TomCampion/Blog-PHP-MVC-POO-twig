@@ -12,7 +12,7 @@ Class UserManager extends Manager {
             $query->execute( array($usr->getFirstname(), $usr->getLastname(), $usr->getEmail(), $usr->getPassword(), $usr->getAdmin(), $usr->getRestricted()) );
             return $this->db->lastInsertId();
         } catch (Exception $e) {
-            echo 'Impossible d\ajouter l\'utilisateur : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible d\ajouter l\'utilisateur : '.$e->getMessage());
         }
     }
 
@@ -21,7 +21,7 @@ Class UserManager extends Manager {
             $query = $this->db->prepare('DELETE FROM users WHERE id=?');
             $query->execute( array($usr->getId()) );
         } catch (Exception $e) {
-            echo 'Impossible de supprimmer l\'utilisateur : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de supprimmer l\'utilisateur : '.$e->getMessage());
         }
     }
 
@@ -30,7 +30,7 @@ Class UserManager extends Manager {
             $query = $this->db->prepare('UPDATE users SET firstname= ?, lastname= ?, email= ? WHERE id= ?');
             $query->execute( array($firstname, $lastname, $email, $id) );
         } catch (Exception $e) {
-            echo 'Impossible de modifier l\'utilisateur : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de modifier l\'utilisateur : '.$e->getMessage());
         }
     }
 
@@ -39,7 +39,7 @@ Class UserManager extends Manager {
             $query = $this->db->prepare('UPDATE users SET password= ? WHERE id= ?');
             $query->execute( array(password_hash($password, PASSWORD_ARGON2I), $id) );
         } catch (Exception $e) {
-            echo 'Impossible de modifier le mot de passe : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de modifier le mot de passe : '.$e->getMessage());
         }
     }
 
@@ -50,7 +50,7 @@ Class UserManager extends Manager {
             $usersNumber = $query->fetchColumn();
             return (int)$usersNumber;
         } catch (Exception $e) {
-            echo 'Impossible de selectionner les utilisateurs publiés : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de selectionner les utilisateurs publiés : '.$e->getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ Class UserManager extends Manager {
                 return false;
             }
         } catch (Exception $e) {
-            echo 'Impossible de selectionner l\'utilisateur : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de selectionner l\'utilisateur : '.$e->getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ Class UserManager extends Manager {
             $query = $this->db->prepare('UPDATE users SET admin=0 WHERE id=?');
             $query->execute( array($id) );
         } catch (Exception $e) {
-            echo 'Impossible de retirer le role admin : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de retirer le role admin : '.$e->getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ Class UserManager extends Manager {
             $query = $this->db->prepare('UPDATE users SET admin=1 WHERE id=?');
             $query->execute( array($id) );
         } catch (Exception $e) {
-            echo 'Impossible de mettre le role admin : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de mettre le role admin : '.$e->getMessage());
         }
     }
 
@@ -92,7 +92,7 @@ Class UserManager extends Manager {
             $query = $this->db->prepare('UPDATE users SET restricted=1 WHERE id=?');
             $query->execute( array($id) );
         } catch (Exception $e) {
-            echo 'Impossible de restreindre l\utilisateur : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de restreindre l\utilisateur : '.$e->getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ Class UserManager extends Manager {
             $query = $this->db->prepare('UPDATE users SET restricted=0 WHERE id=?');
             $query->execute( array($id) );
         } catch (Exception $e) {
-            echo 'Impossible d\'enlever la restriction : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible d\'enlever la restriction : '.$e->getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ Class UserManager extends Manager {
             }
             return $valid;
         } catch (Exception $e) {
-            echo 'Impossible d\'enlever la restriction : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible d\'enlever la restriction : '.$e->getMessage());
         }
     }
 
@@ -135,7 +135,7 @@ Class UserManager extends Manager {
                 return false;
             }
         } catch (Exception $e) {
-            echo 'Impossible de vérifer l\'existence de l\'utilisateur : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de vérifer l\'existence de l\'utilisateur : '.$e->getMessage());
         }
     }
 
