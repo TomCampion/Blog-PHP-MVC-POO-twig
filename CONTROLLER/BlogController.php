@@ -43,8 +43,11 @@ class BlogController extends Controller{
     }
 
     public function executeEditComment($params){
-        if (!empty(filter_input(INPUT_POST, 'editComment')) and !empty($params['id'])) {
-            $this->editComment(filter_input(INPUT_POST, 'editComment'), $params['id']);
+        if (!empty(filter_input(INPUT_POST, 'post_id')) and !empty(filter_input(INPUT_POST, 'editComment')) and !empty($params['id'])) {
+            $msg = $this->editComment(filter_input(INPUT_POST, 'editComment'), $params['id']);
+            $post = $this->PostManager->get(filter_input(INPUT_POST, 'post_id'));
+            $comments = $this->CommentManager->getValidCommentsFromPost(filter_input(INPUT_POST, 'post_id'));
+            echo  $this->twig->render('post.twig', ['post' => $post, 'comments' => $comments, 'message'=>$msg] );
         } else {
             $this->executeBlog();
         }
@@ -61,8 +64,9 @@ class BlogController extends Controller{
             if (empty($message)) {
                 $comment = $this->CommentManager->get($comment_id);
                 $comment->setContent(filter_input(INPUT_POST, 'editComment'));
+                $comment->setState(\Tom\Blog\Model\Comments::WAITING_FOR_VALIDATION);
                 $this->CommentManager->update($comment);
-                header ("Location: $_SERVER[HTTP_REFERER]" );
+                $message = '<div class="alert alert-success" role="alert"><strong>Votre commentaire à bien été modifié, il sera publié dès sa validation !</strong></div>';
             }else{
                 $message = '<div class="alert alert-danger" role="alert"><strong>'.$message.'</strong></div>';
             }

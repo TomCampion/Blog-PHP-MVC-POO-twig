@@ -44,6 +44,9 @@
                         <li><a href="#add-comment" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Ajouter un commentaire</h4></a></li>
                     </ul>
                     <div class="tab-content">
+
+                        {{ message | raw}}
+
                         <div class="tab-pane active" id="comments-logout">
                             <ul class="media-list">
                                 {% for comment in comments %}
@@ -71,6 +74,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
+
                         <div class="tab-pane" id="add-comment">
                             {% if session.id is not empty %}
                             <form action="" method="post" class="form-horizontal" id="commentForm" role="form">
@@ -101,7 +105,7 @@
     <script>
         function editComment(comment_id) {
             if($('.comment'+comment_id).prev()[0].tagName == 'P'){
-                $('.comment'+comment_id).prev().replaceWith('<form method="post" action="editComment-'+comment_id+'"><input type="hidden" name="token" value="{{ csrf_token("editComment") }}"/><textarea class="tcom'+comment_id+' textareaEditComment" name="editComment">'+$('.comment'+comment_id).prev().html().trim()+'</textarea><input type="submit" value="enregistrer modification"></form>');
+                $('.comment'+comment_id).prev().replaceWith('<form method="post" action="editComment-'+comment_id+'"><input type="hidden" name="token" value="{{ csrf_token("editComment") }}"/><input type="hidden" name="post_id" value="{{ post.id }}"/><textarea class="tcom'+comment_id+' textareaEditComment" name="editComment">'+$('.comment'+comment_id).prev().html().trim()+'</textarea><input type="submit" value="enregistrer modification"></form>');
             }else{
                 $('.comment'+comment_id).prev().replaceWith('<p class="media-comment">'+$('.tcom'+comment_id+'').html()+'</p>');
             }
