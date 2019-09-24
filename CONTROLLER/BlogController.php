@@ -16,7 +16,7 @@ class BlogController extends Controller{
     public function executePost($params){
         $post = $this->PostManager->get($params['id']);
         $comments = $this->CommentManager->getValidCommentsFromPost($params['id']);
-        echo  $this->twig->render('post.twig', ['post' => $post, 'comments' => $comments ] );
+        print_r ($this->twig->render('post.twig', ['post' => $post, 'comments' => $comments ] ));
     }
 
     public function executeBlog( $params = null){
@@ -30,13 +30,13 @@ class BlogController extends Controller{
             $params['page']  = ceil($this->PostManager->getPostsNumber()/$nbrpost);
         }
         $publishedPosts = $this->PostManager->getPublishedPosts((int)$params['page'] , $nbrpost);
-        echo  $this->twig->render('blog.twig', ['publishedPosts' => $publishedPosts, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]);
+        print_r ($this->twig->render('blog.twig', ['publishedPosts' => $publishedPosts, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]));
     }
 
     public function executeAddComment($params){
         if(!empty(filter_input(INPUT_POST, 'addComment')) and !empty($params['id'])  ) {
             $msg_addComment = $this->AddComment(filter_input(INPUT_POST, 'addComment'), $params['id']);
-            echo $this->twig->render('post.twig', ['message_addComment' => $msg_addComment]);
+            print_r ($this->twig->render('post.twig', ['message_addComment' => $msg_addComment]));
         }else{
             $this->executeBlog();
         }
