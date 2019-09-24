@@ -13,7 +13,7 @@ Class PostManager extends Manager {
             $query->execute( array($post->getTitle(), $post->getAuthor(), $post->getStandfirst(), $post->getContent(),  $post->getUpdateDate(), $post->getState()) );
             return $this->db->lastInsertId();
         } catch (Exception $e) {
-            echo 'Impossible d\ajouter le post : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible d\ajouter le post : '.$e->getMessage());
         }
     }
 
@@ -22,7 +22,7 @@ Class PostManager extends Manager {
             $query = $this->db->prepare('DELETE FROM posts WHERE id=?');
             $query->execute( array($id) );
         } catch (Exception $e) {
-            echo 'Impossible de supprimmer le post : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de supprimmer le post : '.$e->getMessage());
         }
     }
 
@@ -37,7 +37,7 @@ Class PostManager extends Manager {
                 return false;
             }
         } catch (Exception $e) {
-            echo 'Impossible de selectionner le post : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de selectionner le post : '.$e->getMessage());
         }
     }
 
@@ -46,7 +46,7 @@ Class PostManager extends Manager {
             $query = $this->db->prepare('UPDATE posts SET title= ?, author= ?, standfirst= ?, content= ?, updateDate= NOW(), state= ? WHERE id= ?');
             $query->execute( array($post->getTitle(), $post->getAuthor(), $post->getStandfirst(), $post->getContent(), $post->getState(), $post->getId() ));
         } catch (Exception $e) {
-            echo 'Impossible de modifier le post : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de modifier le post : '.$e->getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ Class PostManager extends Manager {
         $postsNumber = $query->fetchColumn();
         return (int)$postsNumber;
     } catch (Exception $e) {
-        echo 'Impossible de selectionner les posts publiés : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de selectionner les posts publiés : '.$e->getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ Class PostManager extends Manager {
             $posts = $query->fetchAll();
             return $posts;
         } catch (Exception $e) {
-            echo 'Impossible de selectionner les posts publiés : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de selectionner les posts publiés : '.$e->getMessage());
         }
     }
 

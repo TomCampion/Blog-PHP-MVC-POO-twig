@@ -17,7 +17,7 @@ class ProfileController extends Controller{
 
     public function executeProfil(){
         $comments = $this->commentManager->getCommentsFromUser($_SESSION['id'], 10);
-        echo  $this->twig->render('profil.twig',['comments' => $comments]);
+        print_r ($this->twig->render('profil.twig',['comments' => $comments]));
     }
 
     private function redirectedUnconnectedUsers(){
@@ -62,7 +62,7 @@ class ProfileController extends Controller{
         $this->redirectedUnconnectedUsers();
         if(!empty(filter_input(INPUT_POST, 'nom')) and !empty(filter_input(INPUT_POST, 'prenom')) and !empty(filter_input(INPUT_POST, 'email'))) {
             $msg_edit = $this->editProfile(filter_input(INPUT_POST, 'prenom'), filter_input(INPUT_POST, 'nom'), filter_input(INPUT_POST, 'email'));
-            echo $this->twig->render('profil.twig', ['msg' => $msg_edit]);
+            print_r($this->twig->render('profil.twig', ['msg' => $msg_edit]));
         }else{
             $this->executeProfil();
         }
@@ -94,7 +94,7 @@ class ProfileController extends Controller{
         $this->redirectedUnconnectedUsers();
         if(!empty(filter_input(INPUT_POST, 'password')) and !empty(filter_input(INPUT_POST, 'password2'))) {
             $msg_password = $this->changePassword(filter_input(INPUT_POST, 'password'), filter_input(INPUT_POST, 'password2'));
-            echo $this->twig->render('profil.twig', ['msg' => $msg_password]);
+            print_r ($this->twig->render('profil.twig', ['msg' => $msg_password]));
         }else{
             $this->executeProfil();
         }

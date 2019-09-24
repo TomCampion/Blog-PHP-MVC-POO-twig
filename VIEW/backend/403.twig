@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr" class="no-js">
+<head>
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Tom Campion | Développeur web" />
+    <meta name="author" content="Tom Campion" />
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" href="/blog/public/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="/blog/public/css/jquery.mCustomScrollbar.min.css" type="text/css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" type="text/css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+    <link rel="stylesheet" href="/blog/public/css/main.css" type="text/css" />
+
+    <script src="/blog/public/js/jquery-2.1.3.min.js"></script>
+
+<body>
+
+<div id="page" class="page">
+    <!-- Header -->
+    <header id="site_header" class="header mobile-menu-hide header-color-light">
+        <div class="my-photo tilt-effect">
+            <img src="/blog/public/images/logo.png" alt="image">
+        </div>
+
+        <div class="site-title-block">
+            <h1 class="site-title">Tom Campion</h1>
+        </div>
+
+        <!-- Navigation -->
+        <div class="site-nav">
+            <!-- Main menu -->
+            <ul id="nav" class="site-main-menu">
+                <li>
+                    <a class="pt-trigger" href="/blog/accueil" data-animation="21"><i class="menu-icon pe-7s-icon pe-7s-home"></i>Accueil</a>
+                </li>
+                <li>
+                    <a class="pt-trigger" href="/blog/a_propos" data-animation="17"><i class="menu-icon pe-7s-icon pe-7s-user"></i>A propos</a>
+                </li>
+                <li>
+                    <a class="pt-trigger" href="/blog/cv" data-animation="18"><i class="menu-icon pe-7s-icon pe-7s-id"></i>CV</a>
+                </li>
+                <li>
+                    <a class="pt-trigger" href="/blog/portfolio" data-animation="19"><i class="menu-icon pe-7s-icon pe-7s-portfolio"></i>Portfolio</a>
+                </li>
+                <li>
+                    <a class="pt-trigger" href="/blog/contact" data-animation="20"><i class="menu-icon pe-7s-icon pe-7s-mail"></i>Contact</a>
+                </li>
+                <li>
+                    <a class="pt-trigger" href="/blog/blog" data-animation="17"><i class="menu-icon pe-7s-icon pe-7s-news-paper"></i>Blog</a>
+                </li>
+                <li>
+                    <a class="pt-trigger" href="/blog/connexion" data-animation="17"><i class="menu-icon pe-7s-icon pe-7s-door-lock"></i>Connexion</a>
+                </li>
+                {% if session.id is not empty %}
+                    <li>
+                        <a class="pt-trigger" href="/blog/profil" data-animation="18"><i class="menu-icon pe-7s-icon pe-7s-box1"></i>Profil</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <!-- /Main menu -->
+            <a  id="adminLink" href="/blog/users">Administration</a>
+        </div>
+        <!-- Navigation -->
+    </header>
+    <!-- /Header -->
+
+    <!-- Mobile Header -->
+    <div class="mobile-header mobile-visible">
+        <div class="mobile-logo-container">
+            <div class="mobile-site-title">Tom Campion</div>
+        </div>
+
+        <a class="menu-toggle mobile-visible">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+    <!-- /Mobile Header -->
+
+    <!-- Main Content -->
+    <div id="main" class="site-main">
+        <!-- Page changer wrapper -->
+        <div class="pt-wrapper" style="background-image: url(/blog/public/images/main_bg_light.jpg);">
+            <!-- Subpages -->
+            <div class="subpages">
+
+                <div id="main" class="site-main">
+                    <!-- Page changer wrapper -->
+                    <div class="pt-wrapper animated zoomIn" style="padding: 0;">
+                        <!-- Subpages -->
+                        <div class="subpages">
+
+                            <section class="pt-page" >
+                                <div class="border-block-top-110"></div>
+                                <div class="section-inner">
+
+                                    <figure style="text-align:center;vertical-align: middle;margin-top:10%;">
+                                        <img src="/blog/public/images/403.jpg"alt="403 accès refusé">
+                                        <br><br>
+                                        <figcaption class="error"><a href="/blog">Retour à l'accueil</a></figcaption>
+                                        <br>
+                                        <figcaption class="error"><a href="/blog/connexion">Se connecter</a></figcaption>
+                                    </figure>
+
+                                </div>
+                            </section>
+
+                        </div>
+                    </div>
+                    <!-- /Page changer wrapper -->
+                </div>
+
+            </div>
+        </div>
+        <!-- /Page changer wrapper -->
+    </div>
+    <!-- /Main Content -->
+
+</div>
+
+<script src="/blog/public/js/bootstrap.min.js"></script>
+
+<script src="/blog/public/js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script src="/blog/public/js/tilt.jquery.min.js"></script>
+
+<script src="/blog/public/js/Progressbar.min.js"></script>
+
+<script src="/blog/public/js/typewriter.js"></script>
+
+</body>
+</html>

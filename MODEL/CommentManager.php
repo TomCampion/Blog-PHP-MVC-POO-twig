@@ -13,7 +13,7 @@ Class CommentManager extends Manager
             $query->execute(array($comment->getContent(), $comment->getAuthor(), $comment->getUserId(), $comment->getPostId(), $comment->getState(), $comment->getUpdateDate()));
             return $this->db->lastInsertId();
         } catch (Exception $e) {
-            echo 'Impossible d\ajouter le commentaire : ' . $e->getMessage() . '<br>';
+            throw new Exception('Impossible d\ajouter le commentaire : ' . $e->getMessage());
         }
     }
 
@@ -23,7 +23,7 @@ Class CommentManager extends Manager
             $query = $this->db->prepare('DELETE FROM comments WHERE id=?');
             $query->execute(array($id));
         } catch (Exception $e) {
-            echo 'Impossible de supprimmer le commentaire : ' . $e->getMessage() . '<br>';
+            throw new Exception('Impossible de supprimmer le commentaire : ' . $e->getMessage());
         }
     }
 
@@ -39,7 +39,7 @@ Class CommentManager extends Manager
                 return false;
             }
         } catch (Exception $e) {
-            echo 'Impossible de selectionner le commentaire : ' . $e->getMessage() . '<br>';
+            throw new Exception('Impossible de selectionner le commentaire : ' . $e->getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ Class CommentManager extends Manager
                 return false;
             }
         } catch (Exception $e) {
-            echo 'Impossible de selectionner les commentaires du post '.$post_id.' : ' . $e->getMessage() . '<br>';
+            throw new Exception('Impossible de selectionner les commentaires du post '.$post_id.' : ' . $e->getMessage());
         }
     }
 
@@ -70,7 +70,7 @@ Class CommentManager extends Manager
                 return false;
             }
         } catch (Exception $e) {
-            echo 'Impossible de selectionner les commentaires de l\'utilisateur '.$user_id.' : ' . $e->getMessage() . '<br>';
+            throw new Exception('Impossible de selectionner les commentaires de l\'utilisateur '.$user_id.' : ' . $e->getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ Class CommentManager extends Manager
             $commentsNumber = $query->fetchColumn();
             return (int)$commentsNumber;
         } catch (Exception $e) {
-            echo 'Impossible de selectionner les commentaires publiés : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de selectionner les commentaires publiés : '.$e->getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ Class CommentManager extends Manager
             $query = $this->db->prepare('UPDATE comments SET content= ?, author =?, user_id= ?, post_id= ?, state= ?, updateDate= NOW() WHERE id= ?');
             $query->execute( array($comment->getContent(), $comment->getAuthor(), $comment->getUserId(), $comment->getPostId(), $comment->getState(), $comment->getId() ));
         } catch (Exception $e) {
-            echo 'Impossible de modifier le commentaire : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de modifier le commentaire : '.$e->getMessage());
         }
     }
 
@@ -103,7 +103,7 @@ Class CommentManager extends Manager
                 throw new Exception("Impossible de passer le statut du commentaire à : ".$state);
             }
         } catch (Exception $e) {
-            echo 'Impossible de modifier le commentaire : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de modifier le commentaire : '.$e->getMessage());
         }
     }
 }

@@ -19,7 +19,7 @@ class Manager
         try{
             $this->db = new PDO('mysql:host='.getenv("DB_HOST").';dbname='.getenv("DB_NAME").';charset=utf8', ''.getenv("DB_USER").'', ''.getenv("DB_PASSWORD").'');
         }catch(Exception $e){
-            echo 'Echec de la connection à la base de donnée : '.$e->getMessage().'<br>';
+            throw new Exception('Echec de la connection à la base de donnée : '.$e->getMessage());
         }
         return $this->db;
     }
@@ -49,7 +49,7 @@ class Manager
                 throw new Exception("Impossible d'effectuer un tri sur la colonne : ".$column);
             }
         } catch (Exception $e) {
-            echo 'Impossible de selectionner les posts : '.$e->getMessage().'<br>';
+            throw new Exception('Impossible de selectionner les posts : '.$e->getMessage());
         }
     }
 }
