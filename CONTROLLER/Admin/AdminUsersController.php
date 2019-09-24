@@ -29,9 +29,9 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
             } else {
                 $users = $this->userManager->getList("users",null, null, (int)$params['page'] , $nbrpost);
             }
-            echo $this->twig->render('users.twig', ['users' => $users, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]);
+            print_r ($this->twig->render('users.twig', ['users' => $users, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]));
         }else{
-            echo $this->twig->render('403.twig');
+            print_r ($this->twig->render('403.twig'));
         }
     }
 
@@ -58,7 +58,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
                     $this->executeUsers();
                 }
             } else {
-                echo $this->twig->render('403.twig');
+                print_r ($this->twig->render('403.twig'));
             }
         }else{
             header('Location: users');
