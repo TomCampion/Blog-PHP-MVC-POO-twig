@@ -63,9 +63,9 @@
                         <td>{{post.standfirst}}</td>
                         <td>{{post.creationDate |date("d/m/Y")}}</td>
                         <td>{{post.updateDate ? post.updateDate|date("d/m/Y")}}</td>
-                        <td><a href="post-{{post.id}}">Voir</a><br><a href="editPost-{{post.id}}">Edit</a>
+                        <td><a href="post-{{post.id}}">Voir</a><br><a href="/blog/editPost-{{post.id}}">Edit</a>
                             {% if post.state == 'trash' %}
-                                <form method="post" action="deletePost" >
+                                <form method="post" action="/blog/deletePost" >
                                     <input type="hidden" name="token" value="{{ csrf_token('deletePost') }}"/>
                                     <input type="hidden" name="post_id" value="{{post.id}}"/>
                                     <input type="submit" value="delete">

@@ -55,7 +55,7 @@ class SecurityController extends Controller{
     }
 
     private function register(String $firstname, String $lastname, String $email, String $password){
-        if ($_SESSION['register_token'] == $_POST['token']) {
+        if ($_SESSION['register_token'] == filter_input(INPUT_POST, 'token')) {
             $message = $this->checkFirstname($firstname);
             $message .= $this->checkLastname($lastname);
             $message .= $this->checkEmail($email);
@@ -82,7 +82,7 @@ class SecurityController extends Controller{
 
     private function login(String $email, String $password)
     {
-        if ($_SESSION['login_token'] == $_POST['token']) {
+        if ($_SESSION['login_token'] == filter_input(INPUT_POST, 'token')) {
             $message = $this->checkEmail($email);
             $message .= $this->checkPassword($password);
             if (empty($message)) {
@@ -104,8 +104,8 @@ class SecurityController extends Controller{
 
     public function executeAuthentification()
     {
-        if (!empty($_POST['email']) and !empty($_POST['password'])) {
-            $msg_login = $this->login($_POST['email'], $_POST['password']);
+        if (!empty(filter_input(INPUT_POST, 'email')) and !empty(filter_input(INPUT_POST, 'password'))) {
+            $msg_login = $this->login(filter_input(INPUT_POST, 'email'), filter_input(INPUT_POST, 'password'));
             echo $this->twig->render('connexion.twig', ['message_connexion' => $msg_login]);
         }else{
             $this->executeLoginPage();
@@ -113,8 +113,8 @@ class SecurityController extends Controller{
     }
 
     public function executeRegister(){
-        if(!empty($_POST['nom']) and !empty($_POST['prenom']) and !empty($_POST['register_email']) and !empty($_POST['register_password']) ) {
-            $msg_register = $this->register($_POST['prenom'], $_POST['nom'], $_POST['register_email'], $_POST['register_password']);
+        if(!empty(filter_input(INPUT_POST, 'nom')) and !empty(filter_input(INPUT_POST, 'prenom')) and !empty(filter_input(INPUT_POST, 'register_email')) and !empty(filter_input(INPUT_POST, 'register_password'))) {
+            $msg_register = $this->register(filter_input(INPUT_POST, 'prenom'), filter_input(INPUT_POST, 'nom'), filter_input(INPUT_POST, 'register_email'), filter_input(INPUT_POST, 'register_password'));
             echo $this->twig->render('connexion.twig', ['message_register' => $msg_register]);
         }else{
             $this->executeLoginPage();
@@ -127,7 +127,7 @@ class SecurityController extends Controller{
 
     public function executeLogout()
     {
-        if ($_SESSION['logout_token'] == $_POST['token']) {
+        if ($_SESSION['logout_token'] == filter_input(INPUT_POST, 'token')) {
             session_unset();
             session_destroy();
             header('Location: accueil');
