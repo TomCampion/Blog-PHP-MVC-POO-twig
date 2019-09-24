@@ -109,17 +109,15 @@ Class UserManager extends Manager {
     {
         try {
             $valid = true;
-            $db = new PDO('mysql:host='.getenv("DB_HOST").';dbname='.getenv("DB_NAME").';charset=utf8', ''.getenv("DB_USER").'', ''.getenv("DB_PASSWORD").'');
-            $query = $db->prepare('SELECT id FROM users WHERE email=?');
+            $query = $this->db->prepare('SELECT id FROM users WHERE email=?');
             $query->execute( array($email) );
             $record = $query->fetch();
-
             if ($record) {
                 $valid = false;
             }
             return $valid;
         } catch (Exception $e) {
-            throw new Exception('Impossible d\'enlever la restriction : '.$e->getMessage());
+            throw new Exception('Impossible de vérifié l\'unicité de l\'email : '.$e->getMessage());
         }
     }
 
@@ -128,7 +126,6 @@ Class UserManager extends Manager {
             $query = $this->db->prepare('SELECT * FROM users WHERE email=?');
             $query->execute( array($email) );
             $user = $query->fetch();
-
             if($user != false && password_verify($password, $user->password )){
                 return $user;
             }else{
