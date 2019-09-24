@@ -29,9 +29,9 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
             } else {
                 $comments = $this->CommentManager->getList("comments",null, null, (int)$params['page'] , $nbrpost);
             }
-            echo $this->twig->render('comments.twig', ['comments' => $comments, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]);
+            print_r ($this->twig->render('comments.twig', ['comments' => $comments, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]));
         }else{
-            echo $this->twig->render('403.twig');
+            print_r ($this->twig->render('403.twig'));
         }
     }
 
@@ -51,7 +51,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
                 }
                 $this->executeComments();
             }else{
-                echo $this->twig->render('403.twig');
+               print_r ($this->twig->render('403.twig'));
             }
         }else{
             header('Location: comments');
@@ -64,7 +64,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
                 $post = $this->CommentManager->delete(filter_input(INPUT_POST, 'comment_id'));
                 header('Location: comments');
             }else{
-                echo $this->twig->render('403.twig');
+                print_r ($this->twig->render('403.twig'));
             }
         }else{
             header('Location: comments');
