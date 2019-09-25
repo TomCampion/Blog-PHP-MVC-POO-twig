@@ -48,9 +48,9 @@ class ContactController extends Controller{
     public function executeSendMail(){
         if(!empty(filter_input(INPUT_POST, 'nom')) and !empty(filter_input(INPUT_POST, 'mail')) and !empty(filter_input(INPUT_POST, 'message'))) {
             $msg = $this->sendMail(filter_input(INPUT_POST, 'mail'), filter_input(INPUT_POST, 'message'), filter_input(INPUT_POST, 'nom'));
-            echo $this->twig->render('contact.twig', ['message' => $msg]);
+            $this->twig->display('contact.twig', ['message' => $msg]);
         }else{
-            echo $this->twig->render('contact.twig');
+            $this->twig->display('contact.twig');
         }
     }
 
