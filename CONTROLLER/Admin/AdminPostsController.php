@@ -29,9 +29,9 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
             } else {
                 $posts = $this->postManager->getList("posts",null, null, (int)$params['page'] , $nbrpost);
             }
-            print_r ($this->twig->render('posts.twig', ['posts' => $posts, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]));
+            $this->twig->display('posts.twig', ['posts' => $posts, 'page'=> (int)$params['page'], 'nbr_pages'=> $nbr_pages ]);
         }else{
-            print_r ($this->twig->render('403.twig'));
+            $this->twig->display('403.twig');
         }
     }
 
@@ -58,10 +58,10 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
                 $this->addPost(filter_input(INPUT_POST, 'title'), filter_input(INPUT_POST, 'standfirst'), filter_input(INPUT_POST, 'content'), filter_input(INPUT_POST, 'state'));
                 header('Location: posts');
             }else{
-                print_r ($this->twig->render('addPost.twig'));
+                $this->twig->display('addPost.twig');
             }
         }else{
-            print_r ($this->twig->render('403.twig'));
+            $this->twig->display('403.twig');
         }
     }
 
@@ -90,10 +90,10 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
                 header('Location: posts');
             }else{
                 $post = $this->postManager->get($params['id']);
-                print_r ($this->twig->render('editPost.twig', ['post' => $post ]));
+                $this->twig->display('editPost.twig', ['post' => $post ]);
             }
         }else{
-            print_r ($this->twig->render('403.twig'));
+            $this->twig->display('403.twig');
         }
     }
 
@@ -103,7 +103,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
                 $post = $this->postManager->delete(filter_input(INPUT_POST, 'post-id'));
                 header('Location: posts');
             }else{
-                print_r ($this->twig->render('403.twig'));
+                $this->twig->display('403.twig');
             }
         }else{
             header('Location: posts');

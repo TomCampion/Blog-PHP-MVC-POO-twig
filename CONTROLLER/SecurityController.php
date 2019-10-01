@@ -106,7 +106,7 @@ class SecurityController extends Controller{
     {
         if (!empty(filter_input(INPUT_POST, 'email')) and !empty(filter_input(INPUT_POST, 'password'))) {
             $msg_login = $this->login(filter_input(INPUT_POST, 'email'), filter_input(INPUT_POST, 'password'));
-            print_r ($this->twig->render('connexion.twig', ['message_connexion' => $msg_login]));
+            $this->twig->display('connexion.twig', ['message_connexion' => $msg_login]);
         }else{
             $this->executeLoginPage();
         }
@@ -115,14 +115,14 @@ class SecurityController extends Controller{
     public function executeRegister(){
         if(!empty(filter_input(INPUT_POST, 'nom')) and !empty(filter_input(INPUT_POST, 'prenom')) and !empty(filter_input(INPUT_POST, 'register_email')) and !empty(filter_input(INPUT_POST, 'register_password'))) {
             $msg_register = $this->register(filter_input(INPUT_POST, 'prenom'), filter_input(INPUT_POST, 'nom'), filter_input(INPUT_POST, 'register_email'), filter_input(INPUT_POST, 'register_password'));
-            print_r ($this->twig->render('connexion.twig', ['message_register' => $msg_register]));
+            $this->twig->display('connexion.twig', ['message_register' => $msg_register]);
         }else{
             $this->executeLoginPage();
         }
     }
 
     public function executeLoginPage(){
-        print_r ($this->twig->render('connexion.twig'));
+        $this->twig->display('connexion.twig');
     }
 
     public function executeLogout()

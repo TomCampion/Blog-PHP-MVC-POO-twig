@@ -4,46 +4,46 @@ namespace Tom\Blog\Controller;
 class FrontendController extends Controller{
 
     public function executeAccueil(){
-        echo  $this->twig->render('accueil.twig');
+        $this->twig->display('accueil.twig');
     }
 
     public function executeA_propos(){
-        echo  $this->twig->render('a_propos.twig');
+        $this->twig->display('a_propos.twig');
     }
 
     public function executeContact(){
-        echo  $this->twig->render('contact.twig');
+        $this->twig->display('contact.twig');
     }
 
     public function executeCv(){
-        echo  $this->twig->render('cv.twig');
+        $this->twig->display('cv.twig');
     }
 
     public function executePortfolio(){
-        echo  $this->twig->render('portfolio.twig');
+        $this->twig->display('portfolio.twig');
     }
 
     public function executeProjet1(){
-        echo  $this->twig->render('projet1.twig');
+        $this->twig->display('projet1.twig');
     }
 
     public function executeProjet2(){
-        echo  $this->twig->render('projet2.twig');
+        $this->twig->display('projet2.twig');
     }
 
     public function executeProjet3(){
-        echo  $this->twig->render('projet3.twig');
+        $this->twig->display('projet3.twig');
     }
 
     public function executeProjet4(){
-        echo  $this->twig->render('projet4.twig');
+        $this->twig->display('projet4.twig');
     }
 
     public function executeProjet5(){
-        echo  $this->twig->render('projet5.twig');
+        $this->twig->display('projet5.twig');
     }
 
     public function execute404(){
-        echo $this->twig->render('404.twig');
+        $this->twig->display('404.twig');
     }
 }
