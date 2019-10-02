@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Controller;
 
+use Tom\Blog\Services\Session;
+
 class Controller{
 
     protected $twig;
@@ -20,7 +22,7 @@ class Controller{
         $function = new \Twig\TwigFunction('csrf_token', function (String $id) {
             $bytes = random_bytes(256 / 8);
             $val = rtrim(strtr(base64_encode($bytes), '+/', '-_'), '=');
-            $_SESSION[$id.'_token'] = $val;
+            Session::put($id.'_token', $val);
             return $val;
         });
         $this->twig->addFunction($function);

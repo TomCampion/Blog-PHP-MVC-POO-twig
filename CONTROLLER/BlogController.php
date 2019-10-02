@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Controller;
 
+use Tom\Blog\Services\Session;
+
 class BlogController extends Controller{
 
     private $PostManager;
@@ -54,7 +56,7 @@ class BlogController extends Controller{
     }
 
     private function editComment( String $content, int $comment_id){
-        if ($_SESSION['editComment_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('editComment_token') == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if(strlen($content) < 3)
                 $message = '<p class="msg_error">Votre commentaire est trop court, il doit faire au moins 3 caractères </p>';
@@ -77,7 +79,7 @@ class BlogController extends Controller{
     }
 
     private function addComment(String $content, int $post_id){
-        if ($_SESSION['addComment_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('addComment_token') == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if(strlen($content) < 3)
                 $message = '<p class="msg_error">Votre commentaire est trop court, il doit faire au moins 3 caractères </p>';
@@ -88,8 +90,8 @@ class BlogController extends Controller{
                 $comment = new \Tom\Blog\Model\Comments();
                 $data = [
                     'content' => $content,
-                    'author' => $_SESSION['firstname'].' '.$_SESSION['lastname'],
-                    'userId' => $_SESSION['id'],
+                    'author' => Session::get('firstname').' '.Session::get('lastname'),
+                    'userId' => Session::get('id'),
                     'postId' => $post_id,
                     'state' => \Tom\Blog\Model\Comments::WAITING_FOR_VALIDATION
                 ];

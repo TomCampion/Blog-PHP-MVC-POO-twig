@@ -36,7 +36,7 @@
                  </p>
              </form>
 
-             <form method="post" action="changeCommentState">
+             <form method="post" action="/blog/changeCommentState">
                  <input type="hidden" name="tokenState" value="{{ csrf_token('commentState') }}"/>
                  <select name="state">
                      <option value="valid">Valid comment(s)</option>

@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Controller;
 
+use Tom\Blog\Services\Session;
+
 class SecurityController extends Controller{
 
     private $helper;
@@ -55,7 +57,7 @@ class SecurityController extends Controller{
     }
 
     private function register(String $firstname, String $lastname, String $email, String $password){
-        if ($_SESSION['register_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('register_token') == filter_input(INPUT_POST, 'token')) {
             $message = $this->checkFirstname($firstname);
             $message .= $this->checkLastname($lastname);
             $message .= $this->checkEmail($email);
@@ -82,7 +84,7 @@ class SecurityController extends Controller{
 
     private function login(String $email, String $password)
     {
-        if ($_SESSION['login_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('login_token') == filter_input(INPUT_POST, 'token')) {
             $message = $this->checkEmail($email);
             $message .= $this->checkPassword($password);
             if (empty($message)) {
@@ -90,7 +92,7 @@ class SecurityController extends Controller{
                 if (!empty($user)) {
                     foreach ($user as $key => $value) {
                         if ($key == 'id' or $key == 'firstname' or $key == 'lastname' or $key == 'email' or $key == 'admin' or $key == 'restricted' or $key == 'register_date') {
-                            $_SESSION[$key] = $value;
+                            Session::put($key,$value);
                         }
                     }
                     header('Location: profil');
@@ -127,7 +129,7 @@ class SecurityController extends Controller{
 
     public function executeLogout()
     {
-        if ($_SESSION['logout_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('logout_token') == filter_input(INPUT_POST, 'token')) {
             session_unset();
             session_destroy();
             header('Location: accueil');

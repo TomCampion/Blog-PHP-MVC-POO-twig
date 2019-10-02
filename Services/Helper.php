@@ -23,7 +23,7 @@ class Helper{
     }
 
     public function isAdmin(){
-        if(!empty($_SESSION['admin']) and ($_SESSION['admin'])==1){
+        if(!empty(Session::get('admin')) and (Session::get('admin'))==1){
             return true;
         }else{
             return false;
@@ -43,4 +43,5 @@ class Helper{
         }
         return true;
     }
+
 }
