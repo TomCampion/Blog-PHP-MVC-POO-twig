@@ -7,7 +7,6 @@ class SecurityController extends Controller{
 
     private $helper;
     private $userManager;
-    private $csrfTokenManager;
 
     public function __construct()
     {

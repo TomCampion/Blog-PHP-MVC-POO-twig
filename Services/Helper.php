@@ -36,7 +36,7 @@ class Helper{
         $headers = 'MIME-Version: 1.0' . "\r\n"
             . 'Content-type: text/html; charset=utf-8' . "\r\n"
             . 'From: ' . $visitor_email . "\r\n";
-        if (mail($recipient, 'CONTACT from tomcampion.fr', $visitor_message, $headers)) {
+        if (mail($recipient, 'Message de '.$visitor_name, $visitor_message, $headers)) {
             return true;
         } else {
             return false;

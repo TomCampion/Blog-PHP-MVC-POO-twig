@@ -62,7 +62,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
     public function executeDeleteComment(){
         if (!empty(filter_input(INPUT_POST, 'comment_id')) && Session::get('deleteComment_token') == filter_input(INPUT_POST, 'token')) {
             if($this->Helper->isAdmin()) {
-                $post = $this->CommentManager->delete(filter_input(INPUT_POST, 'comment_id'));
+                $this->CommentManager->delete(filter_input(INPUT_POST, 'comment_id'));
                 header('Location: comments');
             }else{
                 $this->twig->display('403.twig');
