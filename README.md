@@ -1,5 +1,5 @@
 ﻿# Blog PHP MVC POO twig
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e2ab4c3b7548418e8ba3831948924219)](https://www.codacy.com/manual/blog/Blog-PHP-MVC-POO-twig?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TomCampion/Blog-PHP-MVC-POO-twig&amp;utm_campaign=Badge_Grade)
 <h2>Installation</h2>
 
 Avant de pouvoir utiliser ce blog, il vous faudra suivre les étapes suivantes :<br>
