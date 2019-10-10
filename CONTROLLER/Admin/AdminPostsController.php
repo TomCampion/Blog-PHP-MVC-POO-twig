@@ -101,7 +101,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     public function executeDeletePost(){
         if (!empty(filter_input(INPUT_POST, 'post_id')) && Session::get('deletePost_token') == filter_input(INPUT_POST, 'token')) {
             if($this->Helper->isAdmin(Session::get('admin'))) {
-                $post = $this->postManager->delete(filter_input(INPUT_POST, 'post-id'));
+                $this->postManager->delete(filter_input(INPUT_POST, 'post-id'));
                 header('Location: posts');
             }else{
                 $this->twig->display('403.twig');
