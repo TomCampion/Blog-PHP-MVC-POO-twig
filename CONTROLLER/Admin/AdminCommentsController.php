@@ -1,5 +1,6 @@
 <?php
 namespace Tom\Blog\AdminController;
+use Tom\Blog\Services\Session;
 
 class AdminCommentsController extends \Tom\Blog\Controller\Controller{
 
@@ -24,7 +25,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
             $params['page']  = ceil($this->CommentManager->getCommentsNumber()/$nbrpost);
         }
         if($this->Helper->isAdmin()) {
-            if (!empty(filter_input(INPUT_POST, 'sort')) and !empty(filter_input(INPUT_POST, 'order')) and $_SESSION['sortUsers_token'] == filter_input(INPUT_POST, 'token')) {
+            if (!empty(filter_input(INPUT_POST, 'sort')) and !empty(filter_input(INPUT_POST, 'order')) and Session::get('sortComments_token') == filter_input(INPUT_POST, 'token')) {
                 $comments = $this->CommentManager->getList("comments",filter_input(INPUT_POST, 'sort'), filter_input(INPUT_POST, 'order'),(int)$params['page'] , $nbrpost);
             } else {
                 $comments = $this->CommentManager->getList("comments",null, null, (int)$params['page'] , $nbrpost);
@@ -36,7 +37,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeChangeCommentState(){
-        if (!empty(filter_input(INPUT_POST, 'tokenState')) && $_SESSION['commentState_token'] == filter_input(INPUT_POST, 'tokenState')) {
+        if (!empty(filter_input(INPUT_POST, 'tokenState')) && Session::get('commentState_token') == filter_input(INPUT_POST, 'tokenState')) {
             if($this->Helper->isAdmin()) {
                 if (!empty(filter_input(INPUT_POST, 'state')) and !empty(filter_input(INPUT_POST, 'comments',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))) {
                     foreach(filter_input(INPUT_POST, 'comments',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) as $valeur)
@@ -59,7 +60,7 @@ class AdminCommentsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeDeleteComment(){
-        if (!empty(filter_input(INPUT_POST, 'comment_id')) && $_SESSION['deleteComment_token'] == filter_input(INPUT_POST, 'token')) {
+        if (!empty(filter_input(INPUT_POST, 'comment_id')) && Session::get('deleteComment_token') == filter_input(INPUT_POST, 'token')) {
             if($this->Helper->isAdmin()) {
                 $post = $this->CommentManager->delete(filter_input(INPUT_POST, 'comment_id'));
                 header('Location: comments');

@@ -1,5 +1,6 @@
 <?php
 namespace Tom\Blog\AdminController;
+use Tom\Blog\Services\Session;
 
 class AdminUsersController extends \Tom\Blog\Controller\Controller{
 
@@ -24,7 +25,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
             $params['page']  = ceil($this->userManager->getUsersNumber()/$nbrpost);
         }
         if($this->Helper->isAdmin()) {
-            if (!empty(filter_input(INPUT_POST, 'sort')) and !empty(filter_input(INPUT_POST, 'order')) and $_SESSION['sortUsers_token'] == filter_input(INPUT_POST, 'token')) {
+            if (!empty(filter_input(INPUT_POST, 'sort')) and !empty(filter_input(INPUT_POST, 'order')) and Session::get('sortUsers_token') == filter_input(INPUT_POST, 'token')) {
                 $users = $this->userManager->getList("users",filter_input(INPUT_POST, 'sort'), filter_input(INPUT_POST, 'order'),(int)$params['page'] , $nbrpost);
             } else {
                 $users = $this->userManager->getList("users",null, null, (int)$params['page'] , $nbrpost);
@@ -36,7 +37,7 @@ class AdminUsersController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeUserAction(){
-        if ($_SESSION['usersAction_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('usersAction_token') == filter_input(INPUT_POST, 'token')) {
             if($this->Helper->isAdmin()) {
                 if (!empty(filter_input(INPUT_POST, 'action')) and !empty(filter_input(INPUT_POST, 'users',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY))) {
                     foreach (filter_input(INPUT_POST, 'users',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) as $valeur) {

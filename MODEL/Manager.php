@@ -2,6 +2,7 @@
 namespace Tom\Blog\Model;
 
 use PDO;
+use Exception;
 
 require 'config.php';
 
@@ -30,18 +31,15 @@ class Manager
                 $column = 'id';
                 $order = 'ASC';
             }
-            if($column == 'id' or $column == 'title' or $column == 'author' or $column == 'state' or $column == 'standfirst' or $column == 'creationDate' or $column == 'updateDate') {
+            if($column == 'id' or $column == 'title' or $column == 'author' or $column == 'state' or $column == 'standfirst' or $column == 'creationDate' or $column == 'updateDate' or $column == 'content' or $column == 'user_id' or $column == 'post_id' or $column == 'firstname' or $column == 'lastname' or $column == 'email' or $column == 'admin' or $column == 'restricted' or $column == 'register_date' ) {
                 if($order == 'ASC' or $order == 'DESC') {
-                    $query = $this->db->prepare("SELECT * FROM $table ORDER BY :column :order LIMIT :offset, :limit");
+                    $query = $this->db->prepare("SELECT * FROM $table ORDER BY $column $order LIMIT :offset, :limit");
                     (int)$offset = $page*$nbrpost-$nbrpost;
-                    //$query->bindParam(':table',  $table, PDO::PARAM_STR);
-                    $query->bindParam(':column',  $column, PDO::PARAM_STR);
-                    $query->bindParam(':order', $order, PDO::PARAM_STR);
                     $query->bindParam(':offset',  $offset, PDO::PARAM_INT);
                     $query->bindParam(':limit', $nbrpost, PDO::PARAM_INT);
                     $query->execute();
-                    $users = $query->fetchAll();
-                    return $users;
+                    $data = $query->fetchAll();
+                    return $data;
                 }else{
                     throw new Exception("Impossible d'effectuer un tri par ordre : ".$order);
                 }

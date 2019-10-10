@@ -1,5 +1,6 @@
 <?php
 namespace Tom\Blog\AdminController;
+use Tom\Blog\Services\Session;
 
 class AdminPostsController extends \Tom\Blog\Controller\Controller{
 
@@ -24,7 +25,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
             $params['page']  = ceil($this->postManager->getPostsNumber()/$nbrpost);
         }
         if($this->Helper->isAdmin()) {
-            if (!empty(filter_input(INPUT_POST, 'sort')) and !empty(filter_input(INPUT_POST, 'order')) and $_SESSION['sortUsers_token'] == filter_input(INPUT_POST, 'token')) {
+            if (!empty(filter_input(INPUT_POST, 'sort')) and !empty(filter_input(INPUT_POST, 'order')) and Session::get('sortPosts_token') == filter_input(INPUT_POST, 'token')) {
                 $posts = $this->postManager->getList("posts",filter_input(INPUT_POST, 'sort'), filter_input(INPUT_POST, 'order'),(int)$params['page'] , $nbrpost);
             } else {
                 $posts = $this->postManager->getList("posts",null, null, (int)$params['page'] , $nbrpost);
@@ -36,13 +37,13 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     private function addPost(String $title, String $standfirst, String $content, String $state){
-        if (!empty(filter_input(INPUT_POST, 'token')) && $_SESSION['addPost_token'] == filter_input(INPUT_POST, 'token')) {
+        if (!empty(filter_input(INPUT_POST, 'token')) && Session::get('addPost_token') == filter_input(INPUT_POST, 'token')) {
             $data = [
                 'title' => $title,
                 'standfirst' => $standfirst,
                 'content' => $content,
                 'state' => $state,
-                'author' => $_SESSION['firstname']. ' ' .$_SESSION['lastname']
+                'author' => Session::get('firstname'). ' ' .Session::get('lastname')
             ];
             $post = new \Tom\Blog\Model\Posts();
             $post->hydrate($data);
@@ -66,7 +67,7 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     private function editPost(int $id, String $title, String $standfirst, String $content, String $state, String $author){
-        if (!empty(filter_input(INPUT_POST, 'token')) && $_SESSION['editPost_token'] == filter_input(INPUT_POST, 'token')) {
+        if (!empty(filter_input(INPUT_POST, 'token')) && Session::get('editPost_token') == filter_input(INPUT_POST, 'token')) {
             $data = [
                 'id' => $id,
                 'title' => $title,
@@ -98,8 +99,8 @@ class AdminPostsController extends \Tom\Blog\Controller\Controller{
     }
 
     public function executeDeletePost(){
-        if (!empty(filter_input(INPUT_POST, 'post_id')) && $_SESSION['deletePost_token'] == filter_input(INPUT_POST, 'token')) {
-            if($this->Helper->isAdmin($_SESSION['admin'])) {
+        if (!empty(filter_input(INPUT_POST, 'post_id')) && Session::get('deletePost_token') == filter_input(INPUT_POST, 'token')) {
+            if($this->Helper->isAdmin(Session::get('admin'))) {
                 $post = $this->postManager->delete(filter_input(INPUT_POST, 'post-id'));
                 header('Location: posts');
             }else{

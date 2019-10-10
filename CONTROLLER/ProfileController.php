@@ -1,6 +1,8 @@
 <?php
 namespace Tom\Blog\Controller;
 
+use Tom\Blog\Services\Session;
+
 class ProfileController extends Controller{
 
     private $helper;
@@ -16,18 +18,18 @@ class ProfileController extends Controller{
     }
 
     public function executeProfil(){
-        $comments = $this->commentManager->getCommentsFromUser($_SESSION['id'], 10);
+        $comments = $this->commentManager->getCommentsFromUser(Session::get('id'), 10);
         $this->twig->display('profil.twig',['comments' => $comments]);
     }
 
     private function redirectedUnconnectedUsers(){
-        if(empty($_SESSION['id'])){
+        if(empty(Session::get('id'))){
             header('Location: accueil');
         }
     }
 
     private function editProfile(String $firstname, String $lastname, String $email){
-        if ($_SESSION['editProfile_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('editProfile_token') == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if(!$this->helper->isAlpha($firstname))
                 $message = $message.'<p class="msg_error">Le champ prénom ne peut contenir que des lettres ! </p>';
@@ -43,10 +45,10 @@ class ProfileController extends Controller{
                 $message = $message.'<p class="msg_error">La taille maximum de l\'email est de 254 caractères ! </p>';
 
             if (empty($message)) {
-                $this->userManager->update($firstname, $lastname, $email, $_SESSION['id']);
-                $_SESSION['email'] = $email;
-                $_SESSION['firstname'] = $firstname;
-                $_SESSION['lastname'] = $lastname;
+                $this->userManager->update($firstname, $lastname, $email, Session::get('id'));
+                Session::put('email', $email);
+                Session::put('firstname', $firstname);
+               Session::put('lastname', $lastname);
                 header('Location: profil');
             }else{
                 $message = '<div class="alert alert-danger" role="alert"><strong>'.$message.'</strong></div>';
@@ -69,7 +71,7 @@ class ProfileController extends Controller{
     }
 
     private function changePassword( String $password, String $password2){
-        if ($_SESSION['changePassword_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('changePassword_token') == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if(strlen($password) < 3)
                 $message = '<p class="msg_error">Votre mot de passe est trop court, il doit faire au moins 3 caractères </p>';
@@ -79,7 +81,7 @@ class ProfileController extends Controller{
                 $message = $message.'<p class="msg_error">Vos mots de passe sont différents ! </p>';
 
             if (empty($message)) {
-                $this->userManager->updatePassword($password, $_SESSION['id']);
+                $this->userManager->updatePassword($password,Session::get('id'));
                 $message = '<div class="alert alert-success" role="alert"><strong>Votre mot de passe a bien été modifié !</strong></div>';
             }else{
                 $message = '<div class="alert alert-danger" role="alert"><strong>'.$message.'</strong></div>';

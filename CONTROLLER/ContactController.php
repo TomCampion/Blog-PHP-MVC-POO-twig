@@ -2,6 +2,8 @@
 namespace Tom\Blog\Controller;
 
 
+use Tom\Blog\Services\Session;
+
 class ContactController extends Controller{
 
     private $helper;
@@ -14,7 +16,7 @@ class ContactController extends Controller{
 
     private function sendMail(String $visitor_email, String $visitor_message, String $visitor_name)
     {
-        if ($_SESSION['contact_token'] == filter_input(INPUT_POST, 'token')) {
+        if (Session::get('contact_token') == filter_input(INPUT_POST, 'token')) {
             $message = '';
             if (!$this->helper->isEmail($visitor_email)) {
                 $message = '<p>Adresse e-mail invalide</p>';

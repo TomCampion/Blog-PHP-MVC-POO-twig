@@ -35,7 +35,7 @@
                 </p>
             </form>
 
-            <form method="post" action="usersAction">
+            <form method="post" action="/blog/usersAction">
                 <input type="hidden" name="token" value="{{ csrf_token('usersAction') }}"/>
                  <select name="action">
                         <option value="setAdmin">Mettre admin</option>
